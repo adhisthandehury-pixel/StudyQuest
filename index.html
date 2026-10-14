@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyQuest ⭐</title>
+<style>
+:root {
+  --p: #b44dff;
+  --p2: #8b35ff;
+  --ink: #f5edff;
+  --muted: #b9a8d6;
+  --bg: #10051f;
+  --line: #43215f;
+  --white: #1b0c2d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 15% 0%, #45116b 0%, transparent 38%),
+    radial-gradient(ellipse at 95% 55%, #250b50 0%, transparent 40%),
+    #10051f;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+button,input,select,textarea { font: inherit; }
+button { cursor: pointer; }
+::selection { background: #b44dff; color: white; }
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 235px minmax(0,1fr);
+}
+aside {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: rgba(21,7,37,.96);
+  border-right: 1px solid var(--line);
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  box-shadow: 5px 0 30px #a020ff08;
+}
+.brand { display:flex; align-items:center; gap:10px; padding:0 7px; }
+.logo {
+  width:42px; height:42px; border-radius:14px;
+  background:linear-gradient(135deg,#d45aff,#782aff);
+  color:white; display:grid; place-items:center;
+  font-size:23px;
+  box-shadow:0 0 22px #b44dff70;
+}
+.brand strong { display:block; }
+.brand small { font-size:11px; color:var(--muted); }
+.nav-label {
+  font-size:10px; letter-spacing:.14em; font-weight:850;
+  color:#a78bc5; padding:0 12px; margin-bottom:6px;
+}
+.nav { display:grid; gap:4px; }
+.nav button {
+  border:1px solid transparent; background:transparent;
+  border-radius:11px; text-align:left; padding:11px;
+  color:#c1afd9; display:flex; gap:11px;
+  align-items:center; font-weight:700; transition:.2s;
+}
+.nav button:hover,.nav button.active {
+  background:#34114f; color:#f0caff;
+  border-color:#7133a3;
+  box-shadow:inset 0 0 16px #a020ff12,0 0 12px #a020ff13;
+}
+.nav span { font-size:18px; width:22px; text-align:center; }
+.tip {
+  margin-top:auto; background:#241039;
+  border:1px solid #522576; border-radius:16px; padding:14px;
+}
+.tip p { font-size:12px; line-height:1.5; color:var(--muted); margin:7px 0 0; }
+
+main { width:100%; max-width:1500px; min-width:0; margin:auto; padding:24px clamp(14px,3vw,36px) 40px; }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:24px; }
+.eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:.13em; color:#d18cff; font-weight:850; }
+.topbar h1 { font-size:clamp(24px,3vw,34px); margin:5px 0 0; letter-spacing:-.04em; }
+.profile {
+  display:flex; align-items:center; gap:9px; padding:7px 11px;
+  border:1px solid var(--line); border-radius:14px;
+  background:#1b0c2d;
+}
+.avatar { width:36px; height:36px; display:grid; place-items:center; background:#392052; border-radius:12px; font-size:19px; }
+.profile small { display:block; color:var(--muted); font-size:11px; }
+
+.page { display:none; }
+.page.active { display:block; }
+.hero {
+  border:1px solid #b75aff70;
+  border-radius:22px; padding:26px;
+  background:
+    radial-gradient(ellipse at 90% 20%,#ed6bff45,transparent 40%),
+    linear-gradient(115deg,#41116b,#7125a5 58%,#4a1680);
+  color:white; display:flex; align-items:center;
+  justify-content:space-between; gap:18px;
+  box-shadow:0 0 28px #8c20ff24,inset 0 0 30px #ed7aff0a;
+}
+.hero h2 { font-size:clamp(23px,3vw,32px); margin:10px 0; letter-spacing:-.04em; }
+.hero p { max-width:560px; color:#f0ddff; line-height:1.55; margin:0; }
+.hero-art { font-size:72px; padding:0 15px; filter:drop-shadow(0 0 15px #e77aff50); }
+
+.btn {
+  border:1px solid #d18aff50;
+  background:linear-gradient(135deg,#c04dff,#812bff);
+  color:white; border-radius:11px; padding:10px 14px;
+  font-weight:800; display:inline-flex;
+  align-items:center; justify-content:center; gap:7px;
+  box-shadow:0 0 14px #a020ff22; transition:.2s;
+}
+.btn:hover { filter:brightness(1.13); box-shadow:0 0 22px #b44dff55; transform:translateY(-1px); }
+.btn.light { background:#f7eaff; color:#661b9c; margin-top:16px; border-color:#fff; }
+.btn.secondary { background:#301447; color:#e6baff; border-color:#6b358e; box-shadow:none; }
+.btn.ghost { background:#1c0d2c; color:var(--ink); border-color:var(--line); box-shadow:none; }
+.btn.small { font-size:12px; padding:8px 10px; }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+
+.stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:18px 0; }
+.stat,.panel,.feature {
+  background:linear-gradient(145deg,#211032,#190a29);
+  border:1px solid var(--line); border-radius:17px;
+  box-shadow:0 5px 22px #0002;
+}
+.stat { padding:16px; transition:.2s; }
+.stat:hover,.feature:hover { border-color:#8643b6; box-shadow:0 0 20px #a020ff17; }
+.stat-head { display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:12px; gap:6px; }
+.stat-icon { width:33px; height:33px; border-radius:11px; display:grid; place-items:center; font-size:18px; background:#38204e !important; }
+.stat strong { display:block; font-size:27px; margin:8px 0 2px; color:#f2d4ff; }
+.stat small { color:var(--muted); font-size:11px; }
+.two-col { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr); gap:16px; }
+.panel { padding:19px; margin-bottom:16px; }
+.panel-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; }
+.panel h3 { font-size:17px; margin:0; }
+.muted { color:var(--muted); }
+.smalltext { font-size:12px; line-height:1.55; }
+.quest { display:flex; align-items:center; gap:10px; padding:12px 0; border-bottom:1px solid #382247; }
+.quest:last-child { border-bottom:0; }
+.quest-icon { width:41px; height:41px; border-radius:13px; background:#39204f; display:grid; place-items:center; font-size:21px; flex-shrink:0; }
+.quest-info { flex:1; min-width:0; }
+.quest-info strong { display:block; font-size:13px; }
+.quest-info small { color:var(--muted); font-size:11px; }
+.reward { font-size:12px; font-weight:850; color:#ffd66b; white-space:nowrap; }
+.section-title { margin:25px 0 13px; display:flex; align-items:end; justify-content:space-between; gap:12px; }
+.section-title h2 { font-size:21px; margin:0; }
+.section-title p { margin:5px 0 0; color:var(--muted); font-size:12px; }
+
+.feature-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.feature { padding:16px; transition:.2s; }
+.feature-icon { font-size:25px; margin-bottom:11px; }
+.feature h3 { font-size:14px; margin:0 0 7px; }
+.feature p { font-size:12px; color:var(--muted); line-height:1.5; min-height:35px; margin:0 0 12px; }
+
+.field { display:grid; gap:7px; margin:12px 0; }
+.field label { font-size:12px; font-weight:800; color:#e1c9f6; }
+.field input,.field select,.field textarea,input[type=text],input[type=url],select,textarea {
+  width:100%; border:1px solid #54336e; border-radius:10px;
+  padding:11px 12px; background:#140820; color:var(--ink); outline:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus,select:focus,textarea:focus {
+  border-color:#c05cff; box-shadow:0 0 0 3px #a020ff20;
+}
+input::placeholder,textarea::placeholder { color:#927ba8; }
+select option { background:#1b0c2d; color:#f5edff; }
+textarea { resize:vertical; min-height:105px; }
+input[type=file] { color:var(--muted); }
+.row { display:flex; align-items:end; gap:9px; flex-wrap:wrap; }
+.row .grow { flex:1; min-width:140px; }
+
+.notice { background:#2c1641; color:#e1c0ff; border:1px solid #63348a; border-radius:12px; padding:12px 14px; font-size:12px; line-height:1.5; margin:12px 0; }
+.notice.warn { background:#392510; color:#ffe0a3; border-color:#745027; }
+.notice.good { background:#123428; color:#a9f5d2; border-color:#28664f; }
+.pill { display:inline-flex; background:#3a1853; color:#e7baff; border:1px solid #67338b; border-radius:30px; padding:5px 9px; font-size:10px; font-weight:850; }
+.empty { text-align:center; padding:24px 13px; color:var(--muted); }
+.empty .big { font-size:37px; margin-bottom:7px; }
+.list-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid #382247; }
+.list-item:last-child { border-bottom:0; }
+.upload-box { border:2px dashed #8542b6; border-radius:16px; padding:22px; text-align:center; background:#1b0b2a; }
+.upload-box input { display:block; max-width:100%; margin:12px auto; }
+.note-status { display:flex; align-items:center; gap:10px; background:#261337; padding:12px; border:1px solid #45225f; border-radius:12px; margin-top:10px; }
+.note-status div { flex:1; min-width:0; }
+.note-status strong { display:block; overflow-wrap:anywhere; font-size:13px; }
+.note-status small { color:var(--muted); font-size:11px; }
+
+.timer-ring {
+  width:min(285px,72vw); aspect-ratio:1;
+  border:10px solid #38214d; border-top-color:#db7bff;
+  border-right-color:#a843ff; border-radius:50%;
+  margin:12px auto 18px; display:flex;
+  flex-direction:column; align-items:center; justify-content:center;
+  box-shadow:0 0 26px #a020ff20,inset 0 0 22px #a020ff12;
+}
+.timer-face { font-size:clamp(48px,8vw,70px); font-weight:900; letter-spacing:-.06em; color:#eac5ff; text-shadow:0 0 18px #b44dff50; }
+.center { text-align:center; }
+.quiz-option { display:block; width:100%; text-align:left; padding:13px; border:1px solid var(--line); border-radius:11px; background:#211032; color:var(--ink); margin:8px 0; }
+.quiz-option:hover { border-color:#c05cff; background:#301447; }
+.quiz-option.correct { background:#123428; border-color:#42b987; }
+.quiz-option.wrong { background:#3a172b; border-color:#e57da5; }
+
+.flashcard {
+  min-height:205px; border:1px solid #8542b6; border-radius:20px;
+  background:radial-gradient(ellipse at top left,#492065,#211032 70%);
+  display:grid; place-items:center; text-align:center; padding:25px; cursor:pointer;
+  box-shadow:inset 0 0 25px #a020ff12;
+}
+.flashcard strong { font-size:22px; color:#f1d6ff; }
+.flashcard small { display:block; color:var(--muted); margin-top:12px; }
+.mindmap { min-height:200px; display:flex; flex-wrap:wrap; gap:11px; align-items:center; justify-content:center; padding:14px; }
+.mind-node { border:1px solid #8141ac; background:#321549; color:#efd5ff; border-radius:13px; padding:11px 14px; font-weight:750; font-size:13px; }
+.mind-node.center-node { background:linear-gradient(135deg,#bc4bff,#7b2cff); color:white; font-size:16px; box-shadow:0 0 18px #a020ff44; }
+.papers-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.paper-card { border:1px solid var(--line); border-radius:14px; padding:15px; background:#211032; }
+.paper-card h4 { margin:8px 0; }
+.paper-card p { font-size:12px; color:var(--muted); line-height:1.5; }
+.footer { text-align:center; color:#927ba8; font-size:11px; padding-top:16px; }
+
+[hidden] { display:none !important; }
+
+@media(max-width:1000px) {
+  .app { grid-template-columns:205px minmax(0,1fr); }
+  .feature-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .two-col { grid-template-columns:1fr; }
+}
+@media(max-width:680px) {
+  .app { display:block; }
+  aside { position:static; height:auto; padding:12px; gap:12px; border-right:0; border-bottom:1px solid var(--line); }
+  .brand { padding:2px 5px; }
+  .nav { display:flex; overflow-x:auto; padding-bottom:3px; }
+  .nav button { white-space:nowrap; padding:9px; font-size:12px; }
+  .nav-label,.tip { display:none; }
+  main { padding:16px 12px 28px; }
+  .profile { padding:6px; }
+  .profile>div:last-child { display:none; }
+  .hero { padding:20px; }
+  .hero-art { font-size:47px; padding:0; }
+  .feature-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .feature { padding:13px; }
+  .papers-grid { grid-template-columns:1fr; }
+  .stats { gap:8px; }
+  .stat { padding:12px; }
+  .stat strong { font-size:23px; }
+  .panel { padding:15px; }
+}
+@media(max-width:380px) {
+  .feature-grid { grid-template-columns:1fr; }
+  .hero-art { display:none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><div class="logo">✦</div><div><strong>StudyQuest</strong><small>Learn a little. Level up.</small></div></div>
+  <div><div class="nav-label">YOUR SPACE</div><nav class="nav" id="nav">
+    <button class="active" data-page="dashboard"><span>🏠</span>Dashboard</button>
+    <button data-page="notes"><span>📚</span>Study Notes</button>
+    <button data-page="quiz"><span>🧠</span>Quiz Arena</button>
+    <button data-page="flashcards"><span>🗂️</span>Flashcards</button>
+    <button data-page="mindmaps"><span>🕸️</span>Mind Maps</button>
+    <button data-page="papers"><span>📄</span>Past Papers</button>
+    <button data-page="quests"><span>🎯</span>Quests</button>
+    <button data-page="timer"><span>⏳</span>Focus Timer</button>
+  </nav></div>
+  <div class="tip">🌱 <strong>Small steps count</strong><p>Learn at your own pace. Take breaks, celebrate progress, and keep going.</p></div>
+</aside>
+<main>
+<header class="topbar"><div><div class="eyebrow">Your learning adventure</div><h1 id="greeting">Ready to learn?</h1></div><div class="profile"><div class="avatar">🧑‍🎓</div><div><strong id="profileName">Learner</strong><small id="profileGrade">Choose your grade</small></div></div></header>
+
+<section class="page active" id="page-dashboard">
+  <div class="hero"><div><span class="pill" style="background:#ffffff2b;color:white">YOUR NEXT CHAPTER STARTS HERE</span><h2>Make today a little brighter ✨</h2><p>Build good study habits, practise what you learn, and collect Stars as you go.</p><button class="btn light" data-go="notes">Open my study notes →</button></div><div class="hero-art">🚀</div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-head">Star balance <span class="stat-icon">⭐</span></div><strong id="starBalance">0</strong><small>Study reward currency</small></div>
+    <div class="stat"><div class="stat-head">Quests completed <span class="stat-icon">🎯</span></div><strong id="questsDone">0</strong><small>Little wins add up</small></div>
+    <div class="stat"><div class="stat-head">Focus minutes <span class="stat-icon">⏳</span></div><strong id="focusMinutes">0</strong><small>Time spent focusing</small></div>
+    <div class="stat"><div class="stat-head">Notes submitted <span class="stat-icon">📚</span></div><strong id="notesCount">0</strong><small>Ready for revision</small></div>
+  </div>
+  <div class="two-col">
+    <div class="panel"><div class="panel-head"><h3>Today's quests</h3><button class="btn secondary small" data-go="quests">View all</button></div><div id="dashboardQuests"></div></div>
+    <div class="panel"><div class="panel-head"><h3>Your study profile</h3><span>🌟</span></div><div class="field"><label for="studentName">What should we call you?</label><input id="studentName" maxlength="32" placeholder="Your nickname"></div><div class="field"><label for="gradeSelect">Your grade</label><select id="gradeSelect"><option value="">Choose grade</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select></div><button class="btn" id="saveProfile">Save profile</button><div class="notice">Progress is saved in this browser on this device. This is not a school-verified account.</div></div>
+  </div>
+  <div class="section-title"><div><h2>Your learning toolkit</h2><p>Pick a tool and keep moving forward.</p></div></div>
+  <div class="feature-grid">
+    <article class="feature"><div class="feature-icon">📚</div><h3>Study Notes</h3><p>Submit notes or upload a PDF for revision.</p><button class="btn secondary small" data-go="notes">Open notes</button></article>
+    <article class="feature"><div class="feature-icon">🧠</div><h3>Quiz Arena</h3><p>Unlock quizzes after submitting notes.</p><button class="btn secondary small" data-go="quiz">Go to quiz</button></article>
+    <article class="feature"><div class="feature-icon">🗂️</div><h3>Flashcards</h3><p>Make question-and-answer cards.</p><button class="btn secondary small" data-go="flashcards">Study cards</button></article>
+    <article class="feature"><div class="feature-icon">🕸️</div><h3>Mind Maps</h3><p>Turn a topic into a visual map.</p><button class="btn secondary small" data-go="mindmaps">Make a map</button></article>
+    <article class="feature"><div class="feature-icon">📄</div><h3>Past Papers</h3><p>Keep past-paper links and revision tasks.</p><button class="btn secondary small" data-go="papers">Explore papers</button></article>
+    <article class="feature"><div class="feature-icon">⏳</div><h3>Focus Timer</h3><p>Work in focused sessions and earn Stars.</p><button class="btn secondary small" data-go="timer">Start focus</button></article>
+  </div>
+</section>
+
+<section class="page" id="page-notes">
+  <div class="section-title"><div><h2>📚 Study Notes</h2><p>Submit your notes to unlock Quiz Arena.</p></div></div>
+  <div class="panel"><div class="upload-box"><div style="font-size:38px">📄</div><h3>Upload a PDF study note</h3><p class="muted smalltext">Choose a PDF from your device. The demo doesn't send the file to a server.</p><input type="file" id="pdfFile" accept="application/pdf,.pdf"><div id="fileStatus" class="smalltext muted">No file selected yet.</div></div>
+    <div class="field"><label for="noteTitle">Notes title</label><input id="noteTitle" maxlength="80" placeholder="e.g. Photosynthesis — Science"></div>
+    <div class="field"><label for="noteText">Paste or type the important notes here</label><textarea id="noteText" maxlength="12000" placeholder="Paste your note text here. Quiz questions in this prototype use this text."></textarea></div>
+    <div class="notice warn">PDF upload alone does not extract its text in this version. Paste the note text above to make note-based questions. Automatic PDF text extraction and AI question generation need extra services.</div>
+    <button class="btn" id="submitNotes">Submit study notes ⭐</button>
+  </div>
+  <div class="panel"><div class="panel-head"><h3>Submitted notes</h3><span class="pill" id="notePill">0 notes</span></div><div id="notesList"><div class="empty"><div class="big">📝</div>Your submitted notes will appear here.</div></div></div>
+</section>
+
+<section class="page" id="page-quiz">
+  <div class="section-title"><div><h2>🧠 Quiz Arena</h2><p>Practise from the notes you have submitted.</p></div></div>
+  <div id="quizLocked" class="panel"><div class="empty"><div class="big">🔒</div><h3>Quiz Arena is locked</h3><p>Submit your study notes first. Then come back here to practise.</p><button class="btn" data-go="notes">Submit study notes</button></div></div>
+  <div id="quizReady" class="panel" hidden><div class="panel-head"><div><h3 id="quizTitle">Your notes quiz</h3><p class="muted smalltext">Questions are made from your submitted text. Review them for accuracy.</p></div><span class="pill">Earn ⭐</span></div><div class="field"><label for="quizNoteSelect">Choose submitted notes</label><select id="quizNoteSelect"></select></div><div class="field"><label for="quizQuestionCount">Number of questions</label><select id="quizQuestionCount"><option value="5">5 questions</option><option value="10">10 questions</option><option value="15">15 questions</option></select></div><button class="btn" id="startQuiz">Start quiz</button><div id="quizArea" style="margin-top:18px"></div></div>
+</section>
+
+<section class="page" id="page-flashcards">
+  <div class="section-title"><div><h2>🗂️ Flashcards</h2><p>Create quick cards and tap to flip them.</p></div></div>
+  <div class="two-col"><div class="panel"><h3>Create a flashcard</h3><div class="field"><label for="cardQuestion">Front — question or term</label><input id="cardQuestion" maxlength="200" placeholder="What is evaporation?"></div><div class="field"><label for="cardAnswer">Back — answer</label><textarea id="cardAnswer" maxlength="1000" placeholder="Liquid changes into gas."></textarea></div><button class="btn" id="addCard">Add flashcard</button><div class="notice">Add your first flashcard to complete the flashcard quest.</div></div><div class="panel"><div class="panel-head"><h3>Flashcard practice</h3><span id="cardCount" class="pill">0 cards</span></div><div id="cardPractice" class="empty"><div class="big">🗂️</div>Add a card to practise.</div><div class="row" style="justify-content:center;margin-top:12px"><button class="btn ghost small" id="prevCard">← Previous</button><button class="btn secondary small" id="flipCard">Flip card</button><button class="btn ghost small" id="nextCard">Next →</button></div></div></div>
+  <div class="panel"><h3>Your cards</h3><div id="cardList" class="smalltext muted">No cards yet.</div></div>
+</section>
+
+<section class="page" id="page-mindmaps">
+  <div class="section-title"><div><h2>🕸️ Mind Maps</h2><p>Break a topic into its key ideas.</p></div></div>
+  <div class="panel"><div class="field"><label for="mapTopic">Main topic</label><input id="mapTopic" maxlength="100" placeholder="e.g. The Solar System"></div><div class="field"><label for="mapBranches">Key ideas — separate each with a comma</label><textarea id="mapBranches" placeholder="Sun, planets, moons, asteroids, comets"></textarea></div><div class="row"><button class="btn" id="makeMap">Generate mind map</button><button class="btn secondary" id="saveMap">Save mind map</button></div><div id="mindmapView" class="mindmap"><span class="muted smalltext">Your mind map will appear here.</span></div></div>
+  <div class="panel"><h3>Saved mind maps</h3><div id="mapList" class="smalltext muted">No saved mind maps yet.</div></div>
+</section>
+
+<section class="page" id="page-papers">
+  <div class="section-title"><div><h2>📄 Past Papers</h2><p>Organize revision papers and add links you trust.</p></div></div>
+  <div class="notice warn">Add links to papers you are allowed to use. Check grade, board, subject, and syllabus before revising.</div>
+  <div class="panel"><h3>Add a past-paper link</h3><div class="row"><div class="field grow"><label for="paperTitle">Paper title</label><input id="paperTitle" maxlength="100" placeholder="Grade 8 Science — Term 1"></div><div class="field grow"><label for="paperUrl">Website link (optional)</label><input id="paperUrl" type="url" placeholder="https://..."></div></div><div class="row"><div class="field grow"><label for="paperSubject">Subject</label><input id="paperSubject" maxlength="50" placeholder="Science"></div><button class="btn" id="addPaper">Add paper</button></div></div>
+  <div class="panel"><div class="panel-head"><h3>My past papers</h3><span class="pill" id="paperCount">0 papers</span></div><div id="paperList"><div class="empty"><div class="big">📄</div>Add a paper or link to keep it here.</div></div></div>
+</section>
+
+<section class="page" id="page-quests">
+  <div class="section-title"><div><h2>🎯 Quests</h2><p>Complete small study goals to earn Stars.</p></div></div>
+  <div class="notice good">Stars are in-app reward points, not real money. Quests can be claimed once in this demo.</div>
+  <div class="panel"><div class="panel-head"><h3>Available quests</h3><span class="pill">Study goals</span></div><div id="allQuests"></div></div>
+  <div class="panel"><h3>⭐ Star balance</h3><p class="muted smalltext">A future Star Shop could let you spend Stars on in-app rewards.</p><div style="font-size:36px;font-weight:900;margin-top:8px" id="questStarBalance">0 ⭐</div></div>
+</section>
+
+<section class="page" id="page-timer">
+  <div class="section-title"><div><h2>⏳ Focus Timer</h2><p>One calm session at a time. Breaks are part of learning.</p></div></div>
+  <div class="panel center"><span class="pill">FOCUS MODE</span><div class="timer-ring"><div class="timer-face" id="timerDisplay">25:00</div><div class="muted smalltext" id="timerLabel">Ready when you are</div></div><div class="row" style="justify-content:center"><button class="btn" id="timerStart">▶ Start focus</button><button class="btn secondary" id="timerPause" disabled>Ⅱ Pause</button><button class="btn ghost" id="timerReset">↻ Reset</button></div><div class="row" style="justify-content:center;margin-top:18px"><label class="smalltext muted" for="timerMinutes">Session length</label><select id="timerMinutes" style="width:auto"><option value="15">15 minutes</option><option value="25" selected>25 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option></select></div><div class="notice" style="max-width:540px;margin:18px auto 0">Finish a full focus session to earn ⭐ 3 Stars. Pausing is okay; the session only counts when the timer reaches zero.</div></div>
+</section>
+
+<div class="footer">StudyQuest • Learn at your own pace ⭐ • Demo progress is stored in this browser.</div>
+</main>
+</div>
+
+<div id="toast" role="status" aria-live="polite" style="position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#28113b;color:white;border:1px solid #8c43b7;padding:12px 17px;border-radius:12px;box-shadow:0 0 24px #a020ff35;font-size:13px;transition:.2s;z-index:99;max-width:90vw;text-align:center"></div>
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
