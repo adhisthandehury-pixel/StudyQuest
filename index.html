@@ -325,11 +325,65 @@ input[type=file] { color:var(--muted); }
   <div class="panel"><h3>Saved mind maps</h3><div id="mapList" class="smalltext muted">No saved mind maps yet.</div></div>
 </section>
 
+
 <section class="page" id="page-papers">
-  <div class="section-title"><div><h2>📄 Past Papers</h2><p>Organize revision papers and add links you trust.</p></div></div>
-  <div class="notice warn">Add links to papers you are allowed to use. Check grade, board, subject, and syllabus before revising.</div>
-  <div class="panel"><h3>Add a past-paper link</h3><div class="row"><div class="field grow"><label for="paperTitle">Paper title</label><input id="paperTitle" maxlength="100" placeholder="Grade 8 Science — Term 1"></div><div class="field grow"><label for="paperUrl">Website link (optional)</label><input id="paperUrl" type="url" placeholder="https://..."></div></div><div class="row"><div class="field grow"><label for="paperSubject">Subject</label><input id="paperSubject" maxlength="50" placeholder="Science"></div><button class="btn" id="addPaper">Add paper</button></div></div>
-  <div class="panel"><div class="panel-head"><h3>My past papers</h3><span class="pill" id="paperCount">0 papers</span></div><div id="paperList"><div class="empty"><div class="big">📄</div>Add a paper or link to keep it here.</div></div></div>
+  <div class="section-title">
+    <div>
+      <h2>📄 Past Papers</h2>
+      <p>Generate exam-style practice papers from your submitted study notes.</p>
+    </div>
+  </div>
+
+  <div class="notice warn">
+    Practice questions are generated from your notes. They are not official past examination papers.
+  </div>
+
+  <div class="panel">
+    <h3>🎯 Create a Practice Paper</h3>
+
+    <div class="row">
+      <div class="field grow">
+        <label for="paperSubject">Subject</label>
+        <input id="paperSubject" maxlength="50" placeholder="Science">
+      </div>
+
+      <div class="field grow">
+        <label for="paperMarks">Total marks</label>
+        <select id="paperMarks">
+          <option value="10">10 marks</option>
+          <option value="20" selected>20 marks</option>
+          <option value="30">30 marks</option>
+          <option value="50">50 marks</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="paperSourceNotes">Your submitted study notes</label>
+      <textarea id="paperSourceNotes" rows="8"
+        placeholder="Paste your chapter notes here..."></textarea>
+    </div>
+
+    <button class="btn" id="generatePracticePaper">
+      ✨ Generate Practice Paper
+    </button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h3>📝 Your Practice Paper</h3>
+      <button class="btn" id="showPaperAnswers">Show Answer Guide</button>
+    </div>
+
+    <div id="generatedPaper">
+      <div class="empty">
+        <div class="big">📚</div>
+        Submit your notes above to create a practice paper.
+      </div>
+    </div>
+
+    <div id="paperAnswerGuide" hidden></div>
+  </div>
 </section>
 
 <section class="page" id="page-quests">
