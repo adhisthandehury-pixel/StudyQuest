@@ -1009,94 +1009,236 @@ function renderMindmaps() {
     });
   });
 }
-
 /* -------------------- PAST PAPERS -------------------- */
 
-$("addPaper").addEventListener("click", () => {
-  const title = $("paperTitle").value.trim();
-  const rawURL = $("paperUrl").value.trim();
-  const subject = $("paperSubject").value.trim();
+let currentPracticePaper = null;
 
-  if (!title) {
-    showToast("Enter a title for the past paper.");
+function getPaperSentences(text) {
+  return text
+    .replace(/\s+/g, " ")
+    .split(/(?<=[.!?])\s+|[;]+/)
+    .map(sentence => sentence.trim())
+    .filter(sentence => {
+      const words = sentence.match(/\b[\p{L}\p{N}][\p{L}\p{N}'-]*\b/gu) || [];
+      return sentence.length >= 20 && words.length >= 5;
+    });
+}
+
+function makePracticePaperQuestions(text, totalMarks) {
+  const sentences = getPaperSentences(text);
+
+  if (sentences.length === 0) return [];
+
+  const questions = [];
+  let remainingMarks = totalMarks;
+  let sentenceIndex = 0;
+
+  while (remainingMarks > 0 && questions.length < 20) {
+    let marks;
+
+    if (remainingMarks >= 5 && questions.length % 4 === 3) {
+      marks = 5;
+    } else if (remainingMarks >= 3 && questions.length % 3 === 2) {
+      marks = 3;
+    } else if (remainingMarks >= 2) {
+      marks = 2;
+    } else {
+      marks = 1;
+    }
+
+    if (marks > remainingMarks) {
+      marks = remainingMarks;
+    }
+
+    const sentence = sentences[sentenceIndex % sentences.length];
+    sentenceIndex++;
+
+    const words = sentence.match(/\b[\p{L}\p{N}][\p{L}\p{N}'-]*\b/gu) || [];
+
+    const answerWord = words
+      .filter(word => word.length >= 4 && !/^\d+$/.test(word))
+      .sort((a, b) => b.length - a.length)[0];
+
+    let question;
+    let answer;
+
+    if (marks === 1 && answerWord) {
+      const escapedWord = answerWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      question = `Fill in the blank: ${sentence.replace(
+        new RegExp(`\\b${escapedWord}\\b`, "i"),
+        "________"
+      )}`;
+
+      answer = answerWord;
+    } else if (marks <= 2) {
+      question = `State the key idea described in your notes: "${sentence}"`;
+
+      answer = sentence;
+    } else if (marks <= 3) {
+      question = `Explain the following idea in your own words: "${sentence}"`;
+
+      answer = sentence;
+    } else {
+      question = `Discuss the following idea and explain its importance: "${sentence}"`;
+
+      answer = sentence;
+    }
+
+    questions.push({
+      number: questions.length + 1,
+      question,
+      answer,
+      marks
+    });
+
+    remainingMarks -= marks;
+  }
+
+  return questions;
+}
+
+function getPracticePaperSource() {
+  const pastedNotes = $("paperSourceNotes").value.trim();
+
+  if (pastedNotes) {
+    return pastedNotes;
+  }
+
+  return state.notes
+    .map(note => note.text || "")
+    .filter(Boolean)
+    .join("\n");
+}
+
+function renderGeneratedPracticePaper() {
+  const output = $("generatedPaper");
+  const answerGuide = $("paperAnswerGuide");
+  const answerButton = $("showPaperAnswers");
+
+  if (!output || !currentPracticePaper) return;
+
+  const paper = currentPracticePaper;
+
+  output.innerHTML = `
+    <div class="notice">
+      <strong>${escapeHTML(paper.subject)}</strong>
+      <br>
+      Total marks: ${paper.questions.reduce((sum, q) => sum + q.marks, 0)}
+      <br>
+      Questions: ${paper.questions.length}
+    </div>
+
+    <h3>Instructions</h3>
+    <p>Answer all questions. Read each question carefully and use your study notes to revise.</p>
+
+    ${paper.questions.map(question => `
+      <div class="list-item" style="display:block;margin-bottom:12px">
+        <strong>
+          Q${question.number}. ${escapeHTML(question.question)}
+        </strong>
+        <div class="muted smalltext" style="margin-top:8px">
+          [${question.marks} ${question.marks === 1 ? "mark" : "marks"}]
+        </div>
+      </div>
+    `).join("")}
+
+    <div class="notice">
+      ⭐ Practice complete? Try answering every question before checking the answer guide.
+    </div>
+  `;
+
+  answerGuide.innerHTML = `
+    <h3>🗝️ Answer Guide</h3>
+    <p>Use these answers to check your understanding. Longer answers may need additional explanation.</p>
+
+    ${paper.questions.map(question => `
+      <div class="list-item" style="display:block;margin-bottom:12px">
+        <strong>Q${question.number}. Answer</strong>
+        <p>${escapeHTML(question.answer)}</p>
+        <div class="muted smalltext">
+          ${question.marks} ${question.marks === 1 ? "mark" : "marks"}
+        </div>
+      </div>
+    `).join("")}
+  `;
+
+  answerGuide.hidden = true;
+
+  if (answerButton) {
+    answerButton.textContent = "Show Answer Guide";
+    answerButton.hidden = false;
+  }
+}
+
+$("generatePracticePaper").addEventListener("click", () => {
+  const subject = $("paperSubject").value.trim() || "General Studies";
+  const totalMarks = Number($("paperMarks").value) || 20;
+  const sourceNotes = getPracticePaperSource();
+
+  if (sourceNotes.length < 40) {
+    showToast("Please submit notes or paste enough study text first.");
+    $("paperSourceNotes").focus();
     return;
   }
 
-  let url = "";
+  const questions = makePracticePaperQuestions(sourceNotes, totalMarks);
 
-  if (rawURL) {
-    url = safeExternalURL(rawURL);
-
-    if (!url) {
-      showToast("Please enter a valid HTTP or HTTPS link.");
-      return;
-    }
+  if (questions.length === 0) {
+    showToast("Add a few complete sentences to your study notes first.");
+    return;
   }
 
-  state.papers.unshift({
+  currentPracticePaper = {
     id: makeId(),
-    title,
-    url,
+    title: `${subject} Practice Paper`,
     subject,
+    questions,
     createdAt: new Date().toISOString()
+  };
+
+  state.papers.unshift({
+    id: currentPracticePaper.id,
+    title: currentPracticePaper.title,
+    subject,
+    url: "",
+    createdAt: currentPracticePaper.createdAt
   });
 
-  $("paperTitle").value = "";
-  $("paperUrl").value = "";
-  $("paperSubject").value = "";
-
   saveState();
-  renderPapers();
+  renderGeneratedPracticePaper();
   checkQuestProgress();
 
-  showToast("Past paper added! 📄");
+  showToast("Your practice paper is ready! 📝");
+});
+
+$("showPaperAnswers").addEventListener("click", () => {
+  const answerGuide = $("paperAnswerGuide");
+  const answerButton = $("showPaperAnswers");
+
+  if (!currentPracticePaper || !answerGuide) {
+    showToast("Generate a practice paper first.");
+    return;
+  }
+
+  answerGuide.hidden = !answerGuide.hidden;
+
+  answerButton.textContent = answerGuide.hidden
+    ? "Show Answer Guide"
+    : "Hide Answer Guide";
 });
 
 function renderPapers() {
-  const container = $("paperList");
+  // Practice papers are displayed in #generatedPaper.
+  // Keep this function so the rest of StudyQuest can call it safely.
+  const output = $("generatedPaper");
 
-  if (!container) return;
+  if (!output) return;
 
-  $("paperCount").textContent = plural(state.papers.length, "paper");
-
-  if (state.papers.length === 0) {
-    container.innerHTML = `
-      <div class="empty">
-        <div class="big">📄</div>
-        Add a paper or link to keep it here.
-      </div>
-    `;
-    return;
+  if (currentPracticePaper) {
+    renderGeneratedPracticePaper();
   }
-
-  container.innerHTML = state.papers.map(paper => `
-    <div class="paper-card" style="margin-bottom:12px">
-      <div class="panel-head">
-        <span class="pill">${escapeHTML(paper.subject || "Revision")}</span>
-        <button class="btn ghost small" data-delete-paper="${escapeHTML(paper.id)}">Delete</button>
-      </div>
-      <h4>${escapeHTML(paper.title)}</h4>
-      ${
-        paper.url
-          ? `<a href="${escapeHTML(paper.url)}" target="_blank" rel="noopener noreferrer" style="color:#d18cff;overflow-wrap:anywhere">Open paper ↗</a>`
-          : '<p>Saved without an external link.</p>'
-      }
-    </div>
-  `).join("");
-
-  container.querySelectorAll("[data-delete-paper]").forEach(button => {
-    button.addEventListener("click", () => {
-      const id = button.dataset.deletePaper;
-
-      state.papers = state.papers.filter(paper => paper.id !== id);
-
-      saveState();
-      renderPapers();
-
-      showToast("Past paper deleted.");
-    });
-  });
-}
+     }
 
 /* -------------------- FOCUS TIMER -------------------- */
 
