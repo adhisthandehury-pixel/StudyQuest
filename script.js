@@ -1381,6 +1381,227 @@ document.addEventListener("visibilitychange", () => {
     tickTimer();
   }
 });
+/* -------------------- STUDYQUEST AI -------------------- */
+
+/*
+  After deploying your backend, replace this placeholder with
+  your actual Cloudflare Worker URL.
+*/
+const STUDYQUEST_AI_API = "PASTE_YOUR_WORKER_URL_HERE";
+
+let aiChatHistory = [];
+let aiBusy = false;
+
+function addAIMessage(role, message) {
+  const chat = $("aiChat");
+  const bubble = document.createElement("div");
+
+  bubble.style.cssText =
+    "padding:12px;margin:8px 0;border-radius:12px;" +
+    "background:" +
+    (role === "user" ? "#3b1755" : "#241039") +
+    ";white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6";
+
+  const label = document.createElement("strong");
+  label.textContent = role === "user"
+    ? "🧑 You"
+    : "🤖 StudyQuest AI";
+
+  const content = document.createElement("div");
+  content.style.marginTop = "6px";
+  content.textContent = message;
+
+  bubble.append(label, content);
+  chat.appendChild(bubble);
+  chat.scrollTop = chat.scrollHeight;
+
+  return bubble;
+}
+
+function setAIMaterialStatus(message) {
+  $("aiMaterialStatus").textContent = message;
+}
+
+$("aiPdf").addEventListener("change", () => {
+  const file = $("aiPdf").files[0];
+
+  if (!file) {
+    setAIMaterialStatus("No PDF selected.");
+    return;
+  }
+
+  if (
+    file.type !== "application/pdf" &&
+    !file.name.toLowerCase().endsWith(".pdf")
+  ) {
+    $("aiPdf").value = "";
+    setAIMaterialStatus("Please select a PDF file.");
+    return;
+  }
+
+  if (file.size > 8 * 1024 * 1024) {
+    $("aiPdf").value = "";
+    setAIMaterialStatus("PDF too large. Maximum size is 8 MB.");
+    return;
+  }
+
+  setAIMaterialStatus(
+    "PDF selected: " + file.name +
+    ". It will be sent securely when you ask a question."
+  );
+});
+
+$("aiNotes").addEventListener("input", () => {
+  if ($("aiNotes").value.trim()) {
+    setAIMaterialStatus("Pasted study notes are ready.");
+  }
+});
+
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = String(reader.result);
+      const comma = result.indexOf(",");
+
+      resolve(result.slice(comma + 1));
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Could not read the PDF file."));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+async function askStudyQuestAI(question) {
+  if (aiBusy) return;
+
+  if (
+    !STUDYQUEST_AI_API.startsWith("https://") ||
+    STUDYQUEST_AI_API.includes("PASTE_YOUR_WORKER_URL")
+  ) {
+    addAIMessage(
+      "assistant",
+      "The AI backend hasn't been connected yet. Deploy the secure " +
+      "backend and add its URL to script.js first."
+    );
+    return;
+  }
+
+  const notes = $("aiNotes").value.trim();
+  const pdf = $("aiPdf").files[0];
+
+  if (!notes && !pdf) {
+    addAIMessage(
+      "assistant",
+      "Please paste your notes or select a PDF first so I can help " +
+      "you study that material."
+    );
+    return;
+  }
+
+  if (question.length > 2000) {
+    addAIMessage("assistant", "Please keep your question under 2,000 characters.");
+    return;
+  }
+
+  aiBusy = true;
+  $("aiSend").disabled = true;
+  $("aiSend").textContent = "Thinking...";
+
+  const loading = addAIMessage("assistant", "Reading your material...");
+
+  try {
+    let pdfBase64 = "";
+
+    if (pdf) {
+      pdfBase64 = await fileToBase64(pdf);
+    }
+
+    const response = await fetch(STUDYQUEST_AI_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        question,
+        notes,
+        pdfBase64,
+        pdfName: pdf ? pdf.name : "",
+        history: aiChatHistory.slice(-8)
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "The AI request failed.");
+    }
+
+    if (!data.answer) {
+      throw new Error("The AI returned an empty answer.");
+    }
+
+    loading.remove();
+    addAIMessage("assistant", data.answer);
+
+    aiChatHistory.push(
+      { role: "user", text: question },
+      { role: "model", text: data.answer }
+    );
+
+    aiChatHistory = aiChatHistory.slice(-8);
+  } catch (error) {
+    loading.remove();
+
+    addAIMessage(
+      "assistant",
+      "I couldn't answer that just now. " +
+      (error.message || "Please try again.")
+    );
+  } finally {
+    aiBusy = false;
+    $("aiSend").disabled = false;
+    $("aiSend").textContent = "✨ Ask StudyQuest AI";
+  }
+}
+
+$("aiForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const question = $("aiQuestion").value.trim();
+  if (!question || aiBusy) return;
+
+  addAIMessage("user", question);
+  $("aiQuestion").value = "";
+
+  await askStudyQuestAI(question);
+});
+
+document.querySelectorAll("[data-ai-prompt]").forEach(button => {
+  button.addEventListener("click", async () => {
+    if (aiBusy) return;
+
+    const question = button.dataset.aiPrompt;
+    addAIMessage("user", question);
+    await askStudyQuestAI(question);
+  });
+});
+
+$("aiClear").addEventListener("click", () => {
+  aiChatHistory = [];
+  $("aiChat").replaceChildren();
+
+  addAIMessage(
+    "assistant",
+    "Chat cleared! Your current study material is still selected. What would you like to learn?"
+  );
+});
+
+/* -------------------- END STUDYQUEST AI -------------------- */
 
 /* -------------------- STARTUP -------------------- */
 
