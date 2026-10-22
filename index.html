@@ -267,6 +267,7 @@ input[type=file] { color:var(--muted); }
     <button data-page="papers"><span>📄</span>Past Papers</button>
     <button data-page="quests"><span>🎯</span>Quests</button>
     <button data-page="timer"><span>⏳</span>Focus Timer</button>
+    <button data-page="ai"><span>🤖</span>StudyQuest AI</button>
   </nav></div>
   <div class="tip">🌱 <strong>Small steps count</strong><p>Learn at your own pace. Take breaks, celebrate progress, and keep going.</p></div>
 </aside>
@@ -392,6 +393,90 @@ input[type=file] { color:var(--muted); }
   <div class="panel"><div class="panel-head"><h3>Available quests</h3><span class="pill">Study goals</span></div><div id="allQuests"></div></div>
   <div class="panel"><h3>⭐ Star balance</h3><p class="muted smalltext">A future Star Shop could let you spend Stars on in-app rewards.</p><div style="font-size:36px;font-weight:900;margin-top:8px" id="questStarBalance">0 ⭐</div></div>
 </section>
+  <section class="page" id="page-ai">
+  <div class="section-title">
+    <div>
+      <h2>🤖 StudyQuest AI</h2>
+      <p>Your personal study companion. Ask questions about your notes.</p>
+    </div>
+  </div>
+
+  <div class="notice">
+    💜 Upload a PDF or paste your notes, then ask your AI study buddy
+    to explain difficult concepts in simple words.
+  </div>
+
+  <div class="panel">
+    <h3>📚 Your study material</h3>
+
+    <div class="field">
+      <label for="aiPdf">Upload a PDF (maximum 8 MB)</label>
+      <input id="aiPdf" type="file" accept=".pdf,application/pdf">
+    </div>
+
+    <div class="field">
+      <label for="aiNotes">Or paste your notes</label>
+      <textarea id="aiNotes" rows="7"
+        placeholder="Paste your chapter notes here..."></textarea>
+    </div>
+
+    <div class="notice" id="aiMaterialStatus">
+      No study material selected yet.
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>💬 Ask StudyQuest AI</h3>
+
+    <div class="row" style="margin:14px 0">
+      <button class="btn secondary small" type="button"
+        data-ai-prompt="Explain my notes in simple words.">
+        Explain simply
+      </button>
+
+      <button class="btn secondary small" type="button"
+        data-ai-prompt="Make a short summary of my notes.">
+        Summarize
+      </button>
+
+      <button class="btn secondary small" type="button"
+        data-ai-prompt="Create five practice questions from my notes.">
+        Practise
+      </button>
+    </div>
+
+    <div id="aiChat" aria-live="polite"
+      style="min-height:160px;max-height:420px;overflow-y:auto;
+      padding:12px;border:1px solid #54336e;border-radius:12px;
+      background:#140820;margin-bottom:14px">
+      <div class="notice">
+        👋 Hey learner! Add your notes and ask me anything about them.
+      </div>
+    </div>
+
+    <form id="aiForm">
+      <div class="field">
+        <label for="aiQuestion">Your question</label>
+        <textarea id="aiQuestion" rows="3" maxlength="2000"
+          placeholder="Why does this happen? Explain with an example..."
+          required></textarea>
+      </div>
+
+      <button class="btn" id="aiSend" type="submit">
+        ✨ Ask StudyQuest AI
+      </button>
+
+      <button class="btn ghost" id="aiClear" type="button">
+        Clear chat
+      </button>
+    </form>
+
+    <p class="muted smalltext">
+      AI answers can contain mistakes. Check important facts against your
+      textbook and teacher's instructions.
+    </p>
+  </div>
+  </section>
 
 <section class="page" id="page-timer">
   <div class="section-title"><div><h2>⏳ Focus Timer</h2><p>One calm session at a time. Breaks are part of learning.</p></div></div>
