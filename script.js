@@ -1387,7 +1387,7 @@ document.addEventListener("visibilitychange", () => {
   After deploying your backend, replace this placeholder with
   your actual Cloudflare Worker URL.
 */
-const STUDYQUEST_AI_API = "PASTE_YOUR_WORKER_URL_HERE";
+const STUDYQUEST_AI_API = "https://studyquestai.adhisthandehury.workers.dev";
 
 let aiChatHistory = [];
 let aiBusy = false;
