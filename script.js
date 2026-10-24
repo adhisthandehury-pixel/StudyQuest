@@ -251,7 +251,13 @@ function renderProfile() {
   const grade = state.profile.grade || "Choose your grade";
 
   $("profileName").textContent = name;
-  $("profileGrade").textContent = grade;
+  $("profileGrade").textContent = grade
+     $("profileTitle").textContent = state.selectedTitle
+  ? ({
+      "flow-spammer": "⚡ Flow Spammer",
+      "david-goggins": "🏆 David Goggins"
+    }[state.selectedTitle] || "No title equipped")
+  : "No title equipped";
   $("greeting").textContent = state.profile.name
     ? `Ready to learn, ${state.profile.name}?`
     : "Ready to learn?";
@@ -259,6 +265,113 @@ function renderProfile() {
   $("studentName").value = state.profile.name;
   $("gradeSelect").value = state.profile.grade;
 }
+function renderTitles() {
+  const titleSelect = $("titleSelect");
+  const dashboardTitles = $("dashboardTitles");
+  const profileTitle = $("profileTitle");
+
+  const titles = [
+    {
+      id: "flow-spammer",
+      name: "Flow Spammer",
+      icon: "⚡",
+      requirement: "Complete 3 focus sessions",
+      unlocked: state.focusSessionsCompleted >= 3
+    },
+    {
+      id: "david-goggins",
+      name: "David Goggins",
+      icon: "🏆",
+      requirement: "Reach a 365-day streak",
+      unlocked: state.currentStreak >= 365
+    }
+  ];
+
+  // Keep unlocked titles saved permanently.
+  titles.forEach(title => {
+    if (
+      title.unlocked &&
+      !state.unlockedTitles.includes(title.id)
+    ) {
+      state.unlockedTitles.push(title.id);
+    }
+  });
+
+  // Only allow titles that have actually been unlocked.
+  const unlockedTitles = titles.filter(title =>
+    state.unlockedTitles.includes(title.id)
+  );
+
+  // Clear an equipped title if it isn't unlocked.
+  if (
+    state.selectedTitle &&
+    !state.unlockedTitles.includes(state.selectedTitle)
+  ) {
+    state.selectedTitle = "";
+  }
+
+  titleSelect.innerHTML =
+    '<option value="">No title equipped</option>' +
+    unlockedTitles.map(title =>
+      `<option value="${title.id}">${title.icon} ${title.name}</option>`
+    ).join("");
+
+  titleSelect.value = state.selectedTitle;
+
+  const equipped = titles.find(
+    title => title.id === state.selectedTitle
+  );
+
+  profileTitle.textContent = equipped
+    ? `${equipped.icon} ${equipped.name}`
+    : "No title equipped";
+
+  dashboardTitles.innerHTML = titles.map(title => {
+    const unlocked = state.unlockedTitles.includes(title.id);
+    const equippedTitle = state.selectedTitle === title.id;
+
+    return `
+      <div class="quest">
+        <div class="quest-icon">${title.icon}</div>
+        <div class="quest-info">
+          <strong>${title.name}</strong>
+          <small>
+            ${unlocked ? "Unlocked!" : title.requirement}
+          </small>
+        </div>
+        <div>
+          <span class="pill">
+            ${equippedTitle ? "Equipped ✓" : unlocked ? "Unlocked" : "Locked 🔒"}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  saveState();
+}
+$("titleSelect").addEventListener("change", () => {
+  const chosenTitle = $("titleSelect").value;
+
+  if (
+    chosenTitle &&
+    !state.unlockedTitles.includes(chosenTitle)
+  ) {
+    showToast("🔒 Unlock this title first!");
+    return;
+  }
+
+  state.selectedTitle = chosenTitle;
+
+  saveState();
+  renderTitles();
+
+  showToast(
+    chosenTitle
+      ? "🏆 Title equipped!"
+      : "Title unequipped."
+  );
+});
 
 $("saveProfile").addEventListener("click", () => {
   const name = $("studentName").value.trim();
@@ -417,6 +530,7 @@ function updateDashboard() {
 
   renderProfile();
   renderQuests();
+  renderTitles();
 }
 
 function refreshEverything() {
