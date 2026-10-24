@@ -181,6 +181,7 @@ function showPage(pageName) {
   if (pageName === "mindmaps") renderMindmaps();
   if (pageName === "papers") renderPapers();
   if (pageName === "quests") renderQuests();
+  if (pageName === "shop") renderShop();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
