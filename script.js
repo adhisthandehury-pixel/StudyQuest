@@ -410,6 +410,10 @@ function updateDashboard() {
   $("questsDone").textContent = state.completedQuests.length;
   $("focusMinutes").textContent = state.focusMinutes;
   $("notesCount").textContent = state.notes.length;
+  $("currentStreak").textContent = state.currentStreak;
+  $("longestStreak").textContent = state.longestStreak;
+  $("streakFreezes").textContent = state.streakFreezes;
+  $("focusSessionsCompleted").textContent = state.focusSessionsCompleted;
 
   renderProfile();
   renderQuests();
