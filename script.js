@@ -57,6 +57,16 @@ function loadState() {
       completedQuests: Array.isArray(parsed.completedQuests)
         ? parsed.completedQuests
         : [],
+       shopOwned: Array.isArray(parsed.shopOwned)
+  ? parsed.shopOwned
+  : [],
+
+shopEquipped: {
+  skin: "",
+  cosmetic: "",
+  theme: "",
+  ...(parsed.shopEquipped || {})
+},
       quizResults: {
         ...DEFAULT_STATE.quizResults,
         ...(parsed.quizResults || {})
