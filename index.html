@@ -252,6 +252,101 @@ input[type=file] { color:var(--muted); }
   .feature-grid { grid-template-columns:1fr; }
   .hero-art { display:none; }
 }
+
+/* ===== STUDYQUEST STAR SHOP ===== */
+
+.shop-balance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(120deg, #351052, #201033);
+  border: 1px solid #8d42c2;
+  border-radius: 18px;
+}
+
+.shop-balance h2 {
+  color: #ffdc75;
+  font-size: 32px;
+  margin: 6px 0 0;
+}
+
+.shop-tabs {
+  margin: 18px 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.shop-item {
+  padding: 18px;
+  border: 1px solid #54336e;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #28133d, #180a27);
+  min-width: 0;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.shop-item:hover {
+  transform: translateY(-4px);
+  border-color: #d18aff;
+}
+
+.shop-item-art {
+  display: grid;
+  place-items: center;
+  min-height: 100px;
+  margin-bottom: 12px;
+  border-radius: 13px;
+  background: radial-gradient(circle, #65308a, #1a0b29 72%);
+  font-size: 52px;
+}
+
+.shop-item h3 {
+  margin: 6px 0;
+  font-size: 16px;
+}
+
+.shop-item p {
+  color: #b9a8d6;
+  font-size: 12px;
+  line-height: 1.5;
+  min-height: 36px;
+}
+
+.shop-price {
+  color: #ffdc75;
+  font-weight: 900;
+  margin: 12px 0;
+}
+
+.shop-item .btn {
+  width: 100%;
+}
+
+.shop-owned {
+  color: #9ff0c5;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 850px) {
+  .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .shop-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 <body>
