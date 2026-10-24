@@ -22,6 +22,14 @@ shopEquipped: {
 },
 
   focusMinutes: 0,
+   focusSessionsCompleted: 0,
+freezeProgress: 0,
+streakFreezes: 0,
+currentStreak: 0,
+longestStreak: 0,
+lastFocusDate: "",
+unlockedTitles: [],
+selectedTitle: "",
   notes: [],
   flashcards: [],
   mindmaps: [],
@@ -57,6 +65,44 @@ function loadState() {
       completedQuests: Array.isArray(parsed.completedQuests)
         ? parsed.completedQuests
         : [],
+       focusSessionsCompleted: Math.max(
+  0,
+  Number(parsed.focusSessionsCompleted) || 0
+),
+
+freezeProgress: Math.max(
+  0,
+  Number(parsed.freezeProgress) || 0
+),
+
+streakFreezes: Math.max(
+  0,
+  Number(parsed.streakFreezes) || 0
+),
+
+currentStreak: Math.max(
+  0,
+  Number(parsed.currentStreak) || 0
+),
+
+longestStreak: Math.max(
+  0,
+  Number(parsed.longestStreak) || 0
+),
+
+lastFocusDate:
+  typeof parsed.lastFocusDate === "string"
+    ? parsed.lastFocusDate
+    : "",
+
+unlockedTitles: Array.isArray(parsed.unlockedTitles)
+  ? parsed.unlockedTitles
+  : [],
+
+selectedTitle:
+  typeof parsed.selectedTitle === "string"
+    ? parsed.selectedTitle
+    : "",
        shopOwned: Array.isArray(parsed.shopOwned)
   ? parsed.shopOwned
   : [],
@@ -1297,7 +1343,74 @@ function stopTimerInterval() {
     timerInterval = null;
   }
 }
+function recordDailyStreak() {
+  const now = new Date();
 
+  // Get today's date in local time
+  const today =
+    now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0");
+
+  // Don't increase the streak twice on the same day
+  if (state.lastFocusDate === today) {
+    return;
+  }
+
+  // First completed focus session
+  if (!state.lastFocusDate) {
+    state.currentStreak = 1;
+  } else {
+    const previousDate = new Date(
+      state.lastFocusDate + "T00:00:00"
+    );
+
+    const todayDate = new Date(today + "T00:00:00");
+
+    const daysPassed = Math.round(
+      (todayDate - previousDate) / 86400000
+    );
+
+    if (daysPassed === 1) {
+      // Studied on the next consecutive day
+      state.currentStreak += 1;
+    } else if (daysPassed > 1) {
+      const missedDays = daysPassed - 1;
+
+      if (state.streakFreezes >= missedDays) {
+        // Automatically use freezes to protect every missed day
+        state.streakFreezes -= missedDays;
+        state.currentStreak += daysPassed;
+
+        showToast(
+          "🧊 Streak protected! " +
+          missedDays +
+          " freeze(s) used."
+        );
+      } else {
+        // Not enough freezes: start a new streak
+        state.currentStreak = 1;
+      }
+    }
+  }
+
+  state.lastFocusDate = today;
+
+  // Update the longest streak
+  if (state.currentStreak > state.longestStreak) {
+    state.longestStreak = state.currentStreak;
+  }
+
+  // Unlock David Goggins at 365 streak days
+  if (
+    state.currentStreak >= 365 &&
+    !state.unlockedTitles.includes("david-goggins")
+  ) {
+    state.unlockedTitles.push("david-goggins");
+
+    showToast("🏆 Title unlocked: David Goggins!");
+  }
+}
 function completeTimerSession() {
   stopTimerInterval();
 
@@ -1309,6 +1422,24 @@ function completeTimerSession() {
 
   state.focusMinutes += sessionMinutes;
   state.stars += 3;
+   state.focusSessionsCompleted += 1;
+   recordDailyStreak();
+state.freezeProgress += 1;
+
+if (state.freezeProgress >= 3) {
+  state.streakFreezes += Math.floor(state.freezeProgress / 3);
+  state.freezeProgress %= 3;
+
+  showToast("🧊 You earned a Streak Freeze!");
+}
+
+if (
+  state.focusSessionsCompleted >= 3 &&
+  !state.unlockedTitles.includes("flow-spammer")
+) {
+  state.unlockedTitles.push("flow-spammer");
+  showToast("🏆 Title unlocked: Flow Spammer!");
+}
 
   saveState();
   renderTimer();
