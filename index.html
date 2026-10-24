@@ -369,7 +369,7 @@ input[type=file] { color:var(--muted); }
 </aside>
 <main>
 <header class="topbar"><div><div class="eyebrow">Your learning adventure</div><h1 id="greeting">Ready to learn?</h1></div><div class="profile"><div class="avatar">🧑‍🎓</div><div><strong id="profileName">Learner</strong><small id="profileGrade">Choose your grade</small></div></div></header>
-
+<small id="profileTitle">No title equipped</small>
 <section class="page active" id="page-dashboard">
   <div class="hero"><div><span class="pill" style="background:#ffffff2b;color:white">YOUR NEXT CHAPTER STARTS HERE</span><h2>Make today a little brighter ✨</h2><p>Build good study habits, practise what you learn, and collect Stars as you go.</p><button class="btn light" data-go="notes">Open my study notes →</button></div><div class="hero-art">🚀</div></div>
   <div class="stats">
@@ -402,9 +402,28 @@ input[type=file] { color:var(--muted); }
 </div>
 
   </div>
+  <div class="panel">
+  <div class="panel-head">
+    <h3>🏆 Your Titles</h3>
+    <span class="pill">Achievements</span>
+  </div>
+  <p class="muted smalltext">
+    Complete focus sessions and build your streak to unlock titles.
+  </p>
+  <div id="dashboardTitles"></div>
+</div>
   <div class="two-col">
     <div class="panel"><div class="panel-head"><h3>Today's quests</h3><button class="btn secondary small" data-go="quests">View all</button></div><div id="dashboardQuests"></div></div>
     <div class="panel"><div class="panel-head"><h3>Your study profile</h3><span>🌟</span></div><div class="field"><label for="studentName">What should we call you?</label><input id="studentName" maxlength="32" placeholder="Your nickname"></div><div class="field"><label for="gradeSelect">Your grade</label><select id="gradeSelect"><option value="">Choose grade</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select></div><button class="btn" id="saveProfile">Save profile</button><div class="notice">Progress is saved in this browser on this device. This is not a school-verified account.</div></div>
+    <div class="field">
+  <label for="titleSelect">🏅 Choose your title</label>
+  <select id="titleSelect">
+    <option value="">No title equipped</option>
+  </select>
+</div>
+<p class="muted smalltext">
+  Unlock titles by completing focus sessions and maintaining your streak.
+</p>
   </div>
   <div class="section-title"><div><h2>Your learning toolkit</h2><p>Pick a tool and keep moving forward.</p></div></div>
   <div class="feature-grid">
