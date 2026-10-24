@@ -394,6 +394,41 @@ input[type=file] { color:var(--muted); }
   <div class="panel"><div class="panel-head"><h3>Available quests</h3><span class="pill">Study goals</span></div><div id="allQuests"></div></div>
   <div class="panel"><h3>⭐ Star balance</h3><p class="muted smalltext">A future Star Shop could let you spend Stars on in-app rewards.</p><div style="font-size:36px;font-weight:900;margin-top:8px" id="questStarBalance">0 ⭐</div></div>
 </section>
+
+<section class="page" id="page-shop">
+  <div class="section-title">
+    <div>
+      <h2>⭐ Star Shop</h2>
+      <p>Spend your Stars and customize your StudyQuest world!</p>
+    </div>
+  </div>
+
+  <div class="panel shop-balance">
+    <div>
+      <span class="muted smalltext">YOUR STAR BALANCE</span>
+      <h2 id="shopBalance">0 ⭐</h2>
+    </div>
+    <span style="font-size:42px">💎</span>
+  </div>
+
+  <div class="notice">
+    Buy cosmetics using Stars earned through studying and quests.
+    Your purchases are saved in this browser.
+  </div>
+
+  <div class="row shop-tabs">
+    <button class="btn shop-tab active" data-shop-category="skins">🎭 Skins</button>
+    <button class="btn secondary shop-tab" data-shop-category="cosmetics">✨ Cosmetics</button>
+    <button class="btn secondary shop-tab" data-shop-category="themes">🌌 Themes</button>
+    <button class="btn secondary shop-tab" data-shop-category="inventory">🎒 Inventory</button>
+  </div>
+
+  <div id="shopItems" class="shop-grid"></div>
+
+  <div id="shopMessage" class="notice" aria-live="polite">
+    Welcome to the Star Shop!
+  </div>
+</section>
   <section class="page" id="page-ai">
   <div class="section-title">
     <div>
