@@ -13,7 +13,14 @@ const DEFAULT_STATE = {
     name: "",
     grade: ""
   },
-  stars: 0,
+  stars: 0,  
+shopOwned: [],
+shopEquipped: {
+  skin: "",
+  cosmetic: "",
+  theme: ""
+},
+
   focusMinutes: 0,
   notes: [],
   flashcards: [],
