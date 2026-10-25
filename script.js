@@ -222,6 +222,7 @@ function showPage(pageName) {
   });
 
   if (pageName === "notes") renderNotes();
+  if (pageName === "blurting") updateBlurtingLock();
   if (pageName === "quiz") updateQuizLock();
   if (pageName === "flashcards") renderFlashcards();
   if (pageName === "mindmaps") renderMindmaps();
@@ -538,6 +539,7 @@ function refreshEverything() {
   updateDashboard();
   renderNotes();
   updateQuizLock();
+  updateBlurtingLock();
   renderFlashcards();
   renderMindmaps();
   renderPapers();
@@ -618,6 +620,7 @@ $("submitNotes").addEventListener("click", () => {
 
   renderNotes();
   updateQuizLock();
+  updateBlurtingLock();
   updateDashboard();
   checkQuestProgress();
 
@@ -679,6 +682,7 @@ function renderNotes() {
       saveState();
       renderNotes();
       updateQuizLock();
+      updateBlurtingLock();
       updateDashboard();
 
       showToast("Study notes deleted.");
@@ -694,6 +698,274 @@ function renderNotes() {
     });
   });
 }
+
+/* -------------------- BLURTING ARENA -------------------- */
+
+let currentBlurtNoteId = "";
+let blurtingDrafts = {};
+
+try {
+  blurtingDrafts = JSON.parse(
+    localStorage.getItem("studyquest_blurting_drafts_v1") || "{}"
+  );
+
+  if (
+    !blurtingDrafts ||
+    typeof blurtingDrafts !== "object" ||
+    Array.isArray(blurtingDrafts)
+  ) {
+    blurtingDrafts = {};
+  }
+} catch (error) {
+  blurtingDrafts = {};
+}
+
+function saveBlurtingDrafts() {
+  try {
+    localStorage.setItem(
+      "studyquest_blurting_drafts_v1",
+      JSON.stringify(blurtingDrafts)
+    );
+  } catch (error) {
+    showToast("Could not save your blurt draft.");
+  }
+}
+
+function updateBlurtingLock() {
+  const locked = $("blurtingLocked");
+  const ready = $("blurtingReady");
+  const status = $("blurtingStatus");
+  const selector = $("blurtingNoteSelect");
+
+  if (!locked || !ready || !status || !selector) return;
+
+  // Notes with actual text can be used as answer guides.
+  const usableNotes = state.notes.filter(
+    note => typeof note.text === "string" && note.text.trim().length > 0
+  );
+
+  const hasUsableNotes = usableNotes.length > 0;
+
+  locked.hidden = hasUsableNotes;
+  ready.hidden = !hasUsableNotes;
+
+  status.textContent = hasUsableNotes ? "🔓 Unlocked" : "🔒 Locked";
+
+  if (!hasUsableNotes) {
+    selector.innerHTML = "";
+    currentBlurtNoteId = "";
+    return;
+  }
+
+  const previousId = selector.value || currentBlurtNoteId;
+
+  selector.innerHTML = usableNotes.map(note => `
+    <option value="${escapeHTML(note.id)}">
+      ${escapeHTML(note.title)}
+    </option>
+  `).join("");
+
+  if (usableNotes.some(note => note.id === previousId)) {
+    selector.value = previousId;
+  } else {
+    selector.value = usableNotes[0].id;
+  }
+
+  currentBlurtNoteId = selector.value;
+  loadBlurtingDraft();
+}
+
+function loadBlurtingDraft() {
+  const selector = $("blurtingNoteSelect");
+  const answer = $("blurtingAnswer");
+  const results = $("blurtingResults");
+  const message = $("blurtingMessage");
+
+  if (!selector || !answer) return;
+
+  currentBlurtNoteId = selector.value;
+
+  answer.value = blurtingDrafts[currentBlurtNoteId] || "";
+
+  if (results) results.hidden = true;
+  if (message) message.hidden = true;
+}
+
+function saveCurrentBlurtDraft() {
+  const selector = $("blurtingNoteSelect");
+  const answer = $("blurtingAnswer");
+
+  if (!selector || !answer || !selector.value) return;
+
+  blurtingDrafts[selector.value] = answer.value;
+  saveBlurtingDrafts();
+}
+
+function tokenizeBlurt(text) {
+  return (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) || [])
+    .filter(word => word.length > 2);
+}
+
+function compareBlurtToNotes(sourceText, blurtText) {
+  const sourceWords = new Set(tokenizeBlurt(sourceText));
+  const blurtWords = new Set(tokenizeBlurt(blurtText));
+
+  const stopWords = new Set([
+    "the", "and", "for", "are", "was", "were", "with", "that",
+    "this", "from", "into", "their", "there", "they", "them",
+    "then", "than", "have", "has", "had", "not", "but", "can",
+    "could", "would", "should", "will", "its", "about", "which",
+    "when", "where", "what", "who", "how", "why", "all", "any",
+    "you", "your", "our", "out", "use", "used", "using", "also",
+    "such", "each", "more", "most", "some", "many", "much",
+    "been", "being", "because", "through", "these", "those"
+  ]);
+
+  const missing = [...sourceWords]
+    .filter(word => !stopWords.has(word) && !blurtWords.has(word))
+    .sort((a, b) => a.localeCompare(b));
+
+  const covered = [...sourceWords]
+    .filter(word => !stopWords.has(word) && blurtWords.has(word));
+
+  return {
+    missing,
+    covered,
+    sourceCount: [...sourceWords].filter(word => !stopWords.has(word)).length
+  };
+}
+
+function renderBlurtResults(note, blurtText) {
+  const results = $("blurtingResults");
+  const guide = $("blurtingGuide");
+  const summary = $("blurtingSummary");
+
+  if (!results || !guide || !summary) return;
+
+  const comparison = compareBlurtToNotes(note.text, blurtText);
+
+  const sourceWords = new Set(tokenizeBlurt(note.text));
+  const stopWords = new Set([
+    "the", "and", "for", "are", "was", "were", "with", "that",
+    "this", "from", "into", "their", "there", "they", "them",
+    "then", "than", "have", "has", "had", "not", "but", "can",
+    "could", "would", "should", "will", "its", "about", "which",
+    "when", "where", "what", "who", "how", "why", "all", "any",
+    "you", "your", "our", "out", "use", "used", "using", "also",
+    "such", "each", "more", "most", "some", "many", "much",
+    "been", "being", "because", "through", "these", "those"
+  ]);
+
+  const highlightedSource = note.text
+    .split(/(\s+)/)
+    .map(part => {
+      const word = part.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+
+      if (word && sourceWords.has(word) &&
+          !stopWords.has(word) &&
+          !tokenizeBlurt(blurtText).includes(word)) {
+        return `<span style="color:#ff647c;font-weight:700">${escapeHTML(part)}</span>`;
+      }
+
+      return escapeHTML(part);
+    })
+    .join("");
+
+  guide.innerHTML = `
+    <h4>📚 Your submitted notes: ${escapeHTML(note.title)}</h4>
+    <div class="panel" style="white-space:pre-wrap;line-height:1.8">
+      ${highlightedSource}
+    </div>
+    <h4>🔴 Concepts or words to revisit</h4>
+    ${
+      comparison.missing.length
+        ? `<p>${comparison.missing.map(word =>
+            `<span style="display:inline-block;color:#ff647c;border:1px solid #ff647c;border-radius:8px;padding:4px 8px;margin:3px">${escapeHTML(word)}</span>`
+          ).join("")}</p>`
+        : "<p>Great! No missing keywords were detected.</p>"
+    }
+  `;
+
+  const percentage = comparison.sourceCount
+    ? Math.round(comparison.covered.length / comparison.sourceCount * 100)
+    : 0;
+
+  summary.textContent =
+    `Keyword coverage: ${percentage}%. ` +
+    `${comparison.missing.length} source keywords were not detected. ` +
+    "This is a basic word comparison, not a full understanding score. " +
+    "Different wording and synonyms may not be recognised.";
+
+  results.hidden = false;
+}
+
+if ($("blurtingNoteSelect")) {
+  $("blurtingNoteSelect").addEventListener("change", () => {
+    loadBlurtingDraft();
+  });
+}
+
+if ($("saveBlurtDraft")) {
+  $("saveBlurtDraft").addEventListener("click", () => {
+    saveCurrentBlurtDraft();
+    showToast("Blurt draft saved! 💾");
+  });
+}
+
+if ($("clearBlurt")) {
+  $("clearBlurt").addEventListener("click", () => {
+    if (!confirm("Clear your blurt for this chapter?")) return;
+
+    const selector = $("blurtingNoteSelect");
+    const answer = $("blurtingAnswer");
+
+    if (selector && answer) {
+      answer.value = "";
+      blurtingDrafts[selector.value] = "";
+      saveBlurtingDrafts();
+    }
+
+    if ($("blurtingResults")) $("blurtingResults").hidden = true;
+    if ($("blurtingMessage")) $("blurtingMessage").hidden = true;
+
+    showToast("Blurt page cleared.");
+  });
+}
+
+if ($("checkBlurt")) {
+  $("checkBlurt").addEventListener("click", () => {
+    const noteId = $("blurtingNoteSelect").value;
+    const note = state.notes.find(item => item.id === noteId);
+    const blurtText = $("blurtingAnswer").value.trim();
+
+    if (!note || !note.text || !note.text.trim()) {
+      showToast("Choose submitted notes that contain text.");
+      return;
+    }
+
+    if (!blurtText) {
+      showToast("Write what you remember before revealing the guide.");
+      $("blurtingAnswer").focus();
+      return;
+    }
+
+    saveCurrentBlurtDraft();
+    renderBlurtResults(note, blurtText);
+
+    showToast("Answer guide revealed! Compare and revise. 📖");
+  });
+}
+
+if ($("tryBlurtAgain")) {
+  $("tryBlurtAgain").addEventListener("click", () => {
+    if ($("blurtingResults")) $("blurtingResults").hidden = true;
+    if ($("blurtingMessage")) $("blurtingMessage").hidden = true;
+
+    $("blurtingAnswer").focus();
+  });
+}
+
+/* -------------------- END BLURTING ARENA -------------------- */
 
 /* -------------------- QUIZ ARENA -------------------- */
 
