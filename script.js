@@ -952,7 +952,17 @@ if ($("checkBlurt")) {
     saveCurrentBlurtDraft();
     renderBlurtResults(note, blurtText);
 
-    showToast("Answer guide revealed! Compare and revise. 📖");
+// Award 10 Stars only once per submitted note.
+if (!Array.isArray(state.completedBlurtingNotes)) {
+  state.completedBlurtingNotes = [];
+}
+
+if (!state.completedBlurtingNotes.includes(note.id)) {
+  state.completedBlurtingNotes.push(note.id);
+  awardStars(10, "Blurting challenge completed!");
+} else {
+  showToast("⭐ You already earned Stars for this chapter!");
+}
   });
 }
 
