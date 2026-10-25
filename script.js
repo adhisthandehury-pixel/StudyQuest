@@ -937,6 +937,7 @@ if ($("checkBlurt")) {
     const noteId = $("blurtingNoteSelect").value;
     const note = state.notes.find(item => item.id === noteId);
     const blurtText = $("blurtingAnswer").value.trim();
+    showToast("DEBUG: Blurting button handler is running.");
 
     if (!note || !note.text || !note.text.trim()) {
       showToast("Choose submitted notes that contain text.");
