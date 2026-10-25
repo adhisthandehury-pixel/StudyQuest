@@ -1007,9 +1007,24 @@ if ($("clearBlurt")) {
   });
 }
 
+if ($("submitBlurt")) {
+  $("submitBlurt").addEventListener("click", () => {
+    const selector = $("blurtingNoteSelect");
+    const answer = $("blurtingAnswer");
+
+    if (!selector || !answer) return;
+
+    const note = state.notes.find(item => item.id === selector.value);
+    const blurtText = answer.value.trim();
+
+    if (!note) {
+      showToast("Please select a study note first.");
+      return;
+    }
+
     if (!blurtText) {
       showToast("Write what you remember before revealing the guide.");
-      $("blurtingAnswer").focus();
+      answer.focus();
       return;
     }
 
@@ -1017,25 +1032,16 @@ if ($("clearBlurt")) {
     renderBlurtResults(note, blurtText);
     completeWeekendObjective("blurting");
 
-// Award 10 Stars only once per submitted note.
-if (!Array.isArray(state.completedBlurtingNotes)) {
-  state.completedBlurtingNotes = [];
-}
+    if (!Array.isArray(state.completedBlurtingNotes)) {
+      state.completedBlurtingNotes = [];
+    }
 
-if (!Array.isArray(state.completedBlurtingNotes)) {
-  state.completedBlurtingNotes = [];
-}
-
-if (!state.completedBlurtingNotes.includes(note.id)) {
-  showToast("DEBUG: First reward for this note.");
-  state.completedBlurtingNotes.push(note.id);
-  awardStars(10, "Blurting challenge completed!");
-} else {
-  showToast("DEBUG: This note was already rewarded.");
-}
+    if (!state.completedBlurtingNotes.includes(note.id)) {
+      state.completedBlurtingNotes.push(note.id);
+      awardStars(10, "Blurting challenge completed!");
+    }
   });
 }
-
 if ($("tryBlurtAgain")) {
   $("tryBlurtAgain").addEventListener("click", () => {
     if ($("blurtingResults")) $("blurtingResults").hidden = true;
