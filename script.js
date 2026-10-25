@@ -596,16 +596,19 @@ function updateDashboard() {
   renderProfile();
   renderQuests();
   renderTitles();
-  const weekendProgress = document.getElementById("weekendLegendProgress");
 
-if (weekendProgress) {
-  const completed = state.weekendLegend &&
-    state.weekendLegend.week === getWeekendKey()
-      ? state.weekendLegend.completed.length
-      : 0;
+  const weekendProgress = $("weekendLegendProgress");
 
-  weekendProgress.textContent = `Progress: ${completed}/4 objectives`;
-} 
+  if (weekendProgress) {
+    const completed =
+      state.weekendLegend &&
+      state.weekendLegend.week === getWeekendKey()
+        ? state.weekendLegend.completed.length
+        : 0;
+
+    weekendProgress.textContent = `Progress: ${completed}/4 objectives`;
+  }
+}
 
 function refreshEverything() {
   renderProfile();
@@ -617,18 +620,7 @@ function refreshEverything() {
   renderMindmaps();
   renderPapers();
   renderQuests();
-}function refreshEverything() {
-  renderProfile();
-  updateDashboard();
-  renderNotes();
-  updateQuizLock();
-  updateBlurtingLock();
-  renderFlashcards();
-  renderMindmaps();
-  renderPapers();
-  renderQuests();
 }
-
 /* -------------------- STUDY NOTES -------------------- */
 
 let selectedPDF = null;
