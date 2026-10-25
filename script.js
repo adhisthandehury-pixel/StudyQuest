@@ -193,6 +193,55 @@ function safeExternalURL(rawURL) {
 
   return "";
 }
+function getWeekendKey() {
+  const now = new Date();
+  const day = now.getDay();
+  const daysSinceFriday = (day + 2) % 7;
+
+  now.setDate(now.getDate() - daysSinceFriday);
+
+  return now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0");
+}
+
+function completeWeekendObjective(objective) {
+  const now = new Date();
+
+  if (![0, 5, 6].includes(now.getDay())) {
+    showToast("🏆 Weekend Legend is available Friday to Sunday!");
+    return;
+  }
+
+  const key = getWeekendKey();
+
+  if (!state.weekendLegend || state.weekendLegend.week !== key) {
+    state.weekendLegend = {
+      week: key,
+      completed: [],
+      bonusClaimed: false
+    };
+  }
+
+  const challenge = state.weekendLegend;
+
+  if (!challenge.completed.includes(objective)) {
+    challenge.completed.push(objective);
+  }
+
+  const required = ["quiz", "blurting", "paper", "quests"];
+
+  if (
+    required.every(item => challenge.completed.includes(item)) &&
+    !challenge.bonusClaimed
+  ) {
+    challenge.bonusClaimed = true;
+    awardStars(200, "WEEKEND LEGEND completed!");
+  } else {
+    saveState();
+    showToast("🏆 Weekend Legend progress saved!");
+  }
+}
 
 function awardStars(amount, reason) {
   state.stars += amount;
@@ -468,6 +517,15 @@ function checkQuestProgress() {
       showToast(`🎯 Quest complete! +${quest.reward} ⭐`);
     });
   }
+
+  if (
+    QUESTS.length > 0 &&
+    QUESTS.every(quest =>
+      state.completedQuests.includes(quest.id)
+    )
+  ) {
+    completeWeekendObjective("quests");
+  }
 }
 
 function makeQuestHTML(quest) {
@@ -535,6 +593,16 @@ function updateDashboard() {
 }
 
 function refreshEverything() {
+  renderProfile();
+  updateDashboard();
+  renderNotes();
+  updateQuizLock();
+  updateBlurtingLock();
+  renderFlashcards();
+  renderMindmaps();
+  renderPapers();
+  renderQuests();
+}function refreshEverything() {
   renderProfile();
   updateDashboard();
   renderNotes();
@@ -932,18 +1000,6 @@ if ($("clearBlurt")) {
   });
 }
 
-if ($("checkBlurt")) {
-  $("checkBlurt").addEventListener("click", () => {
-    const noteId = $("blurtingNoteSelect").value;
-    const note = state.notes.find(item => item.id === noteId);
-    const blurtText = $("blurtingAnswer").value.trim();
-    showToast("DEBUG: Blurting button handler is running.");
-
-    if (!note || !note.text || !note.text.trim()) {
-      showToast("Choose submitted notes that contain text.");
-      return;
-    }
-
     if (!blurtText) {
       showToast("Write what you remember before revealing the guide.");
       $("blurtingAnswer").focus();
@@ -952,6 +1008,7 @@ if ($("checkBlurt")) {
 
     saveCurrentBlurtDraft();
     renderBlurtResults(note, blurtText);
+    completeWeekendObjective("blurting");
 
 // Award 10 Stars only once per submitted note.
 if (!Array.isArray(state.completedBlurtingNotes)) {
@@ -1203,6 +1260,7 @@ function finishQuiz() {
   saveState();
   updateDashboard();
   checkQuestProgress();
+  completeWeekendObjective("quiz");
 
   $("quizArea").innerHTML = `
     <div class="empty">
@@ -1675,9 +1733,10 @@ $("generatePracticePaper").addEventListener("click", () => {
     createdAt: currentPracticePaper.createdAt
   });
 
-  saveState();
+   saveState();
   renderGeneratedPracticePaper();
   checkQuestProgress();
+  completeWeekendObjective("paper");
 
   showToast("Your practice paper is ready! 📝");
 });
