@@ -307,7 +307,7 @@ function renderProfile() {
   const grade = state.profile.grade || "Choose your grade";
 
   $("profileName").textContent = name;
-  $("profileGrade").textContent = grade
+  $("profileGrade").textContent = grade;
      $("profileTitle").textContent = state.selectedTitle
   ? ({
       "flow-spammer": "⚡ Flow Spammer",
@@ -1771,8 +1771,6 @@ $("showPaperAnswers").addEventListener("click", () => {
 });
 
 function renderPapers() {
-  // Practice papers are displayed in #generatedPaper.
-  // Keep this function so the rest of StudyQuest can call it safely.
   const output = $("generatedPaper");
 
   if (!output) return;
@@ -1780,7 +1778,7 @@ function renderPapers() {
   if (currentPracticePaper) {
     renderGeneratedPracticePaper();
   }
-     }
+}
 
 /* -------------------- FOCUS TIMER -------------------- */
 
