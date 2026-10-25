@@ -1,0 +1,812 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StudyQuest makes studying feel like a game. Complete quests, earn stars, master chapters and build healthy study habits.">
+  <meta name="theme-color" content="#10051f">
+  <title>StudyQuest — Level Up Your Learning</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #10051f;
+      --panel: #1b0b30;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --cyan: #67e8f9;
+      --text: #faf5ff;
+      --muted: #c4b5d8;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .background-glow {
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.23;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .glow-one {
+      background: #9333ea;
+      top: -150px;
+      left: -120px;
+    }
+
+    .glow-two {
+      background: #db2777;
+      right: -170px;
+      top: 400px;
+    }
+
+    .navbar {
+      max-width: 1180px;
+      margin: auto;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: -0.7px;
+    }
+
+    .logo-icon {
+      display: grid;
+      place-items: center;
+      width: 43px;
+      height: 43px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #c084fc, #7c3aed);
+      box-shadow: 0 0 25px #9333ea66;
+      font-size: 1.5rem;
+    }
+
+    .logo span:last-child {
+      color: #d8b4fe;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 27px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      padding: 13px 21px;
+      font-size: 0.97rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+    }
+
+    .button-primary {
+      color: white;
+      background: linear-gradient(110deg, #9333ea, #c026d3);
+      box-shadow: 0 0 28px #9333ea40;
+    }
+
+    .button-primary:hover {
+      box-shadow: 0 0 35px #a855f780;
+    }
+
+    .button-secondary {
+      color: white;
+      border-color: #75449b;
+      background: #ffffff08;
+    }
+
+    .hero {
+      max-width: 1180px;
+      min-height: 620px;
+      padding: 90px 24px 100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 14px;
+      border: 1px solid #a855f755;
+      border-radius: 999px;
+      background: #a855f714;
+      color: #e9d5ff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 12px #4ade80;
+    }
+
+    h1 {
+      max-width: 680px;
+      font-size: clamp(3rem, 6.5vw, 5.6rem);
+      line-height: 1.02;
+      letter-spacing: -4px;
+      font-weight: 950;
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg, #c084fc, #f0abfc, #67e8f9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      max-width: 550px;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+      margin-top: 32px;
+    }
+
+    .hero-note {
+      margin-top: 20px;
+      color: #a99bbd;
+      font-size: 0.85rem;
+    }
+
+    .game-scene {
+      min-height: 390px;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .orbit {
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      border: 1px solid #c084fc33;
+      border-radius: 50%;
+      animation: spin 24s linear infinite;
+    }
+
+    .orbit-two {
+      width: 250px;
+      height: 250px;
+      border-style: dashed;
+      border-color: #67e8f944;
+      animation-direction: reverse;
+      animation-duration: 18s;
+    }
+
+    .planet {
+      width: 190px;
+      height: 190px;
+      border-radius: 38%;
+      display: grid;
+      place-items: center;
+      font-size: 5.4rem;
+      background: radial-gradient(circle at 30% 25%, #e9d5ff, #a855f7 38%, #6b21a8 78%);
+      box-shadow: 0 0 50px #a855f766, inset -15px -15px 35px #3b0764aa;
+      animation: float 4s ease-in-out infinite;
+      transform: rotate(-8deg);
+    }
+
+    .floating-card {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 17px;
+      border: 1px solid #ffffff20;
+      border-radius: 17px;
+      background: #1b0b30eF;
+      box-shadow: 0 15px 50px #0005;
+      backdrop-filter: blur(15px);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .floating-card strong {
+      display: block;
+      font-size: 0.94rem;
+    }
+
+    .floating-card small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .card-stars {
+      top: 52px;
+      right: 0;
+      animation-delay: -1s;
+    }
+
+    .card-quest {
+      bottom: 52px;
+      left: 0;
+      animation-delay: -2s;
+    }
+
+    .mini-icon {
+      font-size: 1.8rem;
+    }
+
+    .section {
+      max-width: 1180px;
+      padding: 75px 24px;
+      margin: auto;
+    }
+
+    .section-heading {
+      max-width: 700px;
+      margin: 0 auto 42px;
+      text-align: center;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+    }
+
+    .section-heading p {
+      margin-top: 14px;
+      color: var(--muted);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 19px;
+    }
+
+    .feature-card {
+      padding: 27px;
+      border: 1px solid #ffffff12;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #24103c, #160922);
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: #c084fc77;
+    }
+
+    .feature-icon {
+      display: grid;
+      place-items: center;
+      width: 55px;
+      height: 55px;
+      border-radius: 17px;
+      background: #a855f722;
+      font-size: 1.7rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.17rem;
+      margin-bottom: 9px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .habit-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 45px;
+      align-items: center;
+      padding: 45px;
+      border: 1px solid #a855f733;
+      border-radius: 28px;
+      background: linear-gradient(120deg, #25103e, #170a27);
+    }
+
+    .habit-panel h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+
+    .habit-panel p {
+      color: var(--muted);
+      margin-top: 16px;
+    }
+
+    .habit-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .habit-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 16px;
+      border: 1px solid #ffffff12;
+      border-radius: 15px;
+      background: #ffffff06;
+    }
+
+    .habit-check {
+      display: grid;
+      place-items: center;
+      width: 35px;
+      height: 35px;
+      flex-shrink: 0;
+      border-radius: 11px;
+      background: #22c55e20;
+      color: #86efac;
+    }
+
+    .final-cta {
+      max-width: 950px;
+      margin: 50px auto 90px;
+      padding: 55px 24px;
+      text-align: center;
+      border: 1px solid #c084fc44;
+      border-radius: 28px;
+      background: radial-gradient(ellipse at top, #6b21a855, #1b0b30 70%);
+    }
+
+    .final-cta h2 {
+      font-size: clamp(2.1rem, 5vw, 3.5rem);
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+    }
+
+    .final-cta p {
+      color: var(--muted);
+      margin: 17px auto 25px;
+      max-width: 560px;
+    }
+
+    footer {
+      border-top: 1px solid #ffffff12;
+      padding: 27px 24px;
+      text-align: center;
+      color: #a99bbd;
+      font-size: 0.86rem;
+    }
+
+    footer a {
+      color: #d8b4fe;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes float {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -12px; }
+    }
+
+    @keyframes spin {
+      to { rotate: 360deg; }
+    }
+
+    @media (max-width: 850px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+        padding-top: 65px;
+      }
+
+      .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .game-scene {
+        min-height: 370px;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .habit-panel {
+        grid-template-columns: 1fr;
+        padding: 30px;
+      }
+
+      .nav-links {
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .navbar {
+        padding: 16px;
+      }
+
+      .logo {
+        font-size: 1.15rem;
+      }
+
+      .logo-icon {
+        width: 37px;
+        height: 37px;
+      }
+
+      .nav-links a:not(.button) {
+        display: none;
+      }
+
+      .nav-links .button {
+        padding: 10px 13px;
+        font-size: 0.85rem;
+      }
+
+      .hero {
+        padding: 55px 19px 55px;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 13vw, 4.3rem);
+        letter-spacing: -2.5px;
+      }
+
+      .hero-description {
+        font-size: 1rem;
+      }
+
+      .game-scene {
+        min-height: 330px;
+        transform: scale(0.88);
+        margin: -10px -15px;
+      }
+
+      .orbit {
+        width: 290px;
+        height: 290px;
+      }
+
+      .orbit-two {
+        width: 225px;
+        height: 225px;
+      }
+
+      .planet {
+        width: 160px;
+        height: 160px;
+        font-size: 4.5rem;
+      }
+
+      .card-stars {
+        right: -2px;
+      }
+
+      .card-quest {
+        left: -2px;
+      }
+
+      .section {
+        padding: 55px 19px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .habit-panel {
+        padding: 24px;
+      }
+
+      .final-cta {
+        margin: 20px 19px 60px;
+        padding: 40px 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <header class="navbar">
+    <a class="logo" href="#top" aria-label="StudyQuest home">
+      <span class="logo-icon">⚡</span>
+      <span>Study<span>Quest</span></span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#healthy-study">Our approach</a>
+      <a class="button button-primary" href="index.html">Enter the app ↗</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">
+          <span class="status-dot"></span>
+          Your next level starts here
+        </div>
+
+        <h1>
+          Make studying<br>
+          feel like a <span class="gradient-text">game.</span>
+        </h1>
+
+        <p class="hero-description">
+          Meet StudyQuest — a gamified study space where you can
+          complete quests, earn stars, challenge yourself and turn
+          small study sessions into big progress.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="index.html">
+            ⚡ Enter StudyQuest
+          </a>
+          <a class="button button-secondary" href="#features">
+            Explore features ↓
+          </a>
+        </div>
+
+        <p class="hero-note">
+          Study smart. Take breaks. Level up at your own pace.
+        </p>
+      </div>
+
+      <div class="game-scene" aria-label="A glowing purple game-inspired planet">
+        <div class="orbit"></div>
+        <div class="orbit orbit-two"></div>
+
+        <div class="planet" aria-hidden="true">🚀</div>
+
+        <div class="floating-card card-stars">
+          <span class="mini-icon">⭐</span>
+          <div>
+            <strong>Earn stars</strong>
+            <small>Progress through practice</small>
+          </div>
+        </div>
+
+        <div class="floating-card card-quest">
+          <span class="mini-icon">🎯</span>
+          <div>
+            <strong>Quest complete!</strong>
+            <small>One step closer to mastery</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-heading reveal">
+        <h2>Your learning adventure <span class="gradient-text">starts now.</span></h2>
+        <p>
+          Turn your learning goals into missions. Build consistency
+          while making every study session count.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card reveal">
+          <div class="feature-icon">🎯</div>
+          <h3>Quests & missions</h3>
+          <p>Break your study goals into smaller tasks and celebrate each completed mission.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">⭐</div>
+          <h3>Stars & progress</h3>
+          <p>Earn in-app stars through learning activities and track your progress over time.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">🧠</div>
+          <h3>Quizzes & recall</h3>
+          <p>Test your understanding and practise recalling what you've learned.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">📚</div>
+          <h3>Study materials</h3>
+          <p>Organize your study notes and use learning resources to support revision.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">⏱️</div>
+          <h3>Focus sessions</h3>
+          <p>Use focused study sessions and remember to take breaks between them.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-icon">🔥</div>
+          <h3>Build your streak</h3>
+          <p>Keep showing up, practise regularly and develop sustainable study habits.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="healthy-study">
+      <div class="habit-panel reveal">
+        <div>
+          <div class="eyebrow">🟣 Learn without burning out</div>
+          <h2>Progress matters more than <span class="gradient-text">grinding.</span></h2>
+          <p>
+            StudyQuest is designed around manageable goals.
+            You don't need endless hours to make progress.
+            Focus, practise, pause and return when you're ready.
+          </p>
+        </div>
+
+        <div class="habit-list">
+          <div class="habit-item">
+            <span class="habit-check">✓</span>
+            <div>
+              <strong>Choose one clear goal</strong>
+              <div><small>Know what you want to learn.</small></div>
+            </div>
+          </div>
+
+          <div class="habit-item">
+            <span class="habit-check">✓</span>
+            <div>
+              <strong>Focus for a manageable session</strong>
+              <div><small>Use a timer that suits your needs.</small></div>
+            </div>
+          </div>
+
+          <div class="habit-item">
+            <span class="habit-check">✓</span>
+            <div>
+              <strong>Take a proper break</strong>
+              <div><small>Rest is part of learning, too.</small></div>
+            </div>
+          </div>
+
+          <div class="habit-item">
+            <span class="habit-check">✓</span>
+            <div>
+              <strong>Come back and keep learning</strong>
+              <div><small>Consistency beats burnout.</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="eyebrow">🚀 Ready when you are</div>
+      <h2>Your next chapter.<br><span class="gradient-text">Your next level.</span></h2>
+      <p>
+        Open StudyQuest, choose your next mission and start building
+        your learning streak one step at a time.
+      </p>
+      <a class="button button-primary" href="index.html">
+        Enter StudyQuest ⚡
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>StudyQuest</strong> — Learn, play, progress.
+    </p>
+    <p style="margin-top: 6px;">
+      Made for curious minds. Keep learning at your own pace.
+    </p>
+  </footer>
+
+  <script>
+    const revealItems = document.querySelectorAll(".reveal");
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12
+      });
+
+      revealItems.forEach((item) => observer.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add("visible"));
+    }
+  </script>
+</body>
+</html>
