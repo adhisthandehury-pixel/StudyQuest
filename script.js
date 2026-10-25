@@ -224,6 +224,12 @@ function completeWeekendObjective(objective) {
   }
 
   const challenge = state.weekendLegend;
+  const progress = document.getElementById("weekendLegendProgress");
+
+if (progress) {
+  progress.textContent =
+    `Progress: ${challenge.completed.length}/4 objectives`;
+} 
 
   if (!challenge.completed.includes(objective)) {
     challenge.completed.push(objective);
@@ -590,7 +596,16 @@ function updateDashboard() {
   renderProfile();
   renderQuests();
   renderTitles();
-}
+  const weekendProgress = document.getElementById("weekendLegendProgress");
+
+if (weekendProgress) {
+  const completed = state.weekendLegend &&
+    state.weekendLegend.week === getWeekendKey()
+      ? state.weekendLegend.completed.length
+      : 0;
+
+  weekendProgress.textContent = `Progress: ${completed}/4 objectives`;
+} 
 
 function refreshEverything() {
   renderProfile();
