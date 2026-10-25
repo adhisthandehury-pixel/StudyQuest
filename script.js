@@ -957,11 +957,16 @@ if (!Array.isArray(state.completedBlurtingNotes)) {
   state.completedBlurtingNotes = [];
 }
 
+if (!Array.isArray(state.completedBlurtingNotes)) {
+  state.completedBlurtingNotes = [];
+}
+
 if (!state.completedBlurtingNotes.includes(note.id)) {
+  showToast("DEBUG: First reward for this note.");
   state.completedBlurtingNotes.push(note.id);
   awardStars(10, "Blurting challenge completed!");
 } else {
-  showToast("⭐ You already earned Stars for this chapter!");
+  showToast("DEBUG: This note was already rewarded.");
 }
   });
 }
