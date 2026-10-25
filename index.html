@@ -365,6 +365,7 @@ input[type=file] { color:var(--muted); }
   <div><div class="nav-label">YOUR SPACE</div><nav class="nav" id="nav">
     <button class="active" data-page="dashboard"><span>🏠</span>Dashboard</button>
     <button data-page="notes"><span>📚</span>Study Notes</button>
+    <button data-page="blurting"><span>🧠</span>Blurting Arena 🔒</button>
     <button data-page="quiz"><span>🧠</span>Quiz Arena</button>
     <button data-page="flashcards"><span>🗂️</span>Flashcards</button>
     <button data-page="mindmaps"><span>🕸️</span>Mind Maps</button>
@@ -455,7 +456,86 @@ input[type=file] { color:var(--muted); }
   </div>
   <div class="panel"><div class="panel-head"><h3>Submitted notes</h3><span class="pill" id="notePill">0 notes</span></div><div id="notesList"><div class="empty"><div class="big">📝</div>Your submitted notes will appear here.</div></div></div>
 </section>
+<section class="page" id="page-blurting">
+  <div class="section-title">
+    <div>
+      <h2>🧠 Blurting Arena</h2>
+      <p>Recall what you learned without looking at your notes.</p>
+    </div>
+    <span class="pill" id="blurtingStatus">🔒 Locked</span>
+  </div>
 
+  <div id="blurtingLocked" class="panel">
+    <div class="empty">
+      <div class="big">🔒</div>
+      <h3>Blurting Arena is locked</h3>
+      <p>Submit your study notes first to unlock your memory challenge.</p>
+      <button class="btn" data-go="notes">📚 Open Study Notes</button>
+    </div>
+  </div>
+
+  <div id="blurtingReady" hidden>
+    <div class="panel">
+      <div class="panel-head">
+        <h3>✍️ Your blank page</h3>
+        <span class="pill">Memory mode</span>
+      </div>
+
+      <div class="field">
+        <label for="blurtingNoteSelect">Choose your study notes</label>
+        <select id="blurtingNoteSelect"></select>
+      </div>
+
+      <div class="notice">
+        Write everything you remember. Your selected notes stay hidden
+        until you reveal the answer guide.
+      </div>
+
+      <div class="field">
+        <label for="blurtingAnswer">Blurt everything you remember</label>
+        <textarea
+          id="blurtingAnswer"
+          rows="14"
+          maxlength="20000"
+          placeholder="Start writing everything you remember about this chapter..."
+        ></textarea>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="checkBlurt">
+          🔍 Finish & Reveal Answer Guide
+        </button>
+        <button class="btn secondary" id="saveBlurtDraft">
+          💾 Save Draft
+        </button>
+        <button class="btn ghost" id="clearBlurt">
+          Clear Page
+        </button>
+      </div>
+
+      <div id="blurtingMessage" class="notice" hidden></div>
+    </div>
+
+    <div class="panel" id="blurtingResults" hidden>
+      <div class="panel-head">
+        <h3>📖 Your Answer Guide</h3>
+        <span class="pill">Compare & Learn</span>
+      </div>
+
+      <p class="muted smalltext">
+        Red words or concepts are missing from your blurt.
+        Review them and try recalling them again.
+      </p>
+
+      <div id="blurtingGuide"></div>
+      <div id="blurtingSummary" class="notice"></div>
+
+      <button class="btn secondary" id="tryBlurtAgain">
+        ↻ Try Again
+      </button>
+    </div>
+  </div>
+</section>
 <section class="page" id="page-quiz">
   <div class="section-title"><div><h2>🧠 Quiz Arena</h2><p>Practise from the notes you have submitted.</p></div></div>
   <div id="quizLocked" class="panel"><div class="empty"><div class="big">🔒</div><h3>Quiz Arena is locked</h3><p>Submit your study notes first. Then come back here to practise.</p><button class="btn" data-go="notes">Submit study notes</button></div></div>
