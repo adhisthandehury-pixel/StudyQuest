@@ -1007,8 +1007,8 @@ if ($("clearBlurt")) {
   });
 }
 
-if ($("submitBlurt")) {
-  $("submitBlurt").addEventListener("click", () => {
+if ($("checkBlurt")) {
+  $("checkBlurt").addEventListener("click", () => {
     const selector = $("blurtingNoteSelect");
     const answer = $("blurtingAnswer");
 
