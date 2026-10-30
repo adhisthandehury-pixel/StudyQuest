@@ -1551,9 +1551,11 @@ function renderMindmaps() {
   });
 }
 
+
 /* -------------------- PAST PAPERS -------------------- */
 
 let currentPracticePaper = null;
+let paperGenerating = false;
 
 function getPaperSentences(text) {
   return String(text || "")
@@ -1568,146 +1570,202 @@ function getPaperSentences(text) {
     });
 }
 
-function getPaperWords(text) {
-  return [
-    ...new Set(
-      (String(text || "").match(/\b[\p{L}][\p{L}'-]{3,}\b/gu) || [])
-        .map(word => word.trim())
-        .filter(Boolean)
-    )
-  ];
-}
-
-function makePracticePaperQuestions(text, totalMarks) {
-  const sentences = getPaperSentences(text);
-  const wordBank = getPaperWords(text);
-
-  if (sentences.length === 0) return [];
-
-  const questions = [];
-  let remainingMarks = totalMarks;
-  let sentenceIndex = 0;
-
-  while (remainingMarks > 0 && questions.length < 30) {
-    let marks;
-
-    if (remainingMarks >= 5 && questions.length % 4 === 3) {
-      marks = 5;
-    } else if (remainingMarks >= 3 && questions.length % 3 === 2) {
-      marks = 3;
-    } else if (remainingMarks >= 2) {
-      marks = 2;
-    } else {
-      marks = 1;
-    }
-
-    if (marks > remainingMarks) {
-      marks = remainingMarks;
-    }
-
-    const sentence = sentences[sentenceIndex % sentences.length];
-    sentenceIndex++;
-
-    const words =
-      sentence.match(/\b[\p{L}\p{N}][\p{L}\p{N}'-]*\b/gu) || [];
-
-    const answerWord = words
-      .filter(word => word.length >= 4 && !/^\d+$/.test(word))
-      .sort((a, b) => b.length - a.length)[0];
-
-    let question;
-    let answer;
-    let type;
-    let options = [];
-
-    if (marks === 1 && answerWord) {
-      type = "mcq";
-
-      const escapedWord = answerWord.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        "\\$&"
-      );
-
-      question = `Complete the sentence: ${sentence.replace(
-        new RegExp(`\\b${escapedWord}\\b`, "i"),
-        "________"
-      )}`;
-
-      answer = answerWord;
-
-      const distractors = wordBank
-        .filter(word => word.toLowerCase() !== answerWord.toLowerCase())
-        .sort((a, b) => a.length - b.length)
-        .slice(0, 12);
-
-      options = [answerWord];
-
-      for (const word of distractors) {
-        if (
-          options.length < 4 &&
-          !options.some(
-            option => option.toLowerCase() === word.toLowerCase()
-          )
-        ) {
-          options.push(word);
-        }
-      }
-
-      options.sort((a, b) => {
-        const first = a.toLowerCase();
-        const second = b.toLowerCase();
-
-        return first < second ? -1 : first > second ? 1 : 0;
-      });
-
-      // Keep the correct option position from being predictable.
-      if (options.length > 1) {
-        const correctIndex = options.indexOf(answerWord);
-        const rotated = options.slice(1).concat(options[0]);
-
-        options = rotated;
-
-        if (correctIndex === 0) {
-          options.push(options.shift());
-        }
-      }
-    } else if (marks <= 2) {
-      type = "short";
-      question = `In your own words, state the key idea described here: "${sentence}"`;
-      answer = sentence;
-    } else {
-      type = "long";
-      question = `Explain the following idea and why it is important: "${sentence}"`;
-      answer = sentence;
-    }
-
-    questions.push({
-      number: questions.length + 1,
-      question,
-      answer,
-      marks,
-      type,
-      options,
-      response: ""
-    });
-
-    remainingMarks -= marks;
-  }
-
-  return questions;
-}
-
 function getPracticePaperSource() {
   const pastedNotes = $("paperSourceNotes")?.value.trim() || "";
 
-  if (pastedNotes) {
-    return pastedNotes;
-  }
+  if (pastedNotes) return pastedNotes;
 
   return (state.notes || [])
     .map(note => note.text || "")
     .filter(Boolean)
     .join("\n");
+}
+
+function extractPaperJSON(text) {
+  const cleaned = String(text || "")
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/, "");
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (_) {
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+
+    if (start !== -1 && end > start) {
+      return JSON.parse(cleaned.slice(start, end + 1));
+    }
+
+    throw new Error("The AI did not return valid question data. Please try again.");
+  }
+}
+
+async function generateAIPracticeQuestions(subject, notes, totalMarks) {
+  const prompt = `
+You are an expert school examination paper setter.
+
+Create an original practice paper using the supplied study material.
+Subject: ${subject}
+Total marks required: ${totalMarks}
+
+STUDY MATERIAL:
+${notes}
+
+Return ONLY a valid JSON object. Do not use Markdown fences.
+
+Use exactly this structure:
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "A clear exam-style question",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "answer": "The exact correct option",
+      "marks": 1
+    },
+    {
+      "type": "short",
+      "question": "A short-answer exam question",
+      "options": [],
+      "answer": "A correct suggested answer",
+      "marks": 2
+    },
+    {
+      "type": "long",
+      "question": "An explanation or application question",
+      "options": [],
+      "answer": "A detailed suggested answer",
+      "marks": 5
+    }
+  ]
+}
+
+STRICT RULES:
+1. Write original, meaningful exam questions about the material.
+   Do NOT simply repeat a sentence and ask the student to explain it.
+2. Include a mixture of MCQs, short answers, and long answers whenever
+   the total marks allow it.
+3. Every MCQ must have exactly four distinct, plausible options and
+   exactly one correct answer. The answer must match one option exactly.
+4. Short answers should test recall or understanding.
+5. Long answers should test explanation, reasoning, comparison, or
+   application where the material supports it.
+6. Every answer must be supported by the supplied study material.
+   Do not invent facts that are absent from it.
+7. Use school-appropriate language.
+8. Give every question a positive integer mark value.
+9. The marks of ALL questions must add up to exactly ${totalMarks}.
+10. Include as many useful questions as possible without padding the paper.
+11. Do not include answers inside the question text.
+12. Return valid JSON only.
+`;
+
+  let response;
+
+  try {
+    response = await fetch(STUDYQUEST_AI_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        question: prompt,
+        notes,
+        pdfBase64: "",
+        pdfName: "",
+        history: []
+      })
+    });
+  } catch (_) {
+    throw new Error("Could not connect to StudyQuest AI. Check your internet connection.");
+  }
+
+  let data;
+
+  try {
+    data = await response.json();
+  } catch (_) {
+    throw new Error("The AI server returned an unreadable response.");
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || "The AI request failed.");
+  }
+
+  if (!data.answer) {
+    throw new Error("StudyQuest AI returned an empty response.");
+  }
+
+  const result = extractPaperJSON(data.answer);
+
+  if (!Array.isArray(result.questions) || result.questions.length === 0) {
+    throw new Error("The AI did not provide any questions. Please try again.");
+  }
+
+  const questions = result.questions.map((q, index) => {
+    const type = String(q.type || "").toLowerCase();
+    const question = String(q.question || "").trim();
+    const answer = String(q.answer || "").trim();
+    const marks = Number(q.marks);
+
+    if (!["mcq", "short", "long"].includes(type)) {
+      throw new Error(`Question ${index + 1} has an invalid question type.`);
+    }
+
+    if (!question || !answer || !Number.isInteger(marks) || marks < 1) {
+      throw new Error(`Question ${index + 1} is missing valid information.`);
+    }
+
+    let options = [];
+
+    if (type === "mcq") {
+      if (!Array.isArray(q.options) || q.options.length !== 4) {
+        throw new Error(`MCQ ${index + 1} must have four options. Please try again.`);
+      }
+
+      options = q.options.map(option => String(option).trim());
+
+      const distinctOptions = new Set(
+        options.map(option => option.toLowerCase())
+      );
+
+      if (
+        options.some(option => !option) ||
+        distinctOptions.size !== 4 ||
+        !options.some(option => option === answer)
+      ) {
+        throw new Error(`MCQ ${index + 1} has invalid options or an answer key.`);
+      }
+    }
+
+    return {
+      number: index + 1,
+      type,
+      question,
+      answer,
+      options,
+      marks,
+      response: ""
+    };
+  });
+
+  const actualMarks = questions.reduce(
+    (sum, question) => sum + question.marks,
+    0
+  );
+
+  if (actualMarks !== totalMarks) {
+    throw new Error(
+      `The AI created a ${actualMarks}-mark paper instead of ${totalMarks} marks. Please generate it again.`
+    );
+  }
+
+  if (!questions.some(q => q.type === "mcq")) {
+    throw new Error("The AI did not include any MCQs. Please generate the paper again.");
+  }
+
+  return questions;
 }
 
 function renderGeneratedPracticePaper() {
@@ -1727,21 +1785,20 @@ function renderGeneratedPracticePaper() {
 
   output.innerHTML = `
     <div class="notice">
-      <strong>${escapeHTML(paper.subject)}</strong>
-      <br>
-      Total marks: ${totalMarks}
-      <br>
-      Questions: ${paper.questions.length}
+      <strong>${escapeHTML(paper.subject)} — AI Practice Paper</strong>
+      <br>Total marks: ${totalMarks}
+      <br>Questions: ${paper.questions.length}
+      <br>MCQs: ${paper.questions.filter(q => q.type === "mcq").length}
+      <br>Short answers: ${paper.questions.filter(q => q.type === "short").length}
+      <br>Long answers: ${paper.questions.filter(q => q.type === "long").length}
     </div>
 
     <h3>Instructions</h3>
-    <p>Answer each question below. Your written answers stay in the paper while you work.</p>
+    <p>Answer all questions. Your written answers are entered directly below each question.</p>
 
     ${paper.questions.map((question, index) => `
       <div class="list-item" style="display:block;margin-bottom:16px">
-        <strong>
-          Q${question.number}. ${escapeHTML(question.question)}
-        </strong>
+        <strong>Q${question.number}. ${escapeHTML(question.question)}</strong>
 
         <div class="muted smalltext" style="margin:8px 0">
           [${question.marks} ${question.marks === 1 ? "mark" : "marks"}]
@@ -1751,7 +1808,7 @@ function renderGeneratedPracticePaper() {
           question.type === "mcq"
             ? `
               <div style="display:grid;gap:8px;margin-top:10px">
-                ${question.options.map((option, optionIndex) => `
+                ${question.options.map(option => `
                   <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer">
                     <input
                       type="radio"
@@ -1760,6 +1817,7 @@ function renderGeneratedPracticePaper() {
                       data-paper-answer="${index}"
                       style="margin-top:4px"
                       ${question.response === option ? "checked" : ""}
+                      ${paper.submitted ? "disabled" : ""}
                     >
                     <span>${escapeHTML(option)}</span>
                   </label>
@@ -1776,6 +1834,7 @@ function renderGeneratedPracticePaper() {
                   placeholder="Type your answer here..."
                   aria-label="Answer to question ${question.number}"
                   style="width:100%;margin-top:8px"
+                  ${paper.submitted ? "disabled" : ""}
                 >
               `
               : `
@@ -1786,15 +1845,12 @@ function renderGeneratedPracticePaper() {
                   placeholder="Write your explanation here..."
                   aria-label="Answer to question ${question.number}"
                   style="width:100%;margin-top:8px"
+                  ${paper.submitted ? "disabled" : ""}
                 >${escapeHTML(question.response || "")}</textarea>
               `
         }
       </div>
     `).join("")}
-
-    <div class="notice">
-      ⭐ Take your time. Try answering every question before checking the guide.
-    </div>
   `;
 
   if (submitButton) {
@@ -1841,9 +1897,7 @@ function savePracticePaperResponses() {
     if (!question) return;
 
     if (input.type === "radio") {
-      if (input.checked) {
-        question.response = input.value;
-      }
+      if (input.checked) question.response = input.value;
     } else {
       question.response = input.value;
     }
@@ -1855,94 +1909,49 @@ function renderPracticePaperResults() {
   if (!results || !currentPracticePaper) return;
 
   const paper = currentPracticePaper;
-
-  const mcqQuestions = paper.questions.filter(
-    question => question.type === "mcq"
-  );
+  const mcqQuestions = paper.questions.filter(q => q.type === "mcq");
 
   const correctQuestions = mcqQuestions.filter(
-    question =>
-      String(question.response).trim().toLowerCase() ===
-      String(question.answer).trim().toLowerCase()
+    q => q.response.trim().toLowerCase() === q.answer.trim().toLowerCase()
   );
 
-  const mcqMarks = mcqQuestions.reduce(
-    (sum, question) => sum + question.marks,
-    0
-  );
+  const mcqMarks = mcqQuestions.reduce((sum, q) => sum + q.marks, 0);
+  const earnedMarks = correctQuestions.reduce((sum, q) => sum + q.marks, 0);
 
-  const earnedMarks = correctQuestions.reduce(
-    (sum, question) => sum + question.marks,
-    0
-  );
-
-  const writtenQuestions = paper.questions.filter(
-    question => question.type !== "mcq"
-  );
-
-  const answeredWritten = writtenQuestions.filter(
-    question => String(question.response || "").trim().length > 0
-  );
-
-  const answeredMcq = mcqQuestions.filter(
-    question => String(question.response || "").trim().length > 0
-  ).length;
+  const writtenQuestions = paper.questions.filter(q => q.type !== "mcq");
+  const answeredWritten = writtenQuestions.filter(q => q.response.trim());
 
   results.hidden = false;
+
   results.innerHTML = `
     <div class="notice">
       <h3>📊 Your Results</h3>
-      <p>
-        <strong>MCQ score:</strong>
-        ${earnedMarks} / ${mcqMarks} marks
-      </p>
-      <p>
-        <strong>MCQs answered:</strong>
-        ${answeredMcq} / ${mcqQuestions.length}
-      </p>
-      <p>
-        <strong>Written answers completed:</strong>
-        ${answeredWritten.length} / ${writtenQuestions.length}
-      </p>
-      <p>
-        Written answers need to be checked against the answer guide.
-        They are not automatically graded.
-      </p>
+      <p><strong>MCQ score:</strong> ${earnedMarks} / ${mcqMarks}</p>
+      <p><strong>Correct MCQs:</strong> ${correctQuestions.length} / ${mcqQuestions.length}</p>
+      <p><strong>Written answers completed:</strong> ${answeredWritten.length} / ${writtenQuestions.length}</p>
+      <p>Written answers are not automatically graded. Compare them with the suggested answers below.</p>
     </div>
 
     <h3>📝 Answer Review</h3>
 
-    ${paper.questions.map(question => {
-      const response = String(question.response || "").trim();
+    ${paper.questions.map(q => {
+      const response = q.response.trim();
 
-      let status;
-
-      if (!response) {
-        status = "Not answered";
-      } else if (question.type === "mcq") {
-        status =
-          response.toLowerCase() === question.answer.toLowerCase()
+      const status = !response
+        ? "Not answered"
+        : q.type === "mcq"
+          ? response.toLowerCase() === q.answer.toLowerCase()
             ? "Correct"
-            : "Incorrect";
-      } else {
-        status = "Review your written answer using the guide";
-      }
+            : "Incorrect"
+          : "Review your written answer";
 
       return `
         <div class="list-item" style="display:block;margin-bottom:10px">
-          <strong>Q${question.number}. ${status}</strong>
-          <p>
-            <strong>Your answer:</strong>
-            ${escapeHTML(response || "No answer entered")}
-          </p>
+          <strong>Q${q.number}. ${status}</strong>
+          <p><strong>Your answer:</strong> ${escapeHTML(response || "No answer entered")}</p>
           ${
-            question.type === "mcq"
-              ? `
-                <p>
-                  <strong>Correct answer:</strong>
-                  ${escapeHTML(question.answer)}
-                </p>
-              `
+            q.type === "mcq"
+              ? `<p><strong>Correct answer:</strong> ${escapeHTML(q.answer)}</p>`
               : ""
           }
         </div>
@@ -1954,42 +1963,34 @@ function renderPracticePaperResults() {
     </button>
   `;
 
-  const reviewButton = $("reviewPaperAnswerGuide");
+  $("reviewPaperAnswerGuide")?.addEventListener("click", () => {
+    paper.showAnswers = true;
 
-  if (reviewButton) {
-    reviewButton.addEventListener("click", () => {
-      paper.showAnswers = true;
+    const answerGuide = $("paperAnswerGuide");
+    const answerButton = $("showPaperAnswers");
 
-      const answerGuide = $("paperAnswerGuide");
-      const answerButton = $("showPaperAnswers");
+    if (answerGuide) answerGuide.hidden = false;
+    if (answerButton) answerButton.textContent = "Hide Answer Guide";
 
-      if (answerGuide) answerGuide.hidden = false;
-      if (answerButton) answerButton.textContent = "Hide Answer Guide";
-
-      renderPracticePaperAnswerGuide();
-      answerGuide?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
+    renderPracticePaperAnswerGuide();
+    answerGuide?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 function renderPracticePaperAnswerGuide() {
   const answerGuide = $("paperAnswerGuide");
-
   if (!answerGuide || !currentPracticePaper) return;
 
   answerGuide.innerHTML = `
     <h3>🗝️ Answer Guide</h3>
-    <p>
-      Compare your responses with these suggested answers.
-      Written answers may use different wording and still be correct.
-    </p>
+    <p>Compare your responses with these suggested answers.</p>
 
-    ${currentPracticePaper.questions.map(question => `
+    ${currentPracticePaper.questions.map(q => `
       <div class="list-item" style="display:block;margin-bottom:12px">
-        <strong>Q${question.number}. Suggested answer</strong>
-        <p>${escapeHTML(question.answer)}</p>
+        <strong>Q${q.number}. Suggested answer</strong>
+        <p>${escapeHTML(q.answer)}</p>
         <div class="muted smalltext">
-          ${question.marks} ${question.marks === 1 ? "mark" : "marks"}
+          ${q.marks} ${q.marks === 1 ? "mark" : "marks"}
         </div>
       </div>
     `).join("")}
@@ -1999,57 +2000,71 @@ function renderPracticePaperAnswerGuide() {
 const generatePaperButton = $("generatePracticePaper");
 
 if (generatePaperButton) {
-  generatePaperButton.addEventListener("click", () => {
+  generatePaperButton.addEventListener("click", async () => {
+    if (paperGenerating) return;
+
     const subject = $("paperSubject")?.value.trim() || "General Studies";
     const totalMarks = Number($("paperMarks")?.value) || 20;
     const sourceNotes = getPracticePaperSource();
 
     if (sourceNotes.length < 40) {
-      showToast("Please paste at least a little more study text first.");
+      showToast("Please paste at least 40 characters of study notes first.");
       $("paperSourceNotes")?.focus();
       return;
     }
 
-    const questions = makePracticePaperQuestions(
-      sourceNotes,
-      totalMarks
-    );
-
-    if (questions.length === 0) {
-      showToast(
-        "Add a few complete sentences to your study notes first."
-      );
+    if (typeof STUDYQUEST_AI_API === "undefined") {
+      showToast("StudyQuest AI is not configured in this script.");
       return;
     }
 
-    currentPracticePaper = {
-      id: makeId(),
-      title: `${subject} Practice Paper`,
-      subject,
-      questions,
-      createdAt: new Date().toISOString(),
-      submitted: false,
-      showAnswers: false
-    };
+    paperGenerating = true;
+    generatePaperButton.disabled = true;
+    generatePaperButton.textContent = "🤖 AI is creating your paper...";
 
-    if (!Array.isArray(state.papers)) {
-      state.papers = [];
+    try {
+      const questions = await generateAIPracticeQuestions(
+        subject,
+        sourceNotes,
+        totalMarks
+      );
+
+      currentPracticePaper = {
+        id: makeId(),
+        title: `${subject} AI Practice Paper`,
+        subject,
+        questions,
+        createdAt: new Date().toISOString(),
+        submitted: false,
+        showAnswers: false
+      };
+
+      if (!Array.isArray(state.papers)) {
+        state.papers = [];
+      }
+
+      state.papers.unshift({
+        id: currentPracticePaper.id,
+        title: currentPracticePaper.title,
+        subject,
+        url: "",
+        createdAt: currentPracticePaper.createdAt
+      });
+
+      saveState();
+      renderGeneratedPracticePaper();
+      checkQuestProgress();
+      completeWeekendObjective("paper");
+
+      showToast("Your AI-generated practice paper is ready! 📝");
+    } catch (error) {
+      console.error("StudyQuest AI paper generation error:", error);
+      showToast(error.message || "Could not generate the paper. Please try again.");
+    } finally {
+      paperGenerating = false;
+      generatePaperButton.disabled = false;
+      generatePaperButton.textContent = "✨ Generate Practice Paper";
     }
-
-    state.papers.unshift({
-      id: currentPracticePaper.id,
-      title: currentPracticePaper.title,
-      subject,
-      url: "",
-      createdAt: currentPracticePaper.createdAt
-    });
-
-    saveState();
-    renderGeneratedPracticePaper();
-    checkQuestProgress();
-    completeWeekendObjective("paper");
-
-    showToast("Your practice paper is ready! 📝");
   });
 }
 
@@ -2059,7 +2074,7 @@ if (generatedPaperOutput) {
   generatedPaperOutput.addEventListener("input", event => {
     if (
       event.target.matches("[data-paper-answer]") &&
-      !event.target.matches('input[type="radio"]')
+      event.target.type !== "radio"
     ) {
       savePracticePaperResponses();
     }
@@ -2082,7 +2097,6 @@ if (submitPaperButton) {
     }
 
     savePracticePaperResponses();
-
     currentPracticePaper.submitted = true;
 
     renderGeneratedPracticePaper();
@@ -2101,8 +2115,7 @@ if (paperAnswersButton) {
       return;
     }
 
-    currentPracticePaper.showAnswers =
-      !currentPracticePaper.showAnswers;
+    currentPracticePaper.showAnswers = !currentPracticePaper.showAnswers;
 
     const answerGuide = $("paperAnswerGuide");
 
@@ -2110,10 +2123,9 @@ if (paperAnswersButton) {
       answerGuide.hidden = !currentPracticePaper.showAnswers;
     }
 
-    paperAnswersButton.textContent =
-      currentPracticePaper.showAnswers
-        ? "Hide Answer Guide"
-        : "Show Answer Guide";
+    paperAnswersButton.textContent = currentPracticePaper.showAnswers
+      ? "Hide Answer Guide"
+      : "Show Answer Guide";
 
     renderPracticePaperAnswerGuide();
   });
@@ -2128,6 +2140,8 @@ function renderPapers() {
     renderGeneratedPracticePaper();
   }
 }
+
+/* -------------------- END PAST PAPERS -------------------- */
 
 /* -------------------- FOCUS TIMER -------------------- */
 
