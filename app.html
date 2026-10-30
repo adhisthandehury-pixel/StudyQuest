@@ -559,12 +559,12 @@ input[type=file] { color:var(--muted); }
   <div class="section-title">
     <div>
       <h2>📄 Past Papers</h2>
-      <p>Generate exam-style practice papers from your submitted study notes.</p>
+      <p>Generate exam-style practice papers and answer every question directly in StudyQuest.</p>
     </div>
   </div>
 
   <div class="notice warn">
-    Practice questions are generated from your notes. They are not official past examination papers.
+    These are AI-generated practice questions, not official past examination papers.
   </div>
 
   <div class="panel">
@@ -588,7 +588,7 @@ input[type=file] { color:var(--muted); }
     </div>
 
     <div class="field">
-      <label for="paperSourceNotes">Your submitted study notes</label>
+      <label for="paperSourceNotes">Your study notes</label>
       <textarea id="paperSourceNotes" rows="8"
         placeholder="Paste your chapter notes here..."></textarea>
     </div>
@@ -601,19 +601,27 @@ input[type=file] { color:var(--muted); }
   <div class="panel">
     <div class="panel-head">
       <h3>📝 Your Practice Paper</h3>
-      <button class="btn" id="showPaperAnswers">Show Answer Guide</button>
+      <button class="btn" id="showPaperAnswers" type="button">
+        Show Answer Guide
+      </button>
     </div>
 
     <div id="generatedPaper">
       <div class="empty">
         <div class="big">📚</div>
-        Submit your notes above to create a practice paper.
+        Generate a paper to start answering questions here.
       </div>
     </div>
 
+    <button class="btn" id="submitPracticePaper" type="button" hidden>
+      ✅ Submit My Answers
+    </button>
+
+    <div id="paperResults" hidden></div>
     <div id="paperAnswerGuide" hidden></div>
   </div>
 </section>
+
 
 <section class="page" id="page-quests">
   <div class="section-title"><div><h2>🎯 Quests</h2><p>Complete small study goals to earn Stars.</p></div></div>
