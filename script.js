@@ -35,6 +35,8 @@ selectedTitle: "",
   mindmaps: [],
   papers: [],
   completedQuests: [],
+  todoTasks: [],
+todoRewardedKeys: [],
   quizResults: {
     attempts: 0,
     correct: 0
@@ -65,6 +67,8 @@ function loadState() {
       completedQuests: Array.isArray(parsed.completedQuests)
         ? parsed.completedQuests
         : [],
+       todoTasks: Array.isArray(parsed.todoTasks) ? parsed.todoTasks : [],
+todoRewardedKeys: Array.isArray(parsed.todoRewardedKeys) ? parsed.todoRewardedKeys : [],
        focusSessionsCompleted: Math.max(
   0,
   Number(parsed.focusSessionsCompleted) || 0
@@ -447,145 +451,172 @@ $("saveProfile").addEventListener("click", () => {
   showToast("Your study profile has been saved! 💜");
 });
 
-/* -------------------- QUEST SYSTEM -------------------- */
+/* -------------------- SIMPLE TO-DO LIST -------------------- */
 
-const QUESTS = [
-  {
-    id: "first-note",
-    title: "Submit your first study note",
-    description: "Save a topic you want to revise.",
-    icon: "📚",
-    reward: 10,
-    condition: () => state.notes.length >= 1
-  },
-  {
-    id: "first-card",
-    title: "Create a flashcard",
-    description: "Make a question and its answer.",
-    icon: "🗂️",
-    reward: 5,
-    condition: () => state.flashcards.length >= 1
-  },
-  {
-    id: "first-map",
-    title: "Build a mind map",
-    description: "Organize a topic into key ideas.",
-    icon: "🕸️",
-    reward: 5,
-    condition: () => state.mindmaps.length >= 1
-  },
-  {
-    id: "first-paper",
-    title: "Add a past paper",
-    description: "Save a paper or revision resource.",
-    icon: "📄",
-    reward: 5,
-    condition: () => state.papers.length >= 1
-  },
-  {
-    id: "first-focus",
-    title: "Finish a focus session",
-    description: "Complete one full timer session.",
-    icon: "⏳",
-    reward: 10,
-    condition: () => state.focusMinutes >= 15
-  },
-  {
-    id: "quiz-practice",
-    title: "Try your first quiz",
-    description: "Complete a quiz from your notes.",
-    icon: "🧠",
-    reward: 10,
-    condition: () => state.quizResults.attempts >= 1
-  }
-];
-
-function checkQuestProgress() {
-  let earned = [];
-
-  QUESTS.forEach(quest => {
-    if (
-      quest.condition() &&
-      !state.completedQuests.includes(quest.id)
-    ) {
-      state.completedQuests.push(quest.id);
-      state.stars += quest.reward;
-      earned.push(quest);
-    }
-  });
-
-  if (earned.length > 0) {
-    saveState();
-    updateDashboard();
-    renderQuests();
-
-    earned.forEach(quest => {
-      showToast(`🎯 Quest complete! +${quest.reward} ⭐`);
-    });
-  }
-
-  if (
-    QUESTS.length > 0 &&
-    QUESTS.every(quest =>
-      state.completedQuests.includes(quest.id)
-    )
-  ) {
-    completeWeekendObjective("quests");
-  }
-}
-
-function makeQuestHTML(quest) {
-  const completed = state.completedQuests.includes(quest.id);
-
-  return `
-    <div class="quest">
-      <div class="quest-icon">${quest.icon}</div>
-      <div class="quest-info">
-        <strong>${escapeHTML(quest.title)}</strong>
-        <small>${escapeHTML(quest.description)}</small>
-      </div>
-      <div style="text-align:right">
-        <div class="reward">⭐ ${quest.reward}</div>
-        ${
-          completed
-            ? '<span class="pill">Completed ✓</span>'
-            : '<span class="muted smalltext">In progress</span>'
-        }
-      </div>
-    </div>
-  `;
+function todoKey(title) {
+  return String(title || "").trim().toLowerCase().replace(/\s+/g, " ");
 }
 
 function renderQuests() {
-  const allQuests = $("allQuests");
-  const dashboardQuests = $("dashboardQuests");
+  const list = $("allQuests");
+  const preview = $("dashboardQuests");
+  const balance = $("questStarBalance");
+  const tasks = Array.isArray(state.todoTasks) ? state.todoTasks : [];
 
-  if (allQuests) {
-    allQuests.innerHTML = QUESTS.map(makeQuestHTML).join("");
+  const html = tasks.length ? tasks.map(task => `
+    <div class="todo-task ${task.completed ? "todo-done" : ""}">
+      <label class="todo-label">
+        <input type="checkbox" data-todo-toggle="${escapeHTML(task.id)}" ${task.completed ? "checked" : ""}>
+        <span>${escapeHTML(task.title)}</span>
+      </label>
+      <span class="reward">${task.rewardClaimed ? "✓ Rewarded" : "⭐ 5"}</span>
+      <button class="btn ghost small" data-todo-edit="${escapeHTML(task.id)}" type="button">Edit</button>
+      <button class="btn ghost small" data-todo-delete="${escapeHTML(task.id)}" type="button">Delete</button>
+    </div>
+  `).join("") : '<div class="empty">📝 Your list is empty. Add your first task above!</div>';
+
+  if (list) list.innerHTML = html;
+
+  if (preview) {
+    preview.innerHTML = tasks.length
+      ? tasks.slice(0, 3).map(task => `
+        <div class="quest">
+          <div class="quest-icon">${task.completed ? "✅" : "📝"}</div>
+          <div class="quest-info">
+            <strong>${escapeHTML(task.title)}</strong>
+            <small>${task.completed ? "Completed" : "One small step at a time"}</small>
+          </div>
+          <span class="reward">${task.rewardClaimed ? "✓" : "⭐ 5"}</span>
+        </div>
+      `).join("")
+      : '<div class="empty">Add a small task to get started.</div>';
   }
 
-  if (dashboardQuests) {
-    const remaining = QUESTS.filter(
-      quest => !state.completedQuests.includes(quest.id)
-    );
+  if (balance) balance.textContent = `${state.stars} ⭐`;
 
-    const visible = remaining.length
-      ? remaining.slice(0, 3)
-      : QUESTS.slice(0, 3);
+  if (list && !list.dataset.todoBound) {
+    list.dataset.todoBound = "yes";
 
-    dashboardQuests.innerHTML = visible.map(makeQuestHTML).join("");
-  }
+    list.addEventListener("change", event => {
+      const id = event.target.dataset.todoToggle;
+      if (!id) return;
 
-  if ($("questStarBalance")) {
-    $("questStarBalance").textContent = `${state.stars} ⭐`;
+      const task = state.todoTasks.find(item => item.id === id);
+      if (!task) return;
+
+      task.completed = event.target.checked;
+
+      if (task.completed && !task.rewardClaimed) {
+        const key = task.rewardKey || todoKey(task.title);
+
+        if (!state.todoRewardedKeys.includes(key)) {
+          state.stars += 5;
+          state.todoRewardedKeys.push(key);
+          task.rewardClaimed = true;
+          showToast("⭐ Task completed! +5 Stars");
+        } else {
+          task.rewardClaimed = true;
+          showToast("This task title has already earned Stars.");
+        }
+      }
+
+      saveState();
+      updateDashboard();
+      renderQuests();
+      renderShop();
+    });
+
+    list.addEventListener("click", event => {
+      const editId = event.target.dataset.todoEdit;
+      const deleteId = event.target.dataset.todoDelete;
+
+      if (editId) {
+        const task = state.todoTasks.find(item => item.id === editId);
+        if (!task) return;
+
+        const next = prompt("Edit task:", task.title);
+        if (next === null) return;
+
+        if (!next.trim()) {
+          showToast("Task title cannot be empty.");
+          return;
+        }
+
+        task.title = next.trim().slice(0, 120);
+        saveState();
+        renderQuests();
+      }
+
+      if (deleteId) {
+        const task = state.todoTasks.find(item => item.id === deleteId);
+        if (!task) return;
+
+        if (!confirm(`Delete "${task.title}"?`)) return;
+
+        state.todoTasks = state.todoTasks.filter(item => item.id !== deleteId);
+        saveState();
+        renderQuests();
+        updateDashboard();
+      }
+    });
   }
 }
 
+function checkQuestProgress() {
+  // Old automatic quests are disabled.
+}
+
+function addTodoTask() {
+  const input = $("todoInput");
+
+  if (!input || !input.value.trim()) {
+    showToast("Type a task first.");
+    return;
+  }
+
+  const title = input.value.trim().slice(0, 120);
+  const key = todoKey(title);
+
+  if (state.todoTasks.some(task => todoKey(task.title) === key)) {
+    showToast("That task is already on your list.");
+    return;
+  }
+
+  state.todoTasks.push({
+    id: makeId(),
+    title,
+    completed: false,
+    rewardClaimed: state.todoRewardedKeys.includes(key),
+    rewardKey: key
+  });
+
+  input.value = "";
+  saveState();
+  renderQuests();
+  updateDashboard();
+}
+
+const addTodoButton = $("addTodo");
+
+if (addTodoButton) {
+  addTodoButton.addEventListener("click", addTodoTask);
+}
+
+const todoInputElement = $("todoInput");
+
+if (todoInputElement) {
+  todoInputElement.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addTodoTask();
+    }
+  });
+}
 /* -------------------- DASHBOARD -------------------- */
 
 function updateDashboard() {
   $("starBalance").textContent = state.stars;
-  $("questsDone").textContent = state.completedQuests.length;
+  $("questsDone").textContent = (state.todoTasks || []).filter(task => task.completed).length;
   $("focusMinutes").textContent = state.focusMinutes;
   $("notesCount").textContent = state.notes.length;
   $("currentStreak").textContent = state.currentStreak;
@@ -2702,26 +2733,11 @@ function renderShop() {
 
   if (!balance || !container) return;
 
+  const items = SHOP_ITEMS.filter(
+    item => item.category === currentShopCategory
+  );
+
   balance.textContent = `${state.stars} ⭐`;
-
-  document.querySelectorAll("[data-shop-category]").forEach(button => {
-    const active = button.dataset.shopCategory === currentShopCategory;
-
-    button.classList.toggle("active", active);
-    button.classList.toggle("secondary", !active);
-  });
-
-  let items;
-
-  if (currentShopCategory === "inventory") {
-    items = SHOP_ITEMS.filter(item =>
-      state.shopOwned.includes(item.id)
-    );
-  } else {
-    items = SHOP_ITEMS.filter(item =>
-      item.category === currentShopCategory
-    );
-  }
 
   if (items.length === 0) {
     container.innerHTML = `
@@ -2735,7 +2751,8 @@ function renderShop() {
 
   container.innerHTML = items.map(item => {
     const owned = state.shopOwned.includes(item.id);
-    const equipped = state.shopEquipped[item.category] === item.id;
+    const slot = item.category.slice(0, -1);
+const equipped = state.shopEquipped[slot] === item.id;
 
     let actionButton = "";
 
@@ -2815,7 +2832,7 @@ function equipShopItem(id) {
 
   if (!item || !state.shopOwned.includes(id)) return;
 
-  const slot = item.category;
+    const slot = item.category.slice(0, -1);
 
   if (state.shopEquipped[slot] === id) {
     state.shopEquipped[slot] = "";
@@ -2831,52 +2848,25 @@ function equipShopItem(id) {
 }
 
 function applyShopAppearance() {
-  const themeId = state.shopEquipped.theme;
-  const theme = getShopItem(themeId);
-
-  const themeBackgrounds = {
-    theme_midnight: "#100b20",
-    theme_cosmic: "#1b0730",
-    theme_crystal: "#241044"
-  };
-
-  if (theme) {
-    document.body.style.backgroundColor =
-      themeBackgrounds[theme.id] || "";
-  } else {
-    document.body.style.backgroundColor = "";
-  }
-
-  document.body.dataset.shopTheme = theme ? theme.id : "";
-
+  const theme = getShopItem(state.shopEquipped.theme);
   const skin = getShopItem(state.shopEquipped.skin);
   const cosmetic = getShopItem(state.shopEquipped.cosmetic);
+
+  document.body.dataset.shopTheme = theme ? theme.id : "";
+  document.body.dataset.shopSkin = skin ? skin.id : "";
+  document.body.dataset.shopCosmetic = cosmetic ? cosmetic.id : "";
 
   const profileAvatar = document.querySelector(".profile .avatar");
 
   if (profileAvatar) {
     profileAvatar.textContent = skin ? skin.icon : "🧑‍🎓";
-    profileAvatar.style.boxShadow = cosmetic
-      ? "0 0 18px #d18aff"
-      : "";
+
     profileAvatar.title = [
       skin ? skin.name : "",
       cosmetic ? cosmetic.name : ""
     ].filter(Boolean).join(" · ");
   }
 }
-
-document.querySelectorAll("[data-shop-category]").forEach(button => {
-  button.addEventListener("click", () => {
-    currentShopCategory = button.dataset.shopCategory;
-    renderShop();
-  });
-});
-
-/* Initialize the Star Shop */
-renderShop();
-applyShopAppearance();
-
 /* =============== END STAR SHOP SYSTEM =============== */
 
 
