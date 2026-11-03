@@ -228,6 +228,102 @@ input[type=file] { color:var(--muted); }
 .paper-card h4 { margin:8px 0; }
 .paper-card p { font-size:12px; color:var(--muted); line-height:1.5; }
 .footer { text-align:center; color:#927ba8; font-size:11px; padding-top:16px; }
+/* To-Do List */
+.todo-add-row {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+.todo-add-row input {
+  flex: 1;
+  min-width: 0;
+}
+.todo-task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #382247;
+}
+.todo-task:last-child {
+  border-bottom: 0;
+}
+.todo-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.todo-label input {
+  width: auto;
+  flex-shrink: 0;
+}
+.todo-done .todo-label span {
+  text-decoration: line-through;
+  opacity: .65;
+}
+.todo-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Star Shop themes */
+body[data-shop-theme="theme_midnight"] {
+  background: radial-gradient(ellipse at 15% 0%,#26304c 0%,transparent 38%),
+  radial-gradient(ellipse at 95% 55%,#10182b 0%,transparent 40%),#080d19;
+  --line: #35445f;
+}
+body[data-shop-theme="theme_cosmic"] {
+  background: radial-gradient(ellipse at 15% 0%,#6815a0 0%,transparent 40%),
+  radial-gradient(ellipse at 95% 55%,#3c087c 0%,transparent 42%),#1b0730;
+  --line: #7735a6;
+}
+body[data-shop-theme="theme_crystal"] {
+  background: radial-gradient(ellipse at 15% 0%,#3e6b94 0%,transparent 40%),
+  radial-gradient(ellipse at 95% 55%,#612b91 0%,transparent 42%),#241044;
+  --line: #9565c4;
+}
+
+/* Star Shop skins */
+body[data-shop-skin="skin_galaxy"] .profile .avatar {
+  background: linear-gradient(135deg,#253b91,#8d35d4);
+  box-shadow: 0 0 16px #7d67ff;
+}
+body[data-shop-skin="skin_flame"] .profile .avatar {
+  background: linear-gradient(135deg,#ff6a22,#bd245e);
+  box-shadow: 0 0 16px #ff6a22;
+}
+body[data-shop-skin="skin_champion"] .profile .avatar {
+  background: linear-gradient(135deg,#ffdb70,#a86a16);
+  box-shadow: 0 0 18px #ffd66b;
+}
+
+/* Star Shop cosmetics */
+body[data-shop-cosmetic="cos_sparkle"] .profile .avatar {
+  outline: 2px dotted #f4c8ff;
+  outline-offset: 3px;
+}
+body[data-shop-cosmetic="cos_lightning"] .profile .avatar::after {
+  content: "⚡";
+  position: absolute;
+  margin-left: 30px;
+  margin-top: -28px;
+  font-size: 15px;
+  filter: drop-shadow(0 0 5px #ffe56b);
+}
+body[data-shop-cosmetic="cos_champion"] .profile .avatar::after {
+  content: "🏆";
+  position: absolute;
+  margin-left: 30px;
+  margin-top: -28px;
+  font-size: 15px;
+}
+.profile .avatar {
+  position: relative;
+}
 
 [hidden] { display:none !important; }
 
@@ -370,7 +466,7 @@ input[type=file] { color:var(--muted); }
     <button data-page="flashcards"><span>🗂️</span>Flashcards</button>
     <button data-page="mindmaps"><span>🕸️</span>Mind Maps</button>
     <button data-page="papers"><span>📄</span>Past Papers</button>
-    <button data-page="quests"><span>🎯</span>Quests</button>
+    <button data-page="quests"><span>📝</span>To-Do List</button>
     <button data-page="shop"><span>🛒</span>Star Shop</button>
     <button data-page="timer"><span>⏳</span>Focus Timer</button>
     <button data-page="ai"><span>🤖</span>StudyQuest AI</button>
@@ -384,7 +480,7 @@ input[type=file] { color:var(--muted); }
   <div class="hero"><div><span class="pill" style="background:#ffffff2b;color:white">YOUR NEXT CHAPTER STARTS HERE</span><h2>Make today a little brighter ✨</h2><p>Build good study habits, practise what you learn, and collect Stars as you go.</p><button class="btn light" data-go="notes">Open my study notes →</button></div><div class="hero-art">🚀</div></div>
   <div class="stats">
     <div class="stat"><div class="stat-head">Star balance <span class="stat-icon">⭐</span></div><strong id="starBalance">0</strong><small>Study reward currency</small></div>
-    <div class="stat"><div class="stat-head">Quests completed <span class="stat-icon">🎯</span></div><strong id="questsDone">0</strong><small>Little wins add up</small></div>
+    <div class="stat"><div class="stat-head">Tasks completed <span class="stat-icon">📝</span></div><strong id="questsDone">0</strong><small>Little wins add up</small></div>
     <div class="stat"><div class="stat-head">Focus minutes <span class="stat-icon">⏳</span></div><strong id="focusMinutes">0</strong><small>Time spent focusing</small></div>
     <div class="stat"><div class="stat-head">Notes submitted <span class="stat-icon">📚</span></div><strong id="notesCount">0</strong><small>Ready for revision</small></div>
 <div class="stat">
@@ -624,24 +720,25 @@ input[type=file] { color:var(--muted); }
 
 
 <section class="page" id="page-quests">
-  <div class="section-title"><div><h2>🎯 Quests</h2><p>Complete small study goals to earn Stars.</p></div></div>
-  <div class="notice good">Stars are in-app reward points, not real money. Quests can be claimed once in this demo.</div>
-  <div class="panel">
-  <div class="panel-head">
-    <h3>🏆 Weekend Legend</h3>
-    <span class="pill">Weekend Challenge</span>
+  <div class="section-title">
+    <div>
+      <h2>📝 To-Do List</h2>
+      <p>Keep it simple. Finish a task and earn 5 Stars once.</p>
+    </div>
   </div>
-  <p>Complete all four objectives to earn 200 bonus Stars!</p>
-  <ul>
-    <li>🧠 Complete one quiz</li>
-    <li>✍️ Complete one Blurting page</li>
-    <li>📄 Generate one practice paper</li>
-    <li>🎯 Complete all available quests</li>
-  </ul>
-  <div id="weekendLegendProgress">Progress: 0/4 objectives</div>
-</div>
-  <div class="panel"><div class="panel-head"><h3>Available quests</h3><span class="pill">Study goals</span></div><div id="allQuests"></div></div>
-  <div class="panel"><h3>⭐ Star balance</h3><p class="muted smalltext">A future Star Shop could let you spend Stars on in-app rewards.</p><div style="font-size:36px;font-weight:900;margin-top:8px" id="questStarBalance">0 ⭐</div></div>
+
+  <div class="panel">
+    <div class="todo-add-row">
+      <input id="todoInput" type="text" maxlength="120" placeholder="What do you need to do?">
+      <button class="btn" id="addTodo" type="button">+ Add task</button>
+    </div>
+    <div id="allQuests"></div>
+  </div>
+
+  <div class="panel">
+    <h3>⭐ Star balance</h3>
+    <div style="font-size:30px;font-weight:900;margin-top:8px" id="questStarBalance">0 ⭐</div>
+  </div>
 </section>
 
 <section class="page" id="page-shop">
@@ -661,7 +758,7 @@ input[type=file] { color:var(--muted); }
   </div>
 
   <div class="notice">
-    Buy cosmetics using Stars earned through studying and quests.
+    Buy cosmetics using Stars earned through studying and your To-Do List.
     Your purchases are saved in this browser.
   </div>
 
