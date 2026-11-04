@@ -2738,6 +2738,9 @@ function renderShop() {
   );
 
   balance.textContent = `${state.stars} ⭐`;
+   const items = currentShopCategory === "inventory"
+  ? SHOP_ITEMS.filter(item => state.shopOwned.includes(item.id))
+  : SHOP_ITEMS.filter(item => item.category === currentShopCategory);
 
   if (items.length === 0) {
     container.innerHTML = `
@@ -2867,6 +2870,17 @@ function applyShopAppearance() {
     ].filter(Boolean).join(" · ");
   }
 }
+// Star Shop category buttons
+document.querySelectorAll("[data-shop-category]").forEach(button => {
+  button.addEventListener("click", () => {
+    currentShopCategory = button.dataset.shopCategory;
+    renderShop();
+  });
+});
+
+// Initialize the Star Shop
+renderShop();
+applyShopAppearance();
 /* =============== END STAR SHOP SYSTEM =============== */
 
 
