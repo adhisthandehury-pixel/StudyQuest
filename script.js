@@ -2738,9 +2738,6 @@ function renderShop() {
   );
 
   balance.textContent = `${state.stars} ⭐`;
-   const items = currentShopCategory === "inventory"
-  ? SHOP_ITEMS.filter(item => state.shopOwned.includes(item.id))
-  : SHOP_ITEMS.filter(item => item.category === currentShopCategory);
 
   if (items.length === 0) {
     container.innerHTML = `
