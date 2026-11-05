@@ -655,85 +655,267 @@ function refreshEverything() {
   renderPapers();
   renderQuests();
 }
+
 /* -------------------- STUDY NOTES -------------------- */
 
-let selectedPDF = null;
+const MAX_PDF_SIZE = 25 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 40 * 1024 * 1024;
+const MAX_STUDY_TEXT = 28000;
 
-$("pdfFile").addEventListener("change", event => {
-  const file = event.target.files[0];
+async function processStudyMaterial(
+  sourceType,
+  title,
+  file,
+  videoUrl
+) {
+  const formData = new FormData();
 
-  selectedPDF = null;
+  formData.append("sourceType", sourceType);
+  formData.append("title", title);
 
-  if (!file) {
-    $("fileStatus").textContent = "No file selected yet.";
+  if (file) {
+    formData.append("file", file);
+  }
+
+  if (videoUrl) {
+    formData.append("videoUrl", videoUrl);
+  }
+
+  const response = await fetch(
+    STUDYQUEST_AI_API + "/process-material",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.error || "Could not process the material."
+    );
+  }
+
+  if (!data.text || !data.text.trim()) {
+    throw new Error("No study text was extracted.");
+  }
+
+  return data.text;
+}
+
+function updateStudyMaterialStatus(message) {
+  const status = $("fileStatus");
+
+  if (status) {
+    status.textContent = message;
+  }
+}
+
+$("pdfFile").addEventListener("change", () => {
+  const file = $("pdfFile").files[0];
+
+  if (!file) return;
+
+  if (
+    file.type !== "application/pdf" &&
+    !file.name.toLowerCase().endsWith(".pdf")
+  ) {
+    $("pdfFile").value = "";
+    showToast("Please select a PDF file.");
     return;
   }
 
-  const isPDF =
-    file.type === "application/pdf" ||
-    file.name.toLowerCase().endsWith(".pdf");
-
-  if (!isPDF) {
-    event.target.value = "";
-    $("fileStatus").textContent = "Please select a PDF file.";
-    showToast("Only PDF files are accepted.");
+  if (file.size > MAX_PDF_SIZE) {
+    $("pdfFile").value = "";
+    showToast("PDF limit is 25 MB.");
     return;
   }
 
-  if (file.size > 15 * 1024 * 1024) {
-    event.target.value = "";
-    $("fileStatus").textContent = "The file is too large. Maximum: 15 MB.";
-    showToast("Please choose a PDF smaller than 15 MB.");
-    return;
-  }
-
-  selectedPDF = file;
-
-  $("fileStatus").textContent =
-    `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) selected.`;
+  updateStudyMaterialStatus(
+    "📄 PDF selected: " + file.name
+  );
 });
 
-$("submitNotes").addEventListener("click", () => {
+$("videoFile").addEventListener("change", () => {
+  const file = $("videoFile").files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    $("videoFile").value = "";
+    showToast("Please select a video file.");
+    return;
+  }
+
+  if (file.size > MAX_VIDEO_SIZE) {
+    $("videoFile").value = "";
+    showToast("Video limit is 40 MB.");
+    return;
+  }
+
+  updateStudyMaterialStatus(
+    "🎥 Video selected: " + file.name
+  );
+});
+
+$("videoUrl").addEventListener("input", () => {
+  if ($("videoUrl").value.trim()) {
+    updateStudyMaterialStatus(
+      "🔗 Video link added. It will be processed when submitted."
+    );
+  }
+});
+
+$("submitNotes").addEventListener("click", async () => {
+  const button = $("submitNotes");
+
+  if (button.disabled) return;
+
   const title = $("noteTitle").value.trim();
-  const text = $("noteText").value.trim();
+  const pastedText = $("noteText").value.trim();
+
+  const pdf = $("pdfFile").files[0];
+  const video = $("videoFile").files[0];
+  const videoUrl = $("videoUrl").value.trim();
 
   if (!title) {
-    showToast("Give your study notes a title first.");
+    showToast("Give your material a title first.");
     $("noteTitle").focus();
     return;
   }
 
-  if (!text && !selectedPDF) {
-    showToast("Add note text or choose a PDF first.");
+  const externalSources = [
+    pdf,
+    video,
+    videoUrl
+  ].filter(Boolean).length;
+
+  if (externalSources > 1) {
+    showToast(
+      "Choose only one PDF, video file or video link at a time."
+    );
     return;
   }
 
-  const note = {
-    id: makeId(),
-    title,
-    text,
-    fileName: selectedPDF ? selectedPDF.name : "",
-    fileSize: selectedPDF ? selectedPDF.size : 0,
-    createdAt: new Date().toISOString()
-  };
+  if (!pastedText && externalSources === 0) {
+    showToast("Add some study material first.");
+    return;
+  }
 
-  state.notes.unshift(note);
+  if (pastedText.length > 20000) {
+    showToast("Your pasted notes are too long.");
+    return;
+  }
 
-  saveState();
+  let extractedText = "";
+  let sourceType = "Pasted text";
+  let sourceName = "";
+  let savedVideoUrl = "";
 
-  $("noteTitle").value = "";
-  $("noteText").value = "";
-  $("pdfFile").value = "";
-  $("fileStatus").textContent = "No file selected yet.";
-  selectedPDF = null;
+  button.disabled = true;
+  button.textContent = "⏳ Processing material...";
 
-  renderNotes();
-  updateQuizLock();
-  updateBlurtingLock();
-  updateDashboard();
-  checkQuestProgress();
+  updateStudyMaterialStatus(
+    "StudyQuest AI is processing your material. Please wait..."
+  );
 
-  showToast("Your study notes have been submitted! 📚");
+  try {
+    if (pdf) {
+      sourceType = "PDF";
+      sourceName = pdf.name;
+
+      extractedText = await processStudyMaterial(
+        "pdf",
+        title,
+        pdf,
+        ""
+      );
+
+    } else if (video) {
+      sourceType = "Video upload";
+      sourceName = video.name;
+
+      extractedText = await processStudyMaterial(
+        "video",
+        title,
+        video,
+        ""
+      );
+
+    } else if (videoUrl) {
+      sourceType = "YouTube video";
+      savedVideoUrl = videoUrl;
+
+      extractedText = await processStudyMaterial(
+        "video-url",
+        title,
+        null,
+        videoUrl
+      );
+    }
+
+    const finalText = [
+      extractedText,
+      pastedText
+        ? "ADDITIONAL STUDENT NOTES:\n" + pastedText
+        : ""
+    ]
+      .filter(Boolean)
+      .join("\n\n")
+      .slice(0, MAX_STUDY_TEXT);
+
+    if (!finalText.trim()) {
+      throw new Error("No usable study text was created.");
+    }
+
+    const note = {
+      id: makeId(),
+      title,
+      text: finalText,
+      sourceType,
+      fileName: sourceName,
+      sourceUrl: savedVideoUrl,
+      createdAt: new Date().toISOString()
+    };
+
+    state.notes.unshift(note);
+
+    saveState();
+
+    $("noteTitle").value = "";
+    $("noteText").value = "";
+    $("pdfFile").value = "";
+    $("videoFile").value = "";
+    $("videoUrl").value = "";
+
+    renderNotes();
+    updateQuizLock();
+    updateBlurtingLock();
+    updateDashboard();
+    checkQuestProgress();
+
+    updateStudyMaterialStatus(
+      "✅ Your material has been processed and saved!"
+    );
+
+    showToast("Study material submitted successfully! ⭐");
+
+  } catch (error) {
+    console.error("Study material error:", error);
+
+    updateStudyMaterialStatus(
+      "❌ " + (error.message || "Processing failed.")
+    );
+
+    showToast(
+      error.message || "Could not process your material."
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "🚀 Process and submit material ⭐";
+  }
 });
 
 function renderNotes() {
@@ -743,14 +925,21 @@ function renderNotes() {
   if (!container) return;
 
   if (pill) {
-    pill.textContent = plural(state.notes.length, "note");
+    pill.textContent = plural(
+      state.notes.length,
+      "note"
+    );
+  }
+
+  if (typeof refreshAIMaterialOptions === "function") {
+    refreshAIMaterialOptions();
   }
 
   if (state.notes.length === 0) {
     container.innerHTML = `
       <div class="empty">
         <div class="big">📝</div>
-        Your submitted notes will appear here.
+        Your submitted study material will appear here.
       </div>
     `;
     return;
@@ -758,25 +947,48 @@ function renderNotes() {
 
   container.innerHTML = state.notes.map(note => `
     <div class="list-item">
+
       <div style="min-width:0;flex:1">
         <strong>${escapeHTML(note.title)}</strong>
+
         <div class="muted smalltext">
-          ${note.text ? "Text available for quiz practice" : "PDF saved as note information"}
+          ${note.text
+            ? "✅ Text available for study activities"
+            : "⚠️ No usable study text"}
         </div>
+
+        <div class="muted smalltext">
+          ${escapeHTML(note.sourceType || "Study material")}
+        </div>
+
         ${
           note.fileName
             ? `<div class="muted smalltext">📄 ${escapeHTML(note.fileName)}</div>`
             : ""
         }
+
       </div>
+
       <div class="row" style="align-items:center">
+
         ${
           note.text
-            ? `<button class="btn secondary small" data-quiz-note="${escapeHTML(note.id)}">Practise</button>`
+            ? `<button class="btn secondary small"
+                 data-quiz-note="${escapeHTML(note.id)}">
+                 Practise
+               </button>`
             : ""
         }
-        <button class="btn ghost small" data-delete-note="${escapeHTML(note.id)}">Delete</button>
+
+        <button
+          class="btn ghost small"
+          data-delete-note="${escapeHTML(note.id)}"
+        >
+          Delete
+        </button>
+
       </div>
+
     </div>
   `).join("");
 
@@ -786,7 +998,9 @@ function renderNotes() {
 
       if (!confirm("Delete these submitted notes?")) return;
 
-      state.notes = state.notes.filter(note => note.id !== id);
+      state.notes = state.notes.filter(
+        note => note.id !== id
+      );
 
       saveState();
       renderNotes();
@@ -794,19 +1008,23 @@ function renderNotes() {
       updateBlurtingLock();
       updateDashboard();
 
-      showToast("Study notes deleted.");
+      showToast("Study material deleted.");
     });
   });
 
   container.querySelectorAll("[data-quiz-note]").forEach(button => {
     button.addEventListener("click", () => {
       showPage("quiz");
-      $("quizNoteSelect").value = button.dataset.quizNote;
+
+      $("quizNoteSelect").value =
+        button.dataset.quizNote;
+
       $("quizTitle").textContent = "Your notes quiz";
       $("quizArea").innerHTML = "";
     });
   });
 }
+
 
 /* -------------------- BLURTING ARENA -------------------- */
 
@@ -2408,13 +2626,11 @@ document.addEventListener("visibilitychange", () => {
     tickTimer();
   }
 });
+
 /* -------------------- STUDYQUEST AI -------------------- */
 
-/*
-  After deploying your backend, replace this placeholder with
-  your actual Cloudflare Worker URL.
-*/
-const STUDYQUEST_AI_API = "https://studyquestai.adhisthandehury.workers.dev";
+const STUDYQUEST_AI_API =
+  "https://studyquestai.adhisthandehury.workers.dev";
 
 let aiChatHistory = [];
 let aiBusy = false;
@@ -2430,77 +2646,108 @@ function addAIMessage(role, message) {
     ";white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6";
 
   const label = document.createElement("strong");
+
   label.textContent = role === "user"
     ? "🧑 You"
     : "🤖 StudyQuest AI";
 
   const content = document.createElement("div");
+
   content.style.marginTop = "6px";
   content.textContent = message;
 
   bubble.append(label, content);
   chat.appendChild(bubble);
+
   chat.scrollTop = chat.scrollHeight;
 
   return bubble;
 }
 
-function setAIMaterialStatus(message) {
-  $("aiMaterialStatus").textContent = message;
+function refreshAIMaterialOptions() {
+  const selector = $("aiNoteSelect");
+  const status = $("aiMaterialStatus");
+
+  if (!selector) return;
+
+  const previousValue = selector.value;
+
+  const usableNotes = state.notes.filter(note =>
+    typeof note.text === "string" &&
+    note.text.trim().length > 0
+  );
+
+  selector.replaceChildren();
+
+  const allOption = document.createElement("option");
+
+  allOption.value = "all";
+  allOption.textContent = "All submitted material";
+
+  selector.appendChild(allOption);
+
+  usableNotes.forEach(note => {
+    const option = document.createElement("option");
+
+    option.value = note.id;
+    option.textContent =
+      note.title + " · " + (note.sourceType || "Notes");
+
+    selector.appendChild(option);
+  });
+
+  const selectionStillExists =
+    previousValue === "all" ||
+    usableNotes.some(note => note.id === previousValue);
+
+  selector.value = selectionStillExists
+    ? previousValue
+    : "all";
+
+  if (status) {
+    status.textContent = usableNotes.length
+      ? `${usableNotes.length} study material item(s) ready for your AI Tutor.`
+      : "No submitted study material yet. Open Send Study Notes to add some.";
+  }
 }
 
-$("aiPdf").addEventListener("change", () => {
-  const file = $("aiPdf").files[0];
+$("aiNoteSelect").addEventListener("change", () => {
+  const selected = $("aiNoteSelect").value;
 
-  if (!file) {
-    setAIMaterialStatus("No PDF selected.");
+  const status = $("aiMaterialStatus");
+
+  if (selected === "all") {
+    refreshAIMaterialOptions();
     return;
   }
 
-  if (
-    file.type !== "application/pdf" &&
-    !file.name.toLowerCase().endsWith(".pdf")
-  ) {
-    $("aiPdf").value = "";
-    setAIMaterialStatus("Please select a PDF file.");
-    return;
-  }
-
-  if (file.size > 8 * 1024 * 1024) {
-    $("aiPdf").value = "";
-    setAIMaterialStatus("PDF too large. Maximum size is 8 MB.");
-    return;
-  }
-
-  setAIMaterialStatus(
-    "PDF selected: " + file.name +
-    ". It will be sent securely when you ask a question."
+  const note = state.notes.find(item =>
+    item.id === selected
   );
-});
 
-$("aiNotes").addEventListener("input", () => {
-  if ($("aiNotes").value.trim()) {
-    setAIMaterialStatus("Pasted study notes are ready.");
+  if (status && note) {
+    status.textContent =
+      "Selected: " + note.title;
   }
 });
 
-async function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+function getSelectedAIMaterial() {
+  const selected = $("aiNoteSelect").value;
 
-    reader.onload = () => {
-      const result = String(reader.result);
-      const comma = result.indexOf(",");
+  const usableNotes = state.notes.filter(note =>
+    typeof note.text === "string" &&
+    note.text.trim().length > 0
+  );
 
-      resolve(result.slice(comma + 1));
-    };
+  const chosenNotes = selected === "all"
+    ? usableNotes
+    : usableNotes.filter(note => note.id === selected);
 
-    reader.onerror = () => {
-      reject(new Error("Could not read the PDF file."));
-    };
-
-    reader.readAsDataURL(file);
-  });
+  return chosenNotes.map(note =>
+    "STUDY MATERIAL: " + note.title +
+    "\nSOURCE: " + (note.sourceType || "Pasted notes") +
+    "\n\n" + note.text
+  ).join("\n\n--------------------\n\n").slice(0, 80000);
 }
 
 async function askStudyQuestAI(question) {
@@ -2512,67 +2759,71 @@ async function askStudyQuestAI(question) {
   ) {
     addAIMessage(
       "assistant",
-      "The AI backend hasn't been connected yet. Deploy the secure " +
-      "backend and add its URL to script.js first."
+      "The AI backend hasn't been connected yet."
     );
     return;
   }
 
-  const notes = $("aiNotes").value.trim();
-  const pdf = $("aiPdf").files[0];
+  const notes = getSelectedAIMaterial();
 
-  if (!notes && !pdf) {
+  if (!notes.trim()) {
     addAIMessage(
       "assistant",
-      "Please paste your notes or select a PDF first so I can help " +
-      "you study that material."
+      "Please submit some study material in Send Study Notes first."
     );
     return;
   }
 
   if (question.length > 2000) {
-    addAIMessage("assistant", "Please keep your question under 2,000 characters.");
+    addAIMessage(
+      "assistant",
+      "Please keep your question under 2,000 characters."
+    );
     return;
   }
 
   aiBusy = true;
+
   $("aiSend").disabled = true;
   $("aiSend").textContent = "Thinking...";
 
-  const loading = addAIMessage("assistant", "Reading your material...");
+  const loading = addAIMessage(
+    "assistant",
+    "Reading your submitted study material..."
+  );
 
   try {
-    let pdfBase64 = "";
-
-    if (pdf) {
-      pdfBase64 = await fileToBase64(pdf);
-    }
-
-    const response = await fetch(STUDYQUEST_AI_API, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        question,
-        notes,
-        pdfBase64,
-        pdfName: pdf ? pdf.name : "",
-        history: aiChatHistory.slice(-8)
-      })
-    });
+    const response = await fetch(
+      STUDYQUEST_AI_API,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question,
+          notes,
+          history: aiChatHistory.slice(-8)
+        })
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "The AI request failed.");
+      throw new Error(
+        data.error || "The AI request failed."
+      );
     }
 
     if (!data.answer) {
-      throw new Error("The AI returned an empty answer.");
+      throw new Error(
+        "The AI returned an empty answer."
+      );
     }
 
     loading.remove();
+
     addAIMessage("assistant", data.answer);
 
     aiChatHistory.push(
@@ -2581,6 +2832,7 @@ async function askStudyQuestAI(question) {
     );
 
     aiChatHistory = aiChatHistory.slice(-8);
+
   } catch (error) {
     loading.remove();
 
@@ -2589,8 +2841,10 @@ async function askStudyQuestAI(question) {
       "I couldn't answer that just now. " +
       (error.message || "Please try again.")
     );
+
   } finally {
     aiBusy = false;
+
     $("aiSend").disabled = false;
     $("aiSend").textContent = "✨ Ask StudyQuest AI";
   }
@@ -2600,9 +2854,11 @@ $("aiForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   const question = $("aiQuestion").value.trim();
+
   if (!question || aiBusy) return;
 
   addAIMessage("user", question);
+
   $("aiQuestion").value = "";
 
   await askStudyQuestAI(question);
@@ -2613,18 +2869,21 @@ document.querySelectorAll("[data-ai-prompt]").forEach(button => {
     if (aiBusy) return;
 
     const question = button.dataset.aiPrompt;
+
     addAIMessage("user", question);
+
     await askStudyQuestAI(question);
   });
 });
 
 $("aiClear").addEventListener("click", () => {
   aiChatHistory = [];
+
   $("aiChat").replaceChildren();
 
   addAIMessage(
     "assistant",
-    "Chat cleared! Your current study material is still selected. What would you like to learn?"
+    "Chat cleared! Your submitted study material is still saved. What would you like to learn?"
   );
 });
 
