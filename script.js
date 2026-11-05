@@ -3147,3 +3147,341 @@ renderShop();
 applyShopAppearance();
 /* =============== END STAR SHOP SYSTEM =============== */
 
+/* =====================================================
+   STUDYQUEST — COSMIC GRAPHICS ENGINE 2.0
+   Safe additive version
+   ===================================================== */
+
+(() => {
+  "use strict";
+
+  if (window.StudyQuestFX) return;
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const mobile = window.matchMedia(
+    "(max-width: 680px)"
+  ).matches;
+
+  const PARTICLE_LIMIT = mobile ? 8 : 16;
+  let activeParticles = 0;
+
+  /* ---------------- COSMIC CSS ---------------- */
+
+  const style = document.createElement("style");
+
+  style.id = "studyquest-cosmic-engine";
+
+  style.textContent = `
+    .sq-cosmic-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: .65;
+      background:
+        radial-gradient(ellipse at 15% 15%,
+          rgba(126,45,255,.12), transparent 42%),
+        radial-gradient(ellipse at 85% 75%,
+          rgba(40,80,255,.10), transparent 45%);
+    }
+
+    .sq-cosmic-layer::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background-image:
+        radial-gradient(2px 2px at 10% 20%,
+          rgba(255,255,255,.8) 50%, transparent 100%),
+        radial-gradient(1px 1px at 30% 70%,
+          rgba(255,255,255,.7) 50%, transparent 100%),
+        radial-gradient(2px 2px at 70% 30%,
+          rgba(210,170,255,.8) 50%, transparent 100%);
+      background-size: 310px 280px;
+      animation: sqGalaxyDrift 120s linear infinite;
+    }
+
+    @keyframes sqGalaxyDrift {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(35px,25px,0); }
+    }
+
+    .sq-page-enter {
+      animation: sqPageEnter .25s ease-out both;
+    }
+
+    @keyframes sqPageEnter {
+      from {
+        opacity: .65;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .sq-particle {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #d9a5ff;
+      box-shadow: 0 0 10px #bd65ff;
+      animation: sqParticleFly .65s ease-out forwards;
+    }
+
+    @keyframes sqParticleFly {
+      from {
+        opacity: 1;
+        transform: translate(0,0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform:
+          translate(var(--sq-x),var(--sq-y))
+          scale(.1);
+      }
+    }
+
+    .sq-reward-glow {
+      animation: sqRewardGlow .5s ease;
+    }
+
+    @keyframes sqRewardGlow {
+      0%,100% { filter: none; }
+      50% {
+        filter: brightness(1.3)
+          drop-shadow(0 0 8px #bd65ff);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sq-cosmic-layer::before,
+      .sq-page-enter,
+      .sq-particle,
+      .sq-reward-glow {
+        animation: none !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  /* ---------------- BACKGROUND ---------------- */
+
+  function createBackground() {
+    if (document.querySelector(".sq-cosmic-layer")) return;
+
+    const layer = document.createElement("div");
+    layer.className = "sq-cosmic-layer";
+    layer.setAttribute("aria-hidden", "true");
+
+    document.body.prepend(layer);
+  }
+
+  /* ---------------- PARTICLES ---------------- */
+
+  function burst(target, amount = 10) {
+    if (reducedMotion) return;
+
+    const available = PARTICLE_LIMIT - activeParticles;
+    const count = Math.max(
+      0,
+      Math.min(amount, available)
+    );
+
+    if (!count) return;
+
+    const rect = target?.getBoundingClientRect?.();
+
+    const x = rect
+      ? rect.left + rect.width / 2
+      : window.innerWidth / 2;
+
+    const y = rect
+      ? rect.top + rect.height / 2
+      : window.innerHeight / 2;
+
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement("span");
+
+      particle.className = "sq-particle";
+      particle.style.left = x + "px";
+      particle.style.top = y + "px";
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 30 + Math.random() * 55;
+
+      particle.style.setProperty(
+        "--sq-x",
+        Math.cos(angle) * distance + "px"
+      );
+
+      particle.style.setProperty(
+        "--sq-y",
+        Math.sin(angle) * distance + "px"
+      );
+
+      document.body.appendChild(particle);
+      activeParticles++;
+
+      let removed = false;
+
+      function cleanup() {
+        if (removed) return;
+        removed = true;
+        activeParticles = Math.max(0, activeParticles - 1);
+        particle.remove();
+      }
+
+      particle.addEventListener(
+        "animationend",
+        cleanup,
+        { once: true }
+      );
+
+      setTimeout(cleanup, 900);
+    }
+  }
+
+  /* ---------------- REWARDS ---------------- */
+
+  function reward(target) {
+    burst(target, 12);
+
+    if (!target?.classList || reducedMotion) return;
+
+    target.classList.remove("sq-reward-glow");
+    void target.offsetWidth;
+    target.classList.add("sq-reward-glow");
+
+    setTimeout(() => {
+      target.classList.remove("sq-reward-glow");
+    }, 550);
+  }
+
+  /* ---------------- SAFE PAGE TRANSITIONS ---------------- */
+
+  const animatedPages = new WeakSet();
+
+  function animatePage(page) {
+    if (!page || reducedMotion) return;
+
+    if (animatedPages.has(page)) return;
+
+    animatedPages.add(page);
+
+    page.classList.remove("sq-page-enter");
+    void page.offsetWidth;
+    page.classList.add("sq-page-enter");
+
+    setTimeout(() => {
+      page.classList.remove("sq-page-enter");
+      animatedPages.delete(page);
+    }, 350);
+  }
+
+  function watchNavigation() {
+    document.querySelectorAll(".page.active").forEach(animatePage);
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (
+          mutation.type !== "attributes" ||
+          mutation.attributeName !== "class"
+        ) continue;
+
+        const page = mutation.target;
+
+        if (
+          page.classList.contains("page") &&
+          page.classList.contains("active")
+        ) {
+          animatePage(page);
+        }
+      }
+    });
+
+    document.querySelectorAll(".page").forEach((page) => {
+      observer.observe(page, {
+        attributes: true,
+        attributeFilter: ["class"]
+      });
+    });
+  }
+
+  /* ---------------- OPTIONAL EVENT HOOKS ---------------- */
+
+  document.addEventListener("click", (event) => {
+    const target = event.target.closest(
+      "[data-sq-fx='reward']"
+    );
+
+    if (target) reward(target);
+  });
+
+  document.addEventListener(
+    "studyquest:task-completed",
+    (event) => reward(event.detail?.element || null)
+  );
+
+  document.addEventListener(
+    "studyquest:stars-earned",
+    (event) => burst(event.detail?.element || null, 12)
+  );
+
+  document.addEventListener(
+    "studyquest:achievement-unlocked",
+    (event) => burst(event.detail?.element || null, 16)
+  );
+
+  /* ---------------- PUBLIC API ---------------- */
+
+  window.StudyQuestFX = {
+    burst,
+    reward,
+    animatePage,
+
+    celebrateTask(element) {
+      reward(element);
+    },
+
+    celebrateStars(element) {
+      burst(element, 12);
+    },
+
+    celebrateAchievement(element) {
+      burst(element, 16);
+    }
+  };
+
+  /* ---------------- INITIALIZATION ---------------- */
+
+  function initialize() {
+    createBackground();
+    watchNavigation();
+
+    console.log(
+      "🌌 StudyQuest Cosmic Graphics Engine 2.0 initialized!"
+    );
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize,
+      { once: true }
+    );
+  } else {
+    initialize();
+  }
+
+})();
+
+
