@@ -452,6 +452,389 @@ body[data-shop-cosmetic="cos_champion"] .profile .avatar::after {
     grid-template-columns: 1fr;
   }
 }
+  
+/* ==========================================
+   STUDYQUEST — COSMIC GALAXY VISUAL UPGRADE
+   CSS ONLY — PRESERVES EXISTING FUNCTIONALITY
+========================================== */
+
+:root {
+  --p: #bd78ff;
+  --p2: #853cff;
+  --ink: #f7f0ff;
+  --muted: #c0aedb;
+  --bg: #090719;
+  --line: #49316e;
+  --white: #17132c;
+}
+
+/* COSMIC BACKGROUND */
+body {
+  background:
+    radial-gradient(ellipse at 12% 8%, #51228b 0%, transparent 35%),
+    radial-gradient(ellipse at 85% 25%, #30176b 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 100%, #21104b 0%, transparent 45%),
+    #090719;
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* Subtle starfield */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .32;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 20%, #fff, transparent),
+    radial-gradient(2px 2px at 85% 65%, #d8aaff, transparent),
+    radial-gradient(1px 1px at 35% 80%, #fff, transparent),
+    radial-gradient(2px 2px at 55% 45%, #c99aff, transparent),
+    radial-gradient(1px 1px at 10% 70%, #fff, transparent);
+  background-size: 310px 310px;
+  animation: cosmicDrift 45s linear infinite;
+}
+
+@keyframes cosmicDrift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100px); }
+}
+
+/* Keep the app above the background */
+.app,
+#toast {
+  position: relative;
+  z-index: 1;
+}
+
+/* SIDEBAR */
+aside {
+  background: rgba(12, 8, 31, .91);
+  backdrop-filter: blur(18px);
+  border-right: 1px solid #69419b;
+  box-shadow: 5px 0 35px #8b35ff12;
+}
+
+.brand .logo {
+  background: linear-gradient(135deg, #e2a5ff, #833cff 65%, #4720a5);
+  box-shadow: 0 0 25px #a34dff80;
+}
+
+.nav button {
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    transform .25s ease,
+    color .25s ease;
+}
+
+.nav button:hover {
+  transform: translateX(3px);
+  background: #38205b;
+}
+
+.nav button.active {
+  background: linear-gradient(110deg, #52218a, #29164c);
+  border-color: #ad70ed;
+  box-shadow: 0 0 18px #a34dff25;
+}
+
+/* MAIN CONTENT */
+main {
+  position: relative;
+}
+
+.topbar {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #49316e;
+}
+
+.eyebrow {
+  color: #d7a6ff;
+  text-shadow: 0 0 12px #b45cff55;
+}
+
+.topbar h1 {
+  text-shadow: 0 0 25px #a34dff35;
+}
+
+/* COSMIC GLASS PANELS */
+.panel,
+.stat,
+.feature,
+.shop-item,
+.paper-card {
+  background:
+    linear-gradient(145deg,
+      rgba(48, 30, 79, .82),
+      rgba(17, 13, 40, .91));
+  border: 1px solid rgba(164, 112, 218, .35);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 28px #00000030,
+    inset 0 1px 0 #ffffff0a;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease;
+}
+
+.stat:hover,
+.feature:hover,
+.shop-item:hover {
+  border-color: #b77aff;
+  box-shadow:
+    0 8px 30px #9d4dff25,
+    inset 0 1px 0 #ffffff12;
+}
+
+.stat:hover,
+.feature:hover {
+  transform: translateY(-3px);
+}
+
+/* HERO SECTION */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 85% 15%, #e1a0ff50, transparent 40%),
+    radial-gradient(ellipse at 10% 100%, #6430b855, transparent 45%),
+    linear-gradient(120deg, #29114f, #59218c 55%, #27134e);
+  border: 1px solid #bd83ff;
+  box-shadow:
+    0 0 35px #913cff25,
+    inset 0 0 35px #ffffff08;
+}
+
+.hero::after {
+  content: "✦";
+  position: absolute;
+  right: 34%;
+  top: 16%;
+  color: #ffffff30;
+  font-size: 27px;
+  pointer-events: none;
+  animation: starTwinkle 4s ease-in-out infinite;
+}
+
+.hero-art {
+  animation: gentleFloat 5s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: .25; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* BUTTONS */
+.btn {
+  background: linear-gradient(135deg, #c17aff, #7934e8);
+  border: 1px solid #d5a5ff80;
+  box-shadow: 0 4px 16px #923cff30;
+  transition:
+    transform .2s ease,
+    filter .2s ease,
+    box-shadow .2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+  box-shadow: 0 6px 22px #a34dff45;
+}
+
+.btn.secondary {
+  background: linear-gradient(135deg, #392052, #26153f);
+  border-color: #8055aa;
+}
+
+.btn.ghost {
+  background: rgba(25, 17, 48, .85);
+}
+
+/* STATS */
+.stat {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat strong {
+  color: #e3c4ff;
+  text-shadow: 0 0 15px #b45cff35;
+}
+
+.stat-icon {
+  background: linear-gradient(135deg, #533078, #2a1a48) !important;
+  border: 1px solid #8e5bb5;
+}
+
+/* SECTION HEADINGS */
+.section-title h2,
+.panel h3 {
+  color: #f1ddff;
+}
+
+.section-title {
+  position: relative;
+}
+
+/* INPUTS */
+.field input,
+.field select,
+.field textarea,
+input[type=text],
+input[type=url],
+select,
+textarea {
+  background: rgba(12, 8, 30, .88);
+  border-color: #63458b;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+select:focus,
+textarea:focus {
+  border-color: #c18aff;
+  box-shadow: 0 0 0 3px #a34dff25;
+}
+
+/* NOTICE PANELS */
+.notice {
+  background: rgba(60, 32, 91, .65);
+  border-color: #8152ad;
+  backdrop-filter: blur(8px);
+}
+
+.notice.good {
+  background: rgba(18, 65, 52, .75);
+}
+
+.notice.warn {
+  background: rgba(76, 48, 21, .75);
+}
+
+/* TIMER */
+.timer-ring {
+  border-color: #463263;
+  border-top-color: #e2a5ff;
+  border-right-color: #9a50ff;
+  box-shadow:
+    0 0 35px #a34dff25,
+    inset 0 0 25px #a34dff15;
+}
+
+.timer-face {
+  text-shadow: 0 0 25px #b45cff75;
+}
+
+/* FLASHCARDS */
+.flashcard {
+  background:
+    radial-gradient(ellipse at 20% 10%, #7545a5, transparent 55%),
+    linear-gradient(145deg, #352052, #17102e);
+  border-color: #b77aff;
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.flashcard:hover {
+  box-shadow: 0 0 30px #a34dff30;
+}
+
+/* MIND MAP */
+.mind-node {
+  background: linear-gradient(135deg, #42265f, #21163c);
+  border-color: #9864c5;
+}
+
+.mind-node.center-node {
+  background: linear-gradient(135deg, #d08aff, #8139ed);
+  box-shadow: 0 0 24px #a34dff55;
+}
+
+/* STAR SHOP */
+.shop-balance {
+  background:
+    radial-gradient(ellipse at 85% 20%, #bd80ff40, transparent 45%),
+    linear-gradient(120deg, #43205f, #1b1235);
+  border-color: #b77aff;
+  box-shadow: 0 0 25px #a34dff20;
+}
+
+.shop-balance h2 {
+  text-shadow: 0 0 18px #ffd66b50;
+}
+
+.shop-item-art {
+  background:
+    radial-gradient(circle, #7545a5, #352052 55%, #160e2c);
+  border: 1px solid #69438f;
+}
+
+.shop-tab.active {
+  background: linear-gradient(135deg, #bd78ff, #7934e8);
+  border-color: #d5a5ff;
+  box-shadow: 0 0 18px #a34dff40;
+}
+
+/* PROGRESS AND ACHIEVEMENTS */
+.pill {
+  background: #472667;
+  border-color: #a16bcc;
+  box-shadow: 0 0 10px #a34dff15;
+}
+
+/* FOOTER */
+.footer {
+  color: #b49bcf;
+}
+
+/* TOAST */
+#toast {
+  background: rgba(41, 20, 65, .96) !important;
+  border-color: #b77aff !important;
+  box-shadow: 0 0 25px #a34dff40 !important;
+  backdrop-filter: blur(12px);
+}
+
+/* MOBILE */
+@media (max-width: 680px) {
+  aside {
+    background: rgba(12, 8, 31, .97);
+  }
+
+  .nav {
+    scrollbar-width: thin;
+    scrollbar-color: #8950b8 transparent;
+  }
+
+  .hero {
+    box-shadow: 0 0 25px #913cff20;
+  }
+}
+
+/* ACCESSIBILITY: RESPECT REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
 </style>
 </head>
 <body>
