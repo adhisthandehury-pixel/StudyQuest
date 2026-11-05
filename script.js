@@ -505,6 +505,9 @@ function renderQuests() {
       if (!task) return;
 
       task.completed = event.target.checked;
+       if (task.completed) {
+  recordDailyStreak();
+}
 
       if (task.completed && !task.rewardClaimed) {
         const key = task.rewardKey || todoKey(task.title);
@@ -1061,6 +1064,9 @@ if ($("checkBlurt")) {
 
     saveCurrentBlurtDraft();
     renderBlurtResults(note, blurtText);
+     recordDailyStreak();
+saveState();
+updateDashboard();
     completeWeekendObjective("blurting");
 
     if (!Array.isArray(state.completedBlurtingNotes)) {
@@ -1300,6 +1306,8 @@ function finishQuiz() {
   state.quizResults.correct += correct;
 
   if (earned > 0) state.stars += earned;
+
+   recordDailyStreak();
 
   saveState();
   updateDashboard();
