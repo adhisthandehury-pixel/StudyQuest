@@ -1590,16 +1590,117 @@ select:focus-visible {
   </div>
 </section>
 
+
 <section class="page" id="page-notes">
-  <div class="section-title"><div><h2>📚 Study Notes</h2><p>Submit your notes to unlock Quiz Arena.</p></div></div>
-  <div class="panel"><div class="upload-box"><div style="font-size:38px">📄</div><h3>Upload a PDF study note</h3><p class="muted smalltext">Choose a PDF from your device. The demo doesn't send the file to a server.</p><input type="file" id="pdfFile" accept="application/pdf,.pdf"><div id="fileStatus" class="smalltext muted">No file selected yet.</div></div>
-    <div class="field"><label for="noteTitle">Notes title</label><input id="noteTitle" maxlength="80" placeholder="e.g. Photosynthesis — Science"></div>
-    <div class="field"><label for="noteText">Paste or type the important notes here</label><textarea id="noteText" maxlength="12000" placeholder="Paste your note text here. Quiz questions in this prototype use this text."></textarea></div>
-    <div class="notice warn">PDF upload alone does not extract its text in this version. Paste the note text above to make note-based questions. Automatic PDF text extraction and AI question generation need extra services.</div>
-    <button class="btn" id="submitNotes">Submit study notes ⭐</button>
+
+  <div class="section-title">
+    <div>
+      <h2>📚 Send Study Notes</h2>
+      <p>Turn PDFs, videos and your own notes into study material.</p>
+    </div>
   </div>
-  <div class="panel"><div class="panel-head"><h3>Submitted notes</h3><span class="pill" id="notePill">0 notes</span></div><div id="notesList"><div class="empty"><div class="big">📝</div>Your submitted notes will appear here.</div></div></div>
+
+  <div class="panel">
+
+    <div class="notice">
+      💜 Add your learning material below. StudyQuest AI will process
+      it and make it available to your study activities.
+    </div>
+
+    <div class="field">
+      <label for="noteTitle">Material title</label>
+      <input
+        id="noteTitle"
+        maxlength="80"
+        placeholder="e.g. Photosynthesis — Science"
+      >
+    </div>
+
+    <div class="upload-box">
+      <div style="font-size:38px">📄</div>
+      <h3>Upload a PDF</h3>
+      <p class="muted smalltext">
+        StudyQuest will extract its educational content.
+        Maximum size: 25 MB.
+      </p>
+      <input
+        type="file"
+        id="pdfFile"
+        accept="application/pdf,.pdf"
+      >
+    </div>
+
+    <div class="field">
+      <label for="videoUrl">🎬 Video link</label>
+      <input
+        type="url"
+        id="videoUrl"
+        placeholder="Paste a public YouTube video URL..."
+      >
+      <p class="muted smalltext">
+        Public YouTube videos are supported.
+      </p>
+    </div>
+
+    <div class="upload-box">
+      <div style="font-size:38px">🎥</div>
+      <h3>Upload a video</h3>
+      <p class="muted smalltext">
+        Upload an educational video from your device.
+        Maximum size: 40 MB.
+      </p>
+      <input
+        type="file"
+        id="videoFile"
+        accept="video/*"
+      >
+    </div>
+
+    <div class="field">
+      <label for="noteText">✍️ Paste or type your notes</label>
+      <textarea
+        id="noteText"
+        maxlength="20000"
+        placeholder="Paste your notes, explanations or important points here..."
+      ></textarea>
+    </div>
+
+    <div
+      class="notice"
+      id="fileStatus"
+      aria-live="polite"
+    >
+      Add a PDF, video link, video file or pasted text.
+    </div>
+
+    <button
+      class="btn"
+      id="submitNotes"
+      type="button"
+    >
+      🚀 Process and submit material ⭐
+    </button>
+
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-head">
+      <h3>📚 Submitted study material</h3>
+      <span class="pill" id="notePill">0 notes</span>
+    </div>
+
+    <div id="notesList">
+      <div class="empty">
+        <div class="big">📝</div>
+        Your submitted study material will appear here.
+      </div>
+    </div>
+
+  </div>
+
 </section>
+
 <section class="page" id="page-blurting">
   <div class="section-title">
     <div>
@@ -1831,10 +1932,35 @@ select:focus-visible {
     </div>
   </div>
 
-  <div class="notice">
-    💜 Upload a PDF or paste your notes, then ask your AI study buddy
-    to explain difficult concepts in simple words.
+  
+<div class="notice">
+  💜 Your AI Tutor uses the material you submit in
+  the Send Study Notes section. No need to upload it twice!
+</div>
+
+<div class="panel">
+  <h3>📚 Your submitted study material</h3>
+
+  <div class="field">
+    <label for="aiNoteSelect">Choose material for your AI Tutor</label>
+    <select id="aiNoteSelect">
+      <option value="all">All submitted material</option>
+    </select>
   </div>
+
+  <div class="notice" id="aiMaterialStatus">
+    Your submitted study material will appear here.
+  </div>
+
+  <button
+    class="btn secondary small"
+    type="button"
+    data-go="notes"
+  >
+    ➕ Add more study material
+  </button>
+</div>
+
 
   <div class="panel">
     <h3>📚 Your study material</h3>
