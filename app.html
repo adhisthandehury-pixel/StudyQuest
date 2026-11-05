@@ -834,6 +834,225 @@ textarea:focus {
     transition-duration: .01ms !important;
   }
 }
+  /* =========================================
+   STUDYQUEST — COSMIC ANIMATION UPGRADE
+   ========================================= */
+
+/* Animated cosmic background */
+body {
+  background:
+    radial-gradient(ellipse at 15% 20%, #54218c55, transparent 40%),
+    radial-gradient(ellipse at 85% 80%, #2436a855, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, #170b35, #070512 80%);
+  background-size: 200% 200%;
+  animation: galaxyShift 16s ease-in-out infinite alternate;
+  overflow-x: hidden;
+}
+
+@keyframes galaxyShift {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 100%; }
+}
+
+/* Floating stars */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(2px 2px at 10% 20%, #fff, transparent),
+    radial-gradient(2px 2px at 30% 80%, #c99aff, transparent),
+    radial-gradient(3px 3px at 70% 30%, #fff, transparent),
+    radial-gradient(2px 2px at 90% 70%, #a86aff, transparent),
+    radial-gradient(2px 2px at 50% 50%, #fff, transparent),
+    radial-gradient(3px 3px at 20% 60%, #b98aff, transparent);
+  background-size: 350px 350px;
+  animation: starDrift 35s linear infinite;
+}
+
+@keyframes starDrift {
+  from { transform: translateY(0) translateX(0); }
+  to { transform: translateY(-350px) translateX(100px); }
+}
+
+/* Keep app content above the background */
+.app {
+  position: relative;
+  z-index: 1;
+}
+
+/* Glowing sidebar */
+aside {
+  animation: sidebarGlow 5s ease-in-out infinite alternate;
+}
+
+@keyframes sidebarGlow {
+  from { box-shadow: 0 0 12px #8b35ff22; }
+  to { box-shadow: 0 0 30px #a64dff66; }
+}
+
+/* Navigation hover effects */
+.nav button {
+  transition: transform .25s ease, background .25s ease,
+              box-shadow .25s ease;
+}
+
+.nav button:hover {
+  transform: translateX(7px) scale(1.025);
+  box-shadow: 0 0 18px #b44dff66;
+}
+
+.nav button.active {
+  animation: activeNav 2s ease-in-out infinite alternate;
+}
+
+@keyframes activeNav {
+  from { box-shadow: 0 0 8px #b44dff55; }
+  to { box-shadow: 0 0 24px #b44dffbb; }
+}
+
+/* Animated panels and cards */
+.panel,
+.stat,
+.feature,
+.shop-item,
+.paper-card {
+  transition: transform .3s ease, box-shadow .3s ease,
+              border-color .3s ease;
+  animation: cardAppear .65s ease both;
+}
+
+.panel:hover,
+.stat:hover,
+.feature:hover,
+.shop-item:hover,
+.paper-card:hover {
+  transform: translateY(-7px) scale(1.015);
+  box-shadow: 0 10px 35px #9b4dff44;
+  border-color: #c084ff;
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Animated buttons */
+button {
+  transition: transform .2s ease, box-shadow .2s ease,
+              filter .2s ease;
+}
+
+button:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 18px #b44dff66;
+}
+
+button:active {
+  transform: scale(.94);
+}
+
+/* Glowing hero section */
+.hero {
+  position: relative;
+  overflow: hidden;
+  animation: heroPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes heroPulse {
+  from {
+    box-shadow: 0 0 15px #9b4dff22;
+  }
+  to {
+    box-shadow: 0 0 45px #9b4dff66;
+  }
+}
+
+/* Animated neon headings */
+h1, h2 {
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  from { text-shadow: 0 0 5px #b44dff44; }
+  to { text-shadow: 0 0 18px #c084ffbb; }
+}
+
+/* Glowing input focus */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #c084ff !important;
+  box-shadow: 0 0 0 3px #a855f733,
+              0 0 18px #a855f755;
+  transition: .25s ease;
+}
+
+/* Floating stars in decorative elements */
+.stat:nth-child(odd) {
+  animation-delay: .15s;
+}
+
+.stat:nth-child(even) {
+  animation-delay: .35s;
+}
+
+/* Flashcard movement */
+.flashcard {
+  transition: transform .45s ease, box-shadow .3s ease;
+}
+
+.flashcard:hover {
+  transform: perspective(900px) rotateY(5deg) translateY(-5px);
+  box-shadow: 0 0 28px #a855f766;
+}
+
+/* Timer glow */
+.timer,
+#timerDisplay {
+  animation: timerGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes timerGlow {
+  from { text-shadow: 0 0 5px #b44dff55; }
+  to { text-shadow: 0 0 25px #c084ff; }
+}
+
+/* Smooth scrollbar */
+* {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#b44dff, #54218c);
+  border-radius: 20px;
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  }
 
 </style>
 </head>
