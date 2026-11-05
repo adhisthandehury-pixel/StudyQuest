@@ -1498,6 +1498,444 @@ select:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+  
+/* ==========================================
+   STUDYQUEST — COSMIC OBSERVATORY 2.0
+   Visual upgrade | Existing functionality preserved
+========================================== */
+
+:root {
+  --p: #c58aff;
+  --p2: #873dff;
+  --ink: #fbf7ff;
+  --muted: #c5b2df;
+  --bg: #080615;
+  --line: rgba(190, 143, 255, .27);
+}
+
+/* ===== DEEP SPACE BACKGROUND ===== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 12% 12%, #7130a955, transparent 38%),
+    radial-gradient(ellipse at 88% 20%, #3437a044, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, #6826a044, transparent 45%),
+    #080615 !important;
+  background-attachment: fixed !important;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* Starfield */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .35;
+  background-image:
+    radial-gradient(2px 2px at 12% 20%, white, transparent),
+    radial-gradient(1px 1px at 28% 75%, #d8b5ff, transparent),
+    radial-gradient(2px 2px at 52% 15%, white, transparent),
+    radial-gradient(2px 2px at 78% 45%, #d8b5ff, transparent),
+    radial-gradient(1px 1px at 91% 83%, white, transparent),
+    radial-gradient(2px 2px at 63% 92%, #c99aff, transparent);
+  background-size: 380px 380px;
+  animation: sqStarDrift 70s linear infinite;
+}
+
+@keyframes sqStarDrift {
+  from { transform: translate3d(0,0,0); }
+  to { transform: translate3d(35px,-100px,0); }
+}
+
+/* Keep content above decorative background */
+
+.app {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== SIDEBAR ===== */
+
+aside {
+  background: rgba(12, 7, 29, .91) !important;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-right: 1px solid rgba(190,143,255,.25) !important;
+  box-shadow: 8px 0 35px #873dff18 !important;
+  animation: none !important;
+}
+
+.brand .logo {
+  background: linear-gradient(135deg,#e5b5ff,#963fff 65%,#4820a5);
+  border: 1px solid #ffffff40;
+  box-shadow:
+    0 0 22px #a34dff85,
+    inset 0 0 12px #ffffff25;
+}
+
+.nav {
+  gap: 7px;
+}
+
+.nav button {
+  border-radius: 13px;
+  transition: .22s ease;
+}
+
+.nav button:hover {
+  transform: translateX(4px);
+  background: #67349b35;
+  border-color: #c58aff55;
+  box-shadow: 0 0 17px #a34dff20;
+}
+
+.nav button.active {
+  background: linear-gradient(110deg,#7338b966,#35205c);
+  border-color: #c58aff90;
+  color: white;
+  box-shadow:
+    0 0 20px #a34dff25,
+    inset 0 0 16px #c58aff12;
+  animation: none !important;
+}
+
+/* ===== MAIN HEADER ===== */
+
+main {
+  position: relative;
+}
+
+.topbar {
+  border-bottom: 1px solid #b58aff25;
+  padding-bottom: 17px;
+}
+
+.eyebrow {
+  color: #dfb8ff;
+  letter-spacing: .18em;
+}
+
+.topbar h1 {
+  color: white;
+  text-shadow: 0 0 25px #bd78ff45;
+}
+
+/* ===== PREMIUM GLASS PANELS ===== */
+
+.panel,
+.stat,
+.feature,
+.shop-item,
+.paper-card {
+  background: linear-gradient(
+    145deg,
+    rgba(48,31,77,.86),
+    rgba(17,12,38,.94)
+  ) !important;
+
+  border: 1px solid rgba(190,143,255,.27) !important;
+  border-radius: 19px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 12px 32px #00000035,
+    inset 0 1px 0 #ffffff0c;
+
+  animation: none !important;
+
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease !important;
+}
+
+.panel:hover,
+.stat:hover,
+.feature:hover,
+.shop-item:hover,
+.paper-card:hover {
+  transform: translateY(-4px);
+  border-color: #c58aff95 !important;
+  box-shadow:
+    0 15px 38px #843bdf35,
+    inset 0 1px 0 #ffffff15;
+}
+
+/* ===== DASHBOARD HERO ===== */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #d6a4ff80 !important;
+  border-radius: 25px;
+
+  background:
+    radial-gradient(ellipse at 85% 15%,#e5a1ff45,transparent 40%),
+    radial-gradient(ellipse at 10% 100%,#7546ff45,transparent 45%),
+    linear-gradient(115deg,#21103f,#59218c 55%,#21134b) !important;
+
+  box-shadow:
+    0 15px 45px #5a23a044,
+    inset 0 1px 0 #ffffff25 !important;
+
+  animation: none !important;
+}
+
+.hero::after {
+  content: "✦";
+  position: absolute;
+  top: 17%;
+  right: 34%;
+  color: #ffffff55;
+  font-size: 28px;
+  pointer-events: none;
+  animation: sqTwinkle 4s ease-in-out infinite;
+}
+
+.hero-art {
+  filter: drop-shadow(0 0 24px #d89dff90);
+  animation: sqFloat 5s ease-in-out infinite;
+}
+
+@keyframes sqFloat {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-9px) rotate(3deg); }
+}
+
+@keyframes sqTwinkle {
+  0%,100% { opacity:.25; transform:scale(.8); }
+  50% { opacity:1; transform:scale(1.15); }
+}
+
+/* ===== DASHBOARD STAT CARDS ===== */
+
+.stat {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::before {
+  content: "";
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  top: -65px;
+  right: -55px;
+  border-radius: 50%;
+  background: #b46aff22;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.stat strong {
+  color: #f0d8ff !important;
+  text-shadow: 0 0 17px #b771ff55;
+}
+
+.stat-icon {
+  border: 1px solid #c393ff55;
+  background: linear-gradient(135deg,#513276,#281b48) !important;
+}
+
+/* ===== TOOLKIT ===== */
+
+.feature {
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-icon {
+  width: 49px;
+  height: 49px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: linear-gradient(135deg,#673c91,#291846);
+  border: 1px solid #cc9dff45;
+  box-shadow: 0 0 18px #9e57ff25;
+}
+
+.feature h3 {
+  color: #f6eaff;
+}
+
+/* ===== BUTTONS ===== */
+
+.btn {
+  border-radius: 12px;
+  background: linear-gradient(125deg,#c184ff,#8139e9) !important;
+  border: 1px solid #e2beff90 !important;
+  box-shadow: 0 5px 17px #883ee140;
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+  box-shadow: 0 8px 25px #9d56ff65;
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+.btn.secondary {
+  background: linear-gradient(135deg,#392653,#251738) !important;
+  border-color: #b281e166 !important;
+}
+
+.btn.ghost {
+  background: #18112b !important;
+}
+
+/* ===== INPUTS ===== */
+
+input,
+textarea,
+select {
+  border-radius: 12px !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #c58aff !important;
+  box-shadow:
+    0 0 0 3px #af6bff29,
+    0 0 18px #af6bff25 !important;
+}
+
+/* ===== FLASHCARDS ===== */
+
+.flashcard {
+  border-radius: 23px;
+  border: 1px solid #cf9bff90;
+  background:
+    radial-gradient(ellipse at 15% 15%,#b873ff55,transparent 50%),
+    linear-gradient(145deg,#392258,#17102e);
+  box-shadow: 0 12px 35px #00000040;
+}
+
+.flashcard:hover {
+  box-shadow: 0 0 30px #a34dff45;
+}
+
+/* ===== TIMER ===== */
+
+.timer-ring {
+  border-width: 9px;
+  border-color: #9567c555;
+  border-top-color: #e0aaff;
+  border-right-color: #9856ff;
+  box-shadow:
+    0 0 35px #a45eff35,
+    inset 0 0 30px #a45eff20;
+}
+
+.timer-face {
+  color: #f1d8ff;
+  text-shadow: 0 0 25px #c285ff90;
+  animation: none !important;
+}
+
+/* ===== STAR SHOP ===== */
+
+.shop-balance {
+  border-radius: 21px;
+  background:
+    radial-gradient(ellipse at 90% 15%,#d6a4ff40,transparent 42%),
+    linear-gradient(120deg,#42205f,#1b1235);
+  border-color: #ce9dff90;
+  box-shadow: 0 12px 35px #6c30be30;
+}
+
+.shop-balance h2 {
+  text-shadow: 0 0 18px #ffd66b80;
+}
+
+.shop-item-art {
+  border-radius: 17px;
+  background:
+    radial-gradient(circle,#7948a8,#352052 60%,#160e2c);
+}
+
+/* ===== NOTICES AND LABELS ===== */
+
+.notice {
+  border-radius: 14px;
+  background: #452a636e;
+  border-color: #b989eb55;
+  backdrop-filter: blur(8px);
+}
+
+.pill {
+  background: #8047b447;
+  border-color: #cc9bff66;
+}
+
+/* ===== TOAST ===== */
+
+#toast {
+  backdrop-filter: blur(15px);
+  border-color: #c58aff !important;
+  box-shadow: 0 0 28px #a34dff60 !important;
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #e0baff;
+  outline-offset: 3px;
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:680px) {
+  aside {
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid #b982ff40;
+  }
+
+  .hero {
+    border-radius: 19px;
+  }
+
+  .panel,
+  .stat,
+  .feature,
+  .shop-item {
+    border-radius: 15px;
+  }
+
+  .nav button:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+
+@media(prefers-reduced-motion:reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 
 
 </style>
