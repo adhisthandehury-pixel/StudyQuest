@@ -1935,7 +1935,32 @@ select:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+/* STUDYQUEST — SCROLLABLE DESKTOP SIDEBAR */
+@media (min-width: 681px) {
+  aside {
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
 
+    scrollbar-width: thin;
+    scrollbar-color: #8950b8 transparent;
+  }
+
+  aside::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  aside::-webkit-scrollbar-thumb {
+    background: #8950b8;
+    border-radius: 10px;
+  }
+
+  aside::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
 
 
 </style>
