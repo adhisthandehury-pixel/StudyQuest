@@ -2,9 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="StudyQuest makes studying feel like a game. Complete quests, earn stars, master chapters and build healthy study habits.">
+  <meta name="description" content="StudyQuest makes studying engaging through AI-assisted learning, quizzes, flashcards, study tools and healthy study habits.">
   <meta name="theme-color" content="#10051f">
   <title>StudyQuest — Level Up Your Learning</title>
 
@@ -593,6 +596,146 @@
         transform: none;
       }
     }
+    
+/* ==========================================
+   STUDYQUEST — COSMIC LANDING PAGE POLISH
+   ========================================== */
+
+:root {
+  --bg: #10051f;
+  --panel: #1b0b30;
+  --purple: #b44dff;
+  --pink: #d76bff;
+  --cyan: #67e8f9;
+  --text: #faf5ff;
+  --muted: #c4b5d8;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background:
+    radial-gradient(ellipse at 15% 5%,
+      rgba(147,51,234,.20), transparent 40%),
+    radial-gradient(ellipse at 90% 45%,
+      rgba(80,45,180,.14), transparent 42%),
+    linear-gradient(145deg, #10051f, #0b0616 70%);
+}
+
+h1, h2, h3,
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.logo-icon {
+  background: linear-gradient(135deg, #d8a5ff, #8b35ff);
+  box-shadow: 0 0 28px #a855f766;
+}
+
+.hero {
+  position: relative;
+}
+
+.hero h1 {
+  text-shadow: 0 0 35px #a855f71c;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    100deg,
+    #d8a5ff,
+    #b44dff,
+    #67e8f9
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 25px #a855f715;
+}
+
+.feature-card {
+  background:
+    radial-gradient(
+      circle at top right,
+      #a855f71c,
+      transparent 55%
+    ),
+    linear-gradient(145deg, #24103c, #160922);
+
+  border-color: #b44dff28;
+  box-shadow: 0 12px 35px #0003;
+}
+
+.feature-card:hover {
+  border-color: #b44dff99;
+  box-shadow: 0 15px 40px #9333ea25;
+}
+
+.feature-icon {
+  background: linear-gradient(
+    145deg,
+    #a855f733,
+    #7c3aed22
+  );
+  border: 1px solid #b44dff30;
+}
+
+.button-primary {
+  background: linear-gradient(
+    110deg,
+    #8b35ff,
+    #b44dff,
+    #c026d3
+  );
+  box-shadow: 0 0 25px #9333ea35;
+}
+
+.button-primary:hover {
+  box-shadow: 0 0 35px #a855f780;
+}
+
+.habit-panel {
+  background:
+    radial-gradient(
+      ellipse at top left,
+      #9333ea25,
+      transparent 60%
+    ),
+    linear-gradient(120deg, #25103e, #170a27);
+  box-shadow: 0 15px 50px #0003;
+}
+
+.final-cta {
+  background:
+    radial-gradient(
+      ellipse at top,
+      #9333ea55,
+      transparent 70%
+    ),
+    #1b0b30;
+  box-shadow: 0 15px 55px #0003;
+}
+
+.floating-card {
+  border-color: #c084fc40;
+  box-shadow:
+    0 15px 50px #0005,
+    0 0 25px #9333ea12;
+}
+
+@media (max-width: 560px) {
+  .feature-card {
+    padding: 23px;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+}
+
   </style>
 </head>
 
@@ -781,7 +924,7 @@
 
   <footer>
     <p>
-      <strong>StudyQuest</strong> — Learn, play, progress.
+      <strong>StudyQuest</strong> — Learn, explore, progress.
     </p>
     <p style="margin-top: 6px;">
       Made for curious minds. Keep learning at your own pace.
