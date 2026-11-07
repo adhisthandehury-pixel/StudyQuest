@@ -1961,7 +1961,1735 @@ select:focus-visible {
     background: transparent;
   }
 }
+  
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 01
+   Glass surfaces • Atmospheric depth • Neon details
+   CSS ONLY — preserves existing JavaScript
+   ===================================================== */
 
+:root {
+  --sq-glow-purple: rgba(180, 77, 255, 0.24);
+  --sq-glow-cyan: rgba(103, 232, 249, 0.12);
+  --sq-glass-border: rgba(196, 145, 255, 0.22);
+  --sq-glass-bg: rgba(35, 15, 58, 0.62);
+}
+
+/* Refined cosmic scrolling */
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: #8950b8 #10051f;
+  scrollbar-width: thin;
+}
+
+/* Premium glass surfaces */
+.stat,
+.feature,
+.upload-box,
+.notice,
+.field,
+.todo-add-row,
+.mindmap {
+  border-color: var(--sq-glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.045),
+    0 8px 28px rgba(0,0,0,0.16);
+}
+
+/* Interactive cards */
+@media (hover: hover) and (pointer: fine) {
+  .stat,
+  .feature {
+    transition:
+      transform 240ms ease,
+      border-color 240ms ease,
+      box-shadow 240ms ease;
+  }
+
+  .stat:hover,
+  .feature:hover {
+    transform: translateY(-5px);
+    border-color: rgba(196,145,255,0.58);
+    box-shadow:
+      0 12px 34px rgba(139,53,255,0.16),
+      0 0 20px var(--sq-glow-purple);
+  }
+}
+
+/* Section heading atmosphere */
+.section-title {
+  text-shadow: 0 0 22px rgba(180,77,255,0.20);
+}
+
+/* Glowing feature icons */
+.feature-icon {
+  filter: drop-shadow(0 0 9px rgba(180,77,255,0.30));
+}
+
+/* Better keyboard focus visibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #c084fc;
+  outline-offset: 3px;
+}
+
+/* Smooth input focus */
+input,
+textarea,
+select {
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(192,132,252,0.8);
+  box-shadow: 0 0 16px rgba(168,85,247,0.16);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .stat,
+  .feature,
+  input,
+  textarea,
+  select {
+    transition: none !important;
+  }
+
+  .stat:hover,
+  .feature:hover {
+    transform: none;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 02
+   CINEMATIC DASHBOARD
+   ===================================================== */
+
+/* Dashboard hero atmosphere */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(192, 132, 252, 0.30);
+  background-image:
+    radial-gradient(
+      ellipse at 85% 15%,
+      rgba(168, 85, 247, 0.24),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 10% 100%,
+      rgba(103, 232, 249, 0.10),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(48, 17, 78, 0.96),
+      rgba(20, 7, 39, 0.96)
+    );
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.24),
+    0 0 35px rgba(168, 85, 247, 0.10),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* Hero illustration glow */
+.hero-art {
+  filter:
+    drop-shadow(0 0 18px rgba(168, 85, 247, 0.30))
+    drop-shadow(0 0 35px rgba(103, 232, 249, 0.10));
+}
+
+/* Dashboard statistics */
+#dashboard .stat {
+  position: relative;
+  overflow: hidden;
+  background-image:
+    linear-gradient(
+      145deg,
+      rgba(168, 85, 247, 0.10),
+      transparent 65%
+    );
+}
+
+#dashboard .stat strong {
+  text-shadow: 0 0 18px rgba(192, 132, 252, 0.28);
+}
+
+/* Dashboard feature cards */
+#dashboard .feature {
+  background-image:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(168, 85, 247, 0.13),
+      transparent 55%
+    );
+}
+
+/* Dashboard entrance animation */
+@keyframes sqDashboardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#dashboard.active .hero {
+  animation: sqDashboardEntrance 650ms ease both;
+}
+
+#dashboard.active .stat {
+  animation: sqDashboardEntrance 550ms ease both;
+}
+
+#dashboard.active .stat:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+#dashboard.active .stat:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+#dashboard.active .stat:nth-child(4) {
+  animation-delay: 210ms;
+}
+
+/* Hero text refinement */
+.hero h1 {
+  text-shadow: 0 0 24px rgba(192, 132, 252, 0.20);
+}
+
+/* Dashboard panel headings */
+#dashboard .panel-head {
+  border-bottom: 1px solid rgba(192, 132, 252, 0.12);
+  padding-bottom: 12px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  #dashboard.active .hero,
+  #dashboard.active .stat {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 03
+   AI TUTOR — FUTURISTIC INTERFACE
+   ===================================================== */
+
+/* AI chat container */
+#aiChat {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(168, 85, 247, 0.12),
+      transparent 65%
+    ),
+    rgba(18, 7, 34, 0.82);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 12px 35px rgba(0,0,0,0.20),
+    0 0 24px rgba(168,85,247,0.07);
+}
+
+/* AI chat scrollbar */
+#aiChat {
+  scrollbar-width: thin;
+  scrollbar-color: #8950b8 transparent;
+}
+
+#aiChat::-webkit-scrollbar {
+  width: 5px;
+}
+
+#aiChat::-webkit-scrollbar-thumb {
+  background: #8950b8;
+  border-radius: 10px;
+}
+
+/* AI question input */
+#aiQuestion {
+  border: 1px solid rgba(192, 132, 252, 0.28);
+  border-radius: 14px;
+  background: rgba(20, 8, 38, 0.85);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.18);
+}
+
+#aiQuestion:focus {
+  border-color: #b56cff;
+  box-shadow:
+    0 0 0 3px rgba(168,85,247,0.12),
+    0 0 20px rgba(168,85,247,0.15);
+}
+
+/* AI form */
+#aiForm {
+  position: relative;
+  gap: 10px;
+}
+
+/* AI response typography */
+#aiChat p {
+  line-height: 1.75;
+}
+
+/* AI message entrance */
+@keyframes sqAIMessageEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply animation to common chat message elements */
+#aiChat .message,
+#aiChat .chat-message,
+#aiChat .ai-message,
+#aiChat .user-message {
+  animation: sqAIMessageEntrance 300ms ease both;
+}
+
+/* AI material status */
+#aiMaterialStatus {
+  border-radius: 12px;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+/* AI page panels */
+#page-ai .panel {
+  background-image:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(168,85,247,0.08),
+      transparent 50%
+    );
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #aiChat .message,
+  #aiChat .chat-message,
+  #aiChat .ai-message,
+  #aiChat .user-message {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 04
+   FLASHCARDS • QUIZ ARENA • BLURTING ARENA
+   ===================================================== */
+
+/* Study arena panels */
+#page-quiz .panel,
+#page-flashcards .panel,
+#page-blurting .panel {
+  background-image:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(168, 85, 247, 0.12),
+      transparent 55%
+    );
+  border-color: rgba(192, 132, 252, 0.24);
+}
+
+/* Quiz question area */
+#quizArea {
+  border: 1px solid rgba(192, 132, 252, 0.22);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(67, 28, 98, 0.30),
+      rgba(23, 9, 42, 0.75)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 10px 30px rgba(0,0,0,0.16);
+}
+
+/* Quiz and blurting result areas */
+#blurtingResults,
+#paperResults {
+  border-radius: 16px;
+  background: rgba(32, 12, 52, 0.65);
+  border: 1px solid rgba(192, 132, 252, 0.20);
+}
+
+/* Flashcard surfaces */
+#page-flashcards .flashcard,
+#page-flashcards .flash-card {
+  border: 1px solid rgba(192, 132, 252, 0.30);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(168, 85, 247, 0.20),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(52, 22, 78, 0.92),
+      rgba(20, 8, 37, 0.96)
+    );
+  box-shadow:
+    0 12px 35px rgba(0,0,0,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  transition:
+    transform 250ms ease,
+    border-color 250ms ease,
+    box-shadow 250ms ease;
+}
+
+/* Flashcard hover */
+@media (hover: hover) and (pointer: fine) {
+  #page-flashcards .flashcard:hover,
+  #page-flashcards .flash-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(192,132,252,0.65);
+    box-shadow:
+      0 15px 38px rgba(139,53,255,0.17),
+      0 0 22px rgba(168,85,247,0.12);
+  }
+}
+
+/* Answer and input fields */
+#page-quiz input,
+#page-blurting textarea,
+#page-flashcards input {
+  border-color: rgba(192, 132, 252, 0.25);
+  background: rgba(18, 7, 34, 0.78);
+  border-radius: 12px;
+}
+
+/* Arena action buttons */
+#page-quiz button,
+#page-blurting button,
+#page-flashcards button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #page-quiz button:hover,
+  #page-blurting button:hover,
+  #page-flashcards button:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 0 18px rgba(168,85,247,0.18);
+  }
+}
+
+/* Arena result entrance */
+@keyframes sqArenaReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#blurtingResults:not(:empty),
+#paperResults:not(:empty) {
+  animation: sqArenaReveal 350ms ease both;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #page-flashcards .flashcard,
+  #page-flashcards .flash-card,
+  #page-quiz button,
+  #page-blurting button {
+    transition: none !important;
+  }
+
+  #blurtingResults:not(:empty),
+  #paperResults:not(:empty) {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 05
+   PAST PAPERS • MIND MAPS • TO-DO
+   ===================================================== */
+
+/* Section atmosphere */
+#page-papers .panel,
+#page-mindmaps .panel,
+#page-quests .panel {
+  background-image:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(168, 85, 247, 0.12),
+      transparent 55%
+    );
+  border-color: rgba(192, 132, 252, 0.24);
+}
+
+/* Past paper generated content */
+#generatedPaper,
+#paperAnswerGuide {
+  border: 1px solid rgba(192, 132, 252, 0.22);
+  border-radius: 16px;
+  background: rgba(25, 9, 43, 0.75);
+  padding: 16px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Mind map canvas */
+#mindmapView,
+.mindmap {
+  border: 1px solid rgba(192, 132, 252, 0.24);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(168, 85, 247, 0.13),
+      transparent 55%
+    ),
+    rgba(17, 6, 32, 0.82);
+  box-shadow:
+    inset 0 0 35px rgba(168,85,247,0.06),
+    0 12px 32px rgba(0,0,0,0.16);
+}
+
+/* Mind map nodes */
+.mindmap > *,
+#mindmapView > * {
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+/* To-do input row */
+.todo-add-row {
+  border: 1px solid rgba(192, 132, 252, 0.24);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(25, 9, 43, 0.72);
+}
+
+/* To-do list items */
+#allQuests > * {
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+/* To-do interactive hover */
+@media (hover: hover) and (pointer: fine) {
+  #allQuests > *:hover {
+    border-color: rgba(192,132,252,0.48);
+    background-color: rgba(168,85,247,0.08);
+  }
+}
+
+/* Past paper and task inputs */
+#page-papers input,
+#page-papers textarea,
+#page-quests input {
+  border-radius: 11px;
+  border-color: rgba(192,132,252,0.25);
+  background: rgba(18,7,34,0.78);
+}
+
+/* Subtle section entrance */
+@keyframes sqWorkspaceReveal {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#page-papers.active .panel,
+#page-mindmaps.active .panel,
+#page-quests.active .panel {
+  animation: sqWorkspaceReveal 400ms ease both;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #allQuests > *,
+  .mindmap > *,
+  #mindmapView > * {
+    transition: none !important;
+  }
+
+  #page-papers.active .panel,
+  #page-mindmaps.active .panel,
+  #page-quests.active .panel {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 06
+   STAR SHOP • SKINS • THEMES • COSMETICS
+   ===================================================== */
+
+/* Star Shop atmosphere */
+#page-shop .panel {
+  background-image:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(168, 85, 247, 0.15),
+      transparent 60%
+    );
+  border-color: rgba(192, 132, 252, 0.27);
+}
+
+/* Shop item cards */
+#page-shop .shop-item,
+#page-shop .shop-card,
+#page-shop .shop-item-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  border-radius: 17px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(168, 85, 247, 0.18),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(49, 19, 75, 0.82),
+      rgba(20, 8, 37, 0.94)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 10px 28px rgba(0,0,0,0.18);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* Shop item hover */
+@media (hover: hover) and (pointer: fine) {
+  #page-shop .shop-item:hover,
+  #page-shop .shop-card:hover,
+  #page-shop .shop-item-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(216, 180, 254, 0.7);
+    box-shadow:
+      0 14px 35px rgba(139,53,255,0.18),
+      0 0 22px rgba(168,85,247,0.13);
+  }
+}
+
+/* Shop item icons */
+#page-shop .shop-item-icon,
+#page-shop .item-icon {
+  filter: drop-shadow(0 0 10px rgba(192,132,252,0.38));
+}
+
+/* Shop prices */
+#page-shop .price,
+#page-shop .shop-price {
+  color: #e9c7ff;
+  text-shadow: 0 0 12px rgba(192,132,252,0.25);
+  font-weight: 800;
+}
+
+/* Shop action buttons */
+#page-shop button {
+  transition:
+    transform 180ms ease,
+    filter 180ms ease,
+    box-shadow 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #page-shop button:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 0 17px rgba(168,85,247,0.20);
+  }
+}
+
+/* Shop category controls */
+#page-shop [data-category],
+#page-shop .shop-category {
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+/* Star balance emphasis */
+#page-shop .star-balance,
+#page-shop .shop-balance {
+  text-shadow: 0 0 15px rgba(250,204,21,0.30);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #page-shop .shop-item,
+  #page-shop .shop-card,
+  #page-shop .shop-item-card,
+  #page-shop button {
+    transition: none !important;
+  }
+
+  #page-shop .shop-item:hover,
+  #page-shop .shop-card:hover,
+  #page-shop .shop-item-card:hover {
+    transform: none;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 07
+   FOCUS TIMER — CONCENTRATION CHAMBER
+   ===================================================== */
+
+/* Timer panel atmosphere */
+#page-timer .panel {
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(168, 85, 247, 0.16),
+      transparent 60%
+    ),
+    rgba(25, 9, 43, 0.82);
+  border-color: rgba(192, 132, 252, 0.30);
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.22),
+    0 0 28px rgba(168,85,247,0.08);
+}
+
+/* Timer ring */
+.timer-ring {
+  filter:
+    drop-shadow(0 0 12px rgba(168,85,247,0.30))
+    drop-shadow(0 0 28px rgba(168,85,247,0.12));
+}
+
+/* Timer display */
+.timer-face {
+  text-shadow:
+    0 0 12px rgba(192,132,252,0.35),
+    0 0 30px rgba(168,85,247,0.18);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Timer controls */
+#page-timer button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #page-timer button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+    box-shadow: 0 0 20px rgba(168,85,247,0.20);
+  }
+}
+
+/* Timer mode selection */
+#page-timer select,
+#page-timer input {
+  border-radius: 12px;
+  border-color: rgba(192,132,252,0.28);
+  background: rgba(18,7,34,0.82);
+}
+
+/* Timer panel headings */
+#page-timer .panel-head {
+  border-bottom: 1px solid rgba(192,132,252,0.14);
+  padding-bottom: 12px;
+}
+
+/* Timer breathing glow */
+@keyframes sqTimerAtmosphere {
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(168,85,247,0.10);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(168,85,247,0.20);
+  }
+}
+
+#page-timer.active .timer-ring {
+  animation: sqTimerAtmosphere 4s ease-in-out infinite;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #page-timer.active .timer-ring {
+    animation: none !important;
+  }
+
+  #page-timer button {
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 08
+   NAVIGATION • PAGE TRANSITIONS • INTERACTIONS
+   ===================================================== */
+
+/* Sidebar brand glow */
+aside .brand,
+aside .logo {
+  filter: drop-shadow(0 0 12px rgba(168,85,247,0.22));
+}
+
+/* Navigation buttons */
+aside .nav button {
+  position: relative;
+  overflow: hidden;
+  transition:
+    background 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    transform 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* Active navigation item */
+aside .nav button.active {
+  border-color: rgba(192,132,252,0.38);
+  background:
+    linear-gradient(
+      100deg,
+      rgba(168,85,247,0.24),
+      rgba(103,232,249,0.06)
+    );
+  box-shadow:
+    inset 3px 0 0 #b56cff,
+    0 0 18px rgba(168,85,247,0.10);
+}
+
+/* Navigation hover */
+@media (hover: hover) and (pointer: fine) {
+  aside .nav button:hover {
+    transform: translateX(3px);
+    background-color: rgba(168,85,247,0.12);
+    border-color: rgba(192,132,252,0.30);
+  }
+}
+
+/* Page entrance */
+@keyframes sqPageEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page.active {
+  animation: sqPageEntrance 300ms ease both;
+}
+
+/* Section title accent */
+.section-title {
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 52px;
+  height: 3px;
+  margin-top: 9px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #b44dff, #67e8f9);
+  box-shadow: 0 0 12px rgba(180,77,255,0.35);
+}
+
+/* Buttons across the application */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Accessible keyboard navigation */
+aside .nav button:focus-visible {
+  outline: 2px solid #c084fc;
+  outline-offset: 3px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .page.active {
+    animation: none !important;
+  }
+
+  aside .nav button {
+    transition: none !important;
+  }
+
+  aside .nav button:hover {
+    transform: none;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 09
+   COSMIC BACKGROUND ENGINE
+   ===================================================== */
+
+/* Atmospheric background */
+body {
+  background-color: #10051f;
+  background-image:
+    radial-gradient(
+      ellipse at 12% 15%,
+      rgba(139,53,255,0.16),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 88% 28%,
+      rgba(103,232,249,0.075),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 48% 95%,
+      rgba(180,77,255,0.12),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      #10051f,
+      #160725 48%,
+      #0d0419
+    ) !important;
+  background-attachment: fixed;
+}
+
+/* Ambient light behind the main workspace */
+main {
+  position: relative;
+  isolation: isolate;
+}
+
+main::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 75% 15%,
+      rgba(180,77,255,0.055),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(103,232,249,0.035),
+      transparent 30%
+    );
+}
+
+/* Refined panel lighting */
+.panel {
+  background-image:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.025),
+      transparent 45%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.045),
+    0 12px 35px rgba(0,0,0,0.20);
+}
+
+/* Subtle cosmic border highlight */
+.panel,
+.hero,
+.stat,
+.feature {
+  border-color: rgba(192,132,252,0.19);
+}
+
+/* Cosmic selection color */
+::selection {
+  background: rgba(168,85,247,0.38);
+  color: #ffffff;
+}
+
+/* Decorative glow for the main content */
+.section-title {
+  text-shadow:
+    0 0 18px rgba(180,77,255,0.17);
+}
+
+/* Reduced motion and mobile performance */
+@media (max-width: 680px) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main::before {
+    display: none;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 10
+   TYPOGRAPHY • ICONS • MICRO-DETAILS
+   ===================================================== */
+
+/* Global text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Heading hierarchy */
+h1, h2, h3, h4,
+.section-title {
+  letter-spacing: -0.035em;
+}
+
+/* Strong text */
+strong,
+b {
+  font-weight: 750;
+}
+
+/* Muted supporting text */
+small,
+.muted,
+.subtitle {
+  color: #bba9ce;
+}
+
+/* Buttons */
+button {
+  border-radius: 11px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  transition:
+    transform 180ms ease,
+    filter 180ms ease,
+    box-shadow 180ms ease;
+}
+
+/* Button hover */
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    filter: brightness(1.08);
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Form labels */
+label {
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  font-family: inherit;
+  line-height: 1.55;
+}
+
+/* Text selection */
+input::placeholder,
+textarea::placeholder {
+  color: #9885aa;
+  opacity: 0.85;
+}
+
+/* Refined separators */
+hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(192,132,252,0.32),
+    transparent
+  );
+}
+
+/* Small icon glow */
+.feature-icon,
+.stat-icon {
+  filter: drop-shadow(0 0 7px rgba(180,77,255,0.24));
+}
+
+/* Better focus visibility */
+a:focus-visible {
+  outline: 2px solid #c084fc;
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none !important;
+  }
+
+  button:active {
+    transform: none;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 11
+   RESPONSIVE DESIGN • PERFORMANCE • MOBILE
+   ===================================================== */
+
+/* Prevent accidental horizontal overflow */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Images and media adapt to their containers */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+/* Tablet refinement */
+@media (max-width: 1024px) {
+  .panel {
+    padding: clamp(14px, 2.5vw, 22px);
+  }
+
+  .hero {
+    gap: 18px;
+  }
+
+  .stat,
+  .feature {
+    min-width: 0;
+  }
+}
+
+/* Mobile refinement */
+@media (max-width: 680px) {
+  main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page {
+    width: 100%;
+    min-width: 0;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(21px, 6vw, 29px);
+    line-height: 1.2;
+  }
+
+  .hero {
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .hero-art {
+    max-width: 100%;
+  }
+
+  .panel {
+    border-radius: 16px;
+  }
+
+  /* Prevent wide content from breaking layouts */
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  pre,
+  code {
+    overflow-wrap: anywhere;
+  }
+
+  /* Comfortable touch targets */
+  button,
+  input,
+  select {
+    min-height: 40px;
+  }
+
+  /* Reduce expensive decorative effects */
+  .stat,
+  .feature,
+  .panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Very narrow screens */
+@media (max-width: 380px) {
+  .page {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .hero {
+    padding: 14px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  button {
+    max-width: 100%;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 12
+   LOADING • EMPTY STATES • FEEDBACK
+   ===================================================== */
+
+/* Loading indicators */
+@keyframes sqLoadingPulse {
+  0%, 100% {
+    opacity: 0.48;
+    filter: brightness(0.85);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+}
+
+.loading,
+.loader,
+.spinner {
+  animation: sqLoadingPulse 1.5s ease-in-out infinite;
+}
+
+/* Empty content areas */
+.empty-state,
+.empty,
+.no-results {
+  border: 1px dashed rgba(192,132,252,0.30);
+  border-radius: 16px;
+  padding: 22px;
+  text-align: center;
+  background: rgba(168,85,247,0.045);
+  color: #c7b5d9;
+}
+
+/* Notices and feedback */
+.notice,
+.alert,
+.toast {
+  border-radius: 13px;
+  border-color: rgba(192,132,252,0.25);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.16);
+}
+
+/* Success feedback */
+.success,
+.success-message {
+  border-color: rgba(74,222,128,0.32);
+  box-shadow: 0 0 16px rgba(74,222,128,0.07);
+}
+
+/* Warning feedback */
+.warning,
+.warning-message {
+  border-color: rgba(250,204,21,0.32);
+}
+
+/* Error feedback */
+.error,
+.error-message {
+  border-color: rgba(248,113,113,0.35);
+}
+
+/* Button press feedback */
+button:active {
+  filter: brightness(0.94);
+}
+
+/* Loading accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .loading,
+  .loader,
+  .spinner {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 13
+   ACHIEVEMENTS • STREAKS • STAR REWARDS
+   ===================================================== */
+
+/* Achievement cards */
+.achievement,
+.achievement-card,
+.badge-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(192,132,252,0.28);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(168,85,247,0.17),
+      transparent 48%
+    ),
+    rgba(32,12,52,0.78);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* Achievement hover */
+@media (hover: hover) and (pointer: fine) {
+  .achievement:hover,
+  .achievement-card:hover,
+  .badge-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(216,180,254,0.65);
+    box-shadow: 0 12px 30px rgba(168,85,247,0.16);
+  }
+}
+
+/* Star currency emphasis */
+.star-balance,
+.stars,
+.star-count {
+  color: #f5d77b;
+  text-shadow: 0 0 13px rgba(250,204,21,0.28);
+  font-weight: 800;
+}
+
+/* Streak emphasis */
+.streak,
+.streak-count {
+  color: #ffb86b;
+  text-shadow: 0 0 13px rgba(251,146,60,0.25);
+}
+
+/* Achievement reveal */
+@keyframes sqAchievementReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.achievement,
+.achievement-card,
+.badge-card {
+  animation: sqAchievementReveal 350ms ease both;
+}
+
+/* Reward notification */
+.reward,
+.reward-popup,
+.star-reward {
+  border: 1px solid rgba(250,204,21,0.35);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(120,75,20,0.30),
+      rgba(38,19,55,0.88)
+    );
+  box-shadow: 0 0 22px rgba(250,204,21,0.10);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .achievement,
+  .achievement-card,
+  .badge-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 13
+   ACHIEVEMENTS • STREAKS • STAR REWARDS
+   ===================================================== */
+
+/* Achievement cards */
+.achievement,
+.achievement-card,
+.badge-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(192,132,252,0.28);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(168,85,247,0.17),
+      transparent 48%
+    ),
+    rgba(32,12,52,0.78);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* Achievement hover */
+@media (hover: hover) and (pointer: fine) {
+  .achievement:hover,
+  .achievement-card:hover,
+  .badge-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(216,180,254,0.65);
+    box-shadow: 0 12px 30px rgba(168,85,247,0.16);
+  }
+}
+
+/* Star currency emphasis */
+.star-balance,
+.stars,
+.star-count {
+  color: #f5d77b;
+  text-shadow: 0 0 13px rgba(250,204,21,0.28);
+  font-weight: 800;
+}
+
+/* Streak emphasis */
+.streak,
+.streak-count {
+  color: #ffb86b;
+  text-shadow: 0 0 13px rgba(251,146,60,0.25);
+}
+
+/* Achievement reveal */
+@keyframes sqAchievementReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.achievement,
+.achievement-card,
+.badge-card {
+  animation: sqAchievementReveal 350ms ease both;
+}
+
+/* Reward notification */
+.reward,
+.reward-popup,
+.star-reward {
+  border: 1px solid rgba(250,204,21,0.35);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(120,75,20,0.30),
+      rgba(38,19,55,0.88)
+    );
+  box-shadow: 0 0 22px rgba(250,204,21,0.10);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .achievement,
+  .achievement-card,
+  .badge-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 14
+   PREMIUM FINISHING DETAILS
+   ===================================================== */
+
+/* Elegant panel highlights */
+.panel,
+.hero,
+.stat,
+.feature {
+  position: relative;
+}
+
+/* Refined panel top-edge lighting */
+.panel::after,
+.stat::after,
+.feature::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 76%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(216,180,254,0.34),
+    transparent
+  );
+  opacity: 0.75;
+}
+
+/* Premium interactive links */
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition:
+    color 180ms ease,
+    text-shadow 180ms ease;
+}
+
+a:hover {
+  color: #d8b4fe;
+  text-shadow: 0 0 12px rgba(168,85,247,0.25);
+}
+
+/* Refined scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7542a5 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #b56cff,
+    #7542a5
+  );
+  border-radius: 20px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Polished selection and disabled states */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+/* Subtle card depth */
+.stat,
+.feature {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.055),
+    0 10px 28px rgba(0,0,0,0.16);
+}
+
+/* Cleaner focus rings */
+:focus-visible {
+  outline: 2px solid rgba(192,132,252,0.90);
+  outline-offset: 3px;
+}
+
+/* Mobile performance */
+@media (max-width: 680px) {
+  .panel::after,
+  .stat::after,
+  .feature::after {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  a {
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   STUDYQUEST — ULTIMATE COSMIC POLISH 15
+   GRAND FINALE • VISUAL CONSISTENCY
+   ===================================================== */
+
+/* Unified visual tokens */
+:root {
+  --sq-final-purple: #b44dff;
+  --sq-final-violet: #8b35ff;
+  --sq-final-cyan: #67e8f9;
+  --sq-final-border: rgba(192,132,252,0.25);
+  --sq-final-glow: rgba(168,85,247,0.16);
+}
+
+/* Consistent interactive borders */
+.panel,
+.hero,
+.stat,
+.feature,
+#aiChat,
+#quizArea,
+#mindmapView {
+  border-color: var(--sq-final-border);
+}
+
+/* Consistent purple lighting */
+.hero,
+#aiChat,
+#quizArea,
+#mindmapView {
+  box-shadow:
+    0 12px 35px rgba(0,0,0,0.18),
+    0 0 24px var(--sq-final-glow);
+}
+
+/* Consistent interaction feedback */
+button,
+a,
+.stat,
+.feature {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Refined active controls */
+button:active {
+  filter: brightness(0.94);
+}
+
+/* Better content readability */
+.panel p,
+.feature p,
+.notice {
+  line-height: 1.65;
+}
+
+/* Final cosmic accent */
+.section-title::after {
+  background: linear-gradient(
+    90deg,
+    var(--sq-final-purple),
+    var(--sq-final-cyan),
+    transparent
+  );
+}
+
+/* Keep visual effects lightweight */
+@media (max-width: 680px) {
+  .hero,
+  #aiChat,
+  #quizArea,
+  #mindmapView {
+    box-shadow: 0 8px 22px rgba(0,0,0,0.16);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
 
 </style>
 </head>
