@@ -5104,6 +5104,408 @@ button:active {
     transition-duration: .01ms !important;
   }
 }
+  
+/* =========================================================
+   STUDYQUEST — FINAL COSMIC DASHBOARD REFINEMENT
+   3 BIG CHANGES: HERO • HOLOGRAPHIC STATS • TOOL PORTALS
+   CSS ONLY — EXISTING FUNCTIONALITY PRESERVED
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. CINEMATIC COSMIC HERO
+   --------------------------------------------------------- */
+
+#page-dashboard .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 230px;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(220, 170, 255, .65);
+  border-radius: 25px;
+  background:
+    radial-gradient(
+      ellipse at 82% 45%,
+      rgba(220, 120, 255, .38),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 15% 100%,
+      rgba(72, 35, 180, .55),
+      transparent 48%
+    ),
+    linear-gradient(
+      115deg,
+      #250b48,
+      #58178b 48%,
+      #241052
+    );
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, .28),
+    0 0 35px rgba(174, 75, 255, .22),
+    inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+
+/* Atmospheric star layer */
+#page-dashboard .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .55;
+  background-image:
+    radial-gradient(2px 2px at 15% 25%, white, transparent),
+    radial-gradient(2px 2px at 42% 70%, #e9c7ff, transparent),
+    radial-gradient(1px 1px at 65% 18%, white, transparent),
+    radial-gradient(2px 2px at 88% 75%, white, transparent),
+    radial-gradient(1px 1px at 75% 42%, #d6a6ff, transparent);
+  background-size: 240px 180px;
+}
+
+/* Keep the hero text above decorative layers */
+#page-dashboard .hero > div:first-child {
+  position: relative;
+  z-index: 2;
+  max-width: 650px;
+}
+
+#page-dashboard .hero h2 {
+  font-size: clamp(27px, 3.5vw, 39px);
+  line-height: 1.12;
+  text-shadow: 0 0 24px rgba(232, 180, 255, .25);
+}
+
+#page-dashboard .hero p {
+  font-size: 14px;
+  max-width: 520px;
+}
+
+/* Rocket display */
+#page-dashboard .hero-art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 130px;
+  width: 150px;
+  height: 150px;
+  padding: 0;
+  font-size: clamp(65px, 8vw, 88px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(231, 184, 255, .20),
+    rgba(151, 69, 255, .08) 55%,
+    transparent 72%
+  );
+  filter: drop-shadow(0 0 20px rgba(230, 160, 255, .65));
+  animation: sqRocketFloat 4s ease-in-out infinite;
+}
+
+/* Rocket orbit */
+#page-dashboard .hero-art::before {
+  content: "";
+  position: absolute;
+  width: 145px;
+  height: 145px;
+  border: 1px solid rgba(235, 195, 255, .55);
+  border-right-color: rgba(103, 232, 249, .9);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-25deg);
+  box-shadow: 0 0 15px rgba(180, 77, 255, .22);
+  pointer-events: none;
+}
+
+@keyframes sqRocketFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(3deg);
+  }
+}
+
+/* ---------------------------------------------------------
+   2. HOLOGRAPHIC STATISTICS
+   --------------------------------------------------------- */
+
+#page-dashboard .stats {
+  gap: 14px;
+  margin-top: 22px;
+  margin-bottom: 24px;
+}
+
+#page-dashboard .stat {
+  --stat-accent: #c084fc;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--stat-accent) 42%, transparent);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(in srgb, var(--stat-accent) 17%, transparent),
+      transparent 52%
+    ),
+    linear-gradient(145deg, #241039, #160a27);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    0 10px 25px rgba(0, 0, 0, .20);
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+/* Individual stat identities */
+#page-dashboard .stat:nth-child(1) {
+  --stat-accent: #ffd66b;
+}
+#page-dashboard .stat:nth-child(2) {
+  --stat-accent: #c084fc;
+}
+#page-dashboard .stat:nth-child(3) {
+  --stat-accent: #67e8f9;
+}
+#page-dashboard .stat:nth-child(4) {
+  --stat-accent: #a5b4fc;
+}
+#page-dashboard .stat:nth-child(5) {
+  --stat-accent: #fb923c;
+}
+#page-dashboard .stat:nth-child(6) {
+  --stat-accent: #fbbf24;
+}
+#page-dashboard .stat:nth-child(7) {
+  --stat-accent: #67e8f9;
+}
+#page-dashboard .stat:nth-child(8) {
+  --stat-accent: #c084fc;
+}
+
+/* Holographic light sweep */
+#page-dashboard .stat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(255, 255, 255, .075) 48%,
+    transparent 70%
+  );
+  transform: translateX(-110%);
+  transition: transform .65s ease;
+}
+
+#page-dashboard .stat-head {
+  position: relative;
+  z-index: 1;
+}
+
+#page-dashboard .stat strong {
+  position: relative;
+  z-index: 1;
+  color: var(--stat-accent);
+  font-size: clamp(25px, 3vw, 31px);
+  text-shadow: 0 0 17px color-mix(in srgb, var(--stat-accent) 35%, transparent);
+}
+
+#page-dashboard .stat small {
+  position: relative;
+  z-index: 1;
+}
+
+#page-dashboard .stat .stat-icon {
+  color: var(--stat-accent);
+  background: color-mix(in srgb, var(--stat-accent) 15%, #211032) !important;
+  border: 1px solid color-mix(in srgb, var(--stat-accent) 35%, transparent);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--stat-accent) 18%, transparent);
+}
+
+/* Desktop interaction */
+@media (hover: hover) and (pointer: fine) {
+  #page-dashboard .stat:hover {
+    transform: translateY(-5px);
+    border-color: var(--stat-accent);
+    box-shadow:
+      0 14px 30px rgba(0, 0, 0, .25),
+      0 0 22px color-mix(in srgb, var(--stat-accent) 20%, transparent);
+  }
+
+  #page-dashboard .stat:hover::before {
+    transform: translateX(110%);
+  }
+}
+
+/* ---------------------------------------------------------
+   3. LEARNING TOOL PORTALS
+   --------------------------------------------------------- */
+
+#page-dashboard .feature-grid {
+  gap: 16px;
+}
+
+#page-dashboard .feature {
+  --portal-accent: #c084fc;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  padding: 20px;
+  border-radius: 19px;
+  border: 1px solid color-mix(in srgb, var(--portal-accent) 38%, transparent);
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      color-mix(in srgb, var(--portal-accent) 18%, transparent),
+      transparent 48%
+    ),
+    linear-gradient(145deg, #241039, #160a27);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    0 10px 25px rgba(0, 0, 0, .20);
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+/* Six different portal energies */
+#page-dashboard .feature:nth-child(1) {
+  --portal-accent: #c084fc;
+}
+#page-dashboard .feature:nth-child(2) {
+  --portal-accent: #fb7185;
+}
+#page-dashboard .feature:nth-child(3) {
+  --portal-accent: #67e8f9;
+}
+#page-dashboard .feature:nth-child(4) {
+  --portal-accent: #a78bfa;
+}
+#page-dashboard .feature:nth-child(5) {
+  --portal-accent: #fbbf24;
+}
+#page-dashboard .feature:nth-child(6) {
+  --portal-accent: #34d399;
+}
+
+/* Portal icon frame */
+#page-dashboard .feature-icon {
+  display: grid;
+  place-items: center;
+  width: 55px;
+  height: 55px;
+  margin-bottom: 15px;
+  border-radius: 16px;
+  font-size: 27px;
+  background: color-mix(in srgb, var(--portal-accent) 15%, #211032);
+  border: 1px solid color-mix(in srgb, var(--portal-accent) 45%, transparent);
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--portal-accent) 18%, transparent),
+    inset 0 0 15px color-mix(in srgb, var(--portal-accent) 9%, transparent);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+#page-dashboard .feature h3 {
+  color: #f7edff;
+  font-size: 16px;
+}
+
+#page-dashboard .feature p {
+  min-height: 42px;
+  color: #c4b1dc;
+}
+
+/* Portal button */
+#page-dashboard .feature .btn {
+  border-color: color-mix(in srgb, var(--portal-accent) 50%, transparent);
+  background: color-mix(in srgb, var(--portal-accent) 16%, #241039);
+  color: #f5eaff;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--portal-accent) 10%, transparent);
+}
+
+/* Portal hover */
+@media (hover: hover) and (pointer: fine) {
+  #page-dashboard .feature:hover {
+    transform: translateY(-6px);
+    border-color: var(--portal-accent);
+    box-shadow:
+      0 16px 32px rgba(0, 0, 0, .25),
+      0 0 24px color-mix(in srgb, var(--portal-accent) 19%, transparent);
+  }
+
+  #page-dashboard .feature:hover .feature-icon {
+    transform: scale(1.08) rotate(-4deg);
+    box-shadow: 0 0 25px color-mix(in srgb, var(--portal-accent) 30%, transparent);
+  }
+
+  #page-dashboard .feature:hover .btn {
+    background: color-mix(in srgb, var(--portal-accent) 28%, #241039);
+  }
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE + PERFORMANCE SAFEGUARDS
+   --------------------------------------------------------- */
+
+@media (max-width: 680px) {
+  #page-dashboard .hero {
+    min-height: 185px;
+    padding: 20px;
+  }
+
+  #page-dashboard .hero-art {
+    min-width: 85px;
+    width: 95px;
+    height: 95px;
+    font-size: 53px;
+  }
+
+  #page-dashboard .hero-art::before {
+    width: 95px;
+    height: 95px;
+  }
+
+  #page-dashboard .stat {
+    padding: 13px;
+  }
+
+  #page-dashboard .feature {
+    padding: 14px;
+  }
+
+  /* Keep mobile rendering lightweight */
+  #page-dashboard .hero-art {
+    animation: none;
+  }
+
+  #page-dashboard .stat,
+  #page-dashboard .feature {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-dashboard .hero-art {
+    animation: none !important;
+  }
+
+  #page-dashboard .stat,
+  #page-dashboard .feature,
+  #page-dashboard .feature-icon {
+    transition: none !important;
+  }
+}
 </style>
 </head>
 <body>
