@@ -1873,18 +1873,19 @@ Do not create empty or unrelated branches.
   status.textContent = "StudyQuest AI is analysing your notes...";
 
   try {
-    const response = await fetch(STUDYQUEST_AI_API, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        question,
-        notes,
-        history: []
-      })
-    });
-
+    const response = await fetch(
+  STUDYQUEST_AI_API + "/generate-mindmap",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      notes,
+      topic: ""
+    })
+  }
+);
     const data = await response.json();
 
     if (!response.ok) {
