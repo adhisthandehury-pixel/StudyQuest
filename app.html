@@ -5506,6 +5506,837 @@ button:active {
     transition: none !important;
   }
 }
+  
+/* =========================================================
+   STUDYQUEST — GALACTIC UNIVERSE 3.0
+   COMPLETE WEBSITE VISUAL REFINEMENT
+   Dashboard • Study Tools • AI • Shop • Timer
+   CSS ONLY — NO HTML OR JAVASCRIPT CHANGES
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. GLOBAL COSMIC DESIGN SYSTEM
+   --------------------------------------------------------- */
+
+:root {
+  --sq-purple: #bd78ff;
+  --sq-violet: #873dff;
+  --sq-cyan: #67e8f9;
+  --sq-pink: #f0a5ff;
+  --sq-gold: #ffd66b;
+  --sq-border: rgba(190, 143, 255, .32);
+  --sq-surface: rgba(29, 17, 49, .88);
+  --sq-glow: rgba(180, 77, 255, .22);
+}
+
+body {
+  color: #fbf7ff;
+}
+
+main {
+  background:
+    radial-gradient(
+      ellipse at 10% 10%,
+      rgba(137, 61, 255, .055),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 90% 75%,
+      rgba(103, 232, 249, .035),
+      transparent 40%
+    );
+}
+
+/* Consistent typography */
+.page h2,
+.page h3,
+.page h4 {
+  letter-spacing: -.35px;
+}
+
+.section-title {
+  padding: 5px 0 13px;
+  margin-bottom: 17px;
+  border-bottom: 1px solid rgba(190, 143, 255, .16);
+}
+
+.section-title h2 {
+  color: #fff;
+  text-shadow: 0 0 20px rgba(189, 120, 255, .28);
+}
+
+.section-title p {
+  line-height: 1.65;
+}
+
+/* ---------------------------------------------------------
+   2. SIDEBAR — GALACTIC CONTROL CENTER
+   --------------------------------------------------------- */
+
+aside {
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(137, 61, 255, .17),
+      transparent 55%
+    ),
+    rgba(12, 7, 29, .96) !important;
+
+  border-right: 1px solid rgba(190, 143, 255, .32) !important;
+  box-shadow: 8px 0 35px rgba(137, 61, 255, .12) !important;
+}
+
+.brand .logo {
+  border-radius: 15px;
+  background: linear-gradient(
+    135deg,
+    #f0c4ff,
+    #a34dff 55%,
+    #5422b5
+  );
+
+  box-shadow:
+    0 0 18px rgba(189, 120, 255, .65),
+    inset 0 0 12px rgba(255,255,255,.22);
+}
+
+.brand strong {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -.4px;
+}
+
+.nav button {
+  position: relative;
+  border-radius: 13px;
+  overflow: hidden;
+  transition:
+    background .22s ease,
+    border-color .22s ease,
+    transform .22s ease,
+    box-shadow .22s ease;
+}
+
+.nav button.active {
+  background:
+    linear-gradient(
+      110deg,
+      rgba(153, 78, 235, .36),
+      rgba(54, 27, 91, .78)
+    );
+
+  border-color: rgba(210, 165, 255, .65);
+  box-shadow:
+    0 0 18px rgba(180, 77, 255, .18),
+    inset 3px 0 0 #d5a4ff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav button:hover {
+    transform: translateX(4px);
+    background: rgba(139, 61, 255, .20);
+    border-color: rgba(190, 143, 255, .4);
+  }
+}
+
+/* ---------------------------------------------------------
+   3. DASHBOARD — COSMIC COMMAND CENTER
+   --------------------------------------------------------- */
+
+#page-dashboard .hero {
+  isolation: isolate;
+  min-height: 225px;
+  padding: clamp(22px, 4vw, 38px);
+  border-radius: 25px;
+
+  background:
+    radial-gradient(
+      ellipse at 85% 15%,
+      rgba(240, 165, 255, .32),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 12% 100%,
+      rgba(103, 232, 249, .13),
+      transparent 45%
+    ),
+    linear-gradient(
+      120deg,
+      #241044,
+      #57218b 55%,
+      #21134b
+    ) !important;
+
+  border: 1px solid rgba(220, 175, 255, .65) !important;
+
+  box-shadow:
+    0 18px 48px rgba(91, 35, 160, .25),
+    inset 0 1px 0 rgba(255,255,255,.17) !important;
+}
+
+#page-dashboard .hero-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 145px;
+  height: 145px;
+  padding: 0;
+  font-size: 78px;
+
+  filter:
+    drop-shadow(0 0 17px rgba(220, 165, 255, .65))
+    drop-shadow(0 0 30px rgba(103, 232, 249, .15));
+
+  animation: sqGalacticRocket 5s ease-in-out infinite;
+}
+
+#page-dashboard .hero-art::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(231, 190, 255, .55);
+  border-right-color: var(--sq-cyan);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+@keyframes sqGalacticRocket {
+  0%, 100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+/* Dashboard statistics */
+#page-dashboard .stat {
+  --sq-stat-color: #c084fc;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  border: 1px solid color-mix(
+    in srgb,
+    var(--sq-stat-color) 38%,
+    transparent
+  ) !important;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(in srgb, var(--sq-stat-color) 17%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(145deg, #2a1742, #150b28) !important;
+}
+
+/* Individual stat colors */
+#page-dashboard .stat:nth-child(1) {
+  --sq-stat-color: #ffd66b;
+}
+#page-dashboard .stat:nth-child(2) {
+  --sq-stat-color: #c084fc;
+}
+#page-dashboard .stat:nth-child(3) {
+  --sq-stat-color: #67e8f9;
+}
+#page-dashboard .stat:nth-child(4) {
+  --sq-stat-color: #a5b4fc;
+}
+#page-dashboard .stat:nth-child(5) {
+  --sq-stat-color: #fb923c;
+}
+#page-dashboard .stat:nth-child(6) {
+  --sq-stat-color: #fbbf24;
+}
+#page-dashboard .stat:nth-child(7) {
+  --sq-stat-color: #67e8f9;
+}
+#page-dashboard .stat:nth-child(8) {
+  --sq-stat-color: #f0a5ff;
+}
+
+#page-dashboard .stat strong {
+  color: var(--sq-stat-color) !important;
+  text-shadow: 0 0 18px color-mix(
+    in srgb,
+    var(--sq-stat-color) 40%,
+    transparent
+  );
+}
+
+#page-dashboard .stat-icon {
+  color: var(--sq-stat-color);
+  border: 1px solid color-mix(
+    in srgb,
+    var(--sq-stat-color) 40%,
+    transparent
+  );
+}
+
+/* ---------------------------------------------------------
+   4. UNIVERSAL GLASS PANELS
+   --------------------------------------------------------- */
+
+.panel:not(.shop-balance),
+.paper-card,
+.shop-item {
+  border: 1px solid var(--sq-border);
+  background:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(160, 95, 255, .09),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(45, 28, 72, .91),
+      rgba(17, 11, 35, .96)
+    );
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.panel {
+  border-radius: 19px;
+}
+
+.panel-head {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(190, 143, 255, .14);
+}
+
+.panel h3 {
+  color: #f4e7ff;
+}
+
+.notice:not(.good):not(.warn) {
+  background:
+    linear-gradient(
+      120deg,
+      rgba(91, 42, 135, .43),
+      rgba(34, 19, 59, .75)
+    );
+
+  border-color: rgba(190, 143, 255, .35);
+  border-radius: 14px;
+}
+
+/* ---------------------------------------------------------
+   5. STUDY NOTES — KNOWLEDGE LAB
+   --------------------------------------------------------- */
+
+#page-notes .upload-box {
+  position: relative;
+  overflow: hidden;
+  border: 1px dashed rgba(205, 155, 255, .72);
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(168, 85, 247, .19),
+      transparent 65%
+    ),
+    rgba(26, 12, 45, .8);
+
+  transition:
+    border-color .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+}
+
+#page-notes .upload-box h3 {
+  color: #f1d8ff;
+}
+
+#page-notes .upload-box input[type="file"] {
+  max-width: 100%;
+}
+
+#page-notes #fileStatus {
+  border-radius: 14px;
+}
+
+#page-notes #notesList {
+  line-height: 1.7;
+}
+
+/* ---------------------------------------------------------
+   6. BLURTING ARENA — FOCUS WORKSPACE
+   --------------------------------------------------------- */
+
+#page-blurting textarea {
+  min-height: 230px;
+  line-height: 1.8;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(29, 15, 48, .98),
+      rgba(17, 10, 32, .98)
+    ) !important;
+  border-color: rgba(190, 143, 255, .38) !important;
+}
+
+#page-blurting #blurtingResults {
+  border-color: rgba(103, 232, 249, .28);
+  background:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(103, 232, 249, .08),
+      transparent 50%
+    ),
+    rgba(22, 17, 39, .92);
+}
+
+/* ---------------------------------------------------------
+   7. QUIZ ARENA — NEON CHALLENGE ROOM
+   --------------------------------------------------------- */
+
+#page-quiz #quizArea {
+  border: 1px solid rgba(190, 143, 255, .3);
+  border-radius: 17px;
+  padding: 15px;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(139, 61, 255, .13),
+      transparent 65%
+    ),
+    rgba(18, 9, 34, .82);
+}
+
+#page-quiz .quiz-option {
+  border-radius: 13px;
+  border-color: rgba(190, 143, 255, .28);
+  background: rgba(39, 22, 62, .85);
+  padding: 14px;
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    transform .2s ease;
+}
+
+#page-quiz .quiz-option.correct {
+  border-color: #42d6a0;
+  box-shadow: 0 0 15px rgba(66, 214, 160, .12);
+}
+
+#page-quiz .quiz-option.wrong {
+  border-color: #ef83a9;
+  box-shadow: 0 0 15px rgba(239, 131, 169, .10);
+}
+
+/* ---------------------------------------------------------
+   8. FLASHCARDS — HOLOGRAPHIC STUDY CARDS
+   --------------------------------------------------------- */
+
+#page-flashcards .flashcard {
+  border-radius: 22px;
+  border: 1px solid rgba(206, 160, 255, .65);
+
+  background:
+    radial-gradient(
+      ellipse at 15% 10%,
+      rgba(193, 120, 255, .32),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 90% 90%,
+      rgba(103, 232, 249, .09),
+      transparent 50%
+    ),
+    linear-gradient(145deg, #392258, #17102e);
+
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+#page-flashcards .flashcard strong {
+  color: #fff;
+  text-shadow: 0 0 18px rgba(192, 132, 252, .3);
+}
+
+#page-flashcards #cardPractice {
+  border-radius: 16px;
+}
+
+/* ---------------------------------------------------------
+   9. MIND MAPS — GALACTIC KNOWLEDGE SPACE
+   --------------------------------------------------------- */
+
+#page-mindmaps #mindmapView,
+#page-mindmaps .mindmap {
+  min-height: 260px;
+  border: 1px solid rgba(190, 143, 255, .38);
+  border-radius: 20px;
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(139, 61, 255, .17),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 15% 85%,
+      rgba(103, 232, 249, .07),
+      transparent 45%
+    ),
+    rgba(15, 8, 30, .92);
+
+  box-shadow:
+    inset 0 0 35px rgba(139, 61, 255, .08),
+    0 12px 30px rgba(0,0,0,.20);
+}
+
+#page-mindmaps .mind-node {
+  border: 1px solid rgba(205, 160, 255, .55);
+  border-radius: 13px;
+  background: linear-gradient(135deg, #49266b, #211436);
+  box-shadow: 0 5px 18px rgba(0,0,0,.20);
+}
+
+#page-mindmaps .mind-node.center-node {
+  background: linear-gradient(135deg, #d18aff, #7834e8);
+  border-color: #e3baff;
+  box-shadow:
+    0 0 24px rgba(180, 77, 255, .38),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+/* Existing expandable mind-map branches */
+#page-mindmaps .mind-branch > summary {
+  border-radius: 13px;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+#page-mindmaps .mind-branch[open] > summary {
+  box-shadow: 0 0 15px rgba(180, 77, 255, .14);
+}
+
+/* ---------------------------------------------------------
+   10. PAST PAPERS — EXAM WORKSPACE
+   --------------------------------------------------------- */
+
+#page-papers #generatedPaper,
+#page-papers #paperAnswerGuide,
+#page-papers #paperResults {
+  border: 1px solid rgba(190, 143, 255, .3);
+  border-radius: 17px;
+  padding: 16px;
+
+  background:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(139, 61, 255, .11),
+      transparent 55%
+    ),
+    rgba(19, 10, 35, .88);
+
+  line-height: 1.75;
+}
+
+#page-papers #generatedPaper input,
+#page-papers #generatedPaper textarea {
+  background: rgba(12, 7, 25, .95);
+  border-color: rgba(190, 143, 255, .4);
+}
+
+#page-papers .paper-card {
+  border-radius: 16px;
+}
+
+/* ---------------------------------------------------------
+   11. TO-DO — TASK CONTROL CENTER
+   --------------------------------------------------------- */
+
+#page-quests .todo-add-row {
+  padding: 10px;
+  border: 1px solid rgba(190, 143, 255, .3);
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(91, 42, 135, .24),
+      rgba(22, 12, 39, .85)
+    );
+}
+
+#page-quests .todo-task,
+#page-quests .quest {
+  border-bottom-color: rgba(190, 143, 255, .16);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+#page-quests .todo-task input[type="checkbox"] {
+  accent-color: #bd78ff;
+}
+
+#page-quests #questStarBalance {
+  color: #ffd66b;
+  text-shadow: 0 0 20px rgba(255, 214, 107, .25);
+}
+
+/* ---------------------------------------------------------
+   12. STAR SHOP — COSMIC TREASURE VAULT
+   --------------------------------------------------------- */
+
+#page-shop .shop-balance {
+  border: 1px solid rgba(255, 214, 107, .48);
+  border-radius: 21px;
+
+  background:
+    radial-gradient(
+      ellipse at 85% 20%,
+      rgba(255, 214, 107, .19),
+      transparent 45%
+    ),
+    linear-gradient(120deg, #43205f, #1b1235);
+
+  box-shadow:
+    0 12px 35px rgba(108, 48, 190, .19),
+    inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+#page-shop .shop-balance h2 {
+  color: #ffdc75;
+  text-shadow: 0 0 20px rgba(255, 214, 107, .38);
+}
+
+#page-shop .shop-item {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+#page-shop .shop-item-art {
+  border: 1px solid rgba(190, 143, 255, .28);
+  background:
+    radial-gradient(
+      circle,
+      #8a52b8,
+      #392052 58%,
+      #160e2c
+    );
+}
+
+#page-shop .shop-tab {
+  border-radius: 12px;
+}
+
+/* ---------------------------------------------------------
+   13. STUDYQUEST AI — FUTURISTIC AI LAB
+   --------------------------------------------------------- */
+
+#page-ai #aiChat {
+  border: 1px solid rgba(190, 143, 255, .38) !important;
+  border-radius: 18px !important;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(139, 61, 255, .14),
+      transparent 65%
+    ),
+    rgba(13, 7, 27, .96) !important;
+
+  box-shadow:
+    inset 0 0 25px rgba(139, 61, 255, .06),
+    0 12px 30px rgba(0,0,0,.18);
+}
+
+#page-ai #aiQuestion {
+  border-radius: 15px;
+  min-height: 85px;
+  line-height: 1.7;
+}
+
+#page-ai #aiMaterialStatus {
+  border-radius: 14px;
+}
+
+#page-ai [data-ai-prompt] {
+  border-radius: 12px;
+}
+
+/* ---------------------------------------------------------
+   14. FOCUS TIMER — FOCUS CHAMBER
+   --------------------------------------------------------- */
+
+#page-timer .panel.center {
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(139, 61, 255, .15),
+      transparent 50%
+    ),
+    linear-gradient(145deg, #28163f, #110a25);
+}
+
+#page-timer .timer-ring {
+  border-width: 10px;
+  border-color: rgba(149, 103, 197, .35);
+  border-top-color: #e5b5ff;
+  border-right-color: #9856ff;
+
+  box-shadow:
+    0 0 32px rgba(164, 94, 255, .25),
+    0 0 65px rgba(139, 61, 255, .09),
+    inset 0 0 30px rgba(164, 94, 255, .12);
+}
+
+#page-timer .timer-face {
+  color: #f6e7ff;
+  text-shadow:
+    0 0 15px rgba(192, 132, 252, .5),
+    0 0 35px rgba(139, 61, 255, .3);
+}
+
+/* ---------------------------------------------------------
+   15. GLOBAL INPUTS AND BUTTONS
+   --------------------------------------------------------- */
+
+input,
+textarea,
+select {
+  border-color: rgba(170, 125, 215, .45) !important;
+  border-radius: 12px !important;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #c58aff !important;
+  box-shadow:
+    0 0 0 3px rgba(168, 85, 247, .15),
+    0 0 17px rgba(168, 85, 247, .15) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #a994bf;
+}
+
+.btn {
+  border-radius: 12px;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+}
+
+.btn:focus-visible,
+.nav button:focus-visible {
+  outline: 2px solid #e5b5ff;
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------
+   16. PAGE TRANSITIONS
+   --------------------------------------------------------- */
+
+@keyframes sqPageReveal {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page.active {
+  animation: sqPageReveal .32s ease both;
+}
+
+/* ---------------------------------------------------------
+   17. MOBILE AND PERFORMANCE
+   --------------------------------------------------------- */
+
+@media (max-width: 680px) {
+  main {
+    background: none;
+  }
+
+  #page-dashboard .hero {
+    min-height: 180px;
+    padding: 19px;
+    border-radius: 19px;
+  }
+
+  #page-dashboard .hero-art {
+    width: 95px;
+    height: 95px;
+    font-size: 53px;
+    animation: none;
+  }
+
+  #page-dashboard .hero-art::before {
+    inset: 1px;
+  }
+
+  .panel,
+  .paper-card,
+  .shop-item {
+    border-radius: 15px;
+  }
+
+  #page-mindmaps #mindmapView,
+  #page-mindmaps .mindmap {
+    overflow-x: auto;
+  }
+
+  /* Reduce blur work on smaller devices */
+  .panel,
+  .stat,
+  .feature,
+  .shop-item,
+  .paper-card,
+  aside {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Touch devices don't need hover movement */
+  .nav button:hover,
+  .btn:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 380px) {
+  #page-dashboard .hero-art {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   18. ACCESSIBILITY
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
