@@ -3985,9 +3985,76 @@ button:active {
 </section>
 
 <section class="page" id="page-mindmaps">
-  <div class="section-title"><div><h2>🕸️ Mind Maps</h2><p>Break a topic into its key ideas.</p></div></div>
-  <div class="panel"><div class="field"><label for="mapTopic">Main topic</label><input id="mapTopic" maxlength="100" placeholder="e.g. The Solar System"></div><div class="field"><label for="mapBranches">Key ideas — separate each with a comma</label><textarea id="mapBranches" placeholder="Sun, planets, moons, asteroids, comets"></textarea></div><div class="row"><button class="btn" id="makeMap">Generate mind map</button><button class="btn secondary" id="saveMap">Save mind map</button></div><div id="mindmapView" class="mindmap"><span class="muted smalltext">Your mind map will appear here.</span></div></div>
-  <div class="panel"><h3>Saved mind maps</h3><div id="mapList" class="smalltext muted">No saved mind maps yet.</div></div>
+
+  <div class="section-title">
+    <div>
+      <h2>🕸️ Mind Maps</h2>
+      <p>Turn your study material into interactive visual knowledge maps.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>✨ AI Mind Map Generator</h3>
+    <p class="muted smalltext">
+      StudyQuest AI will organise your submitted notes into topics,
+      subtopics and connected ideas.
+    </p>
+
+    <div class="field">
+      <label for="mapNoteSelect">Choose your study material</label>
+      <select id="mapNoteSelect">
+        <option value="all">All submitted study material</option>
+      </select>
+    </div>
+
+    <button class="btn" id="generateAIMindMap">
+      ✨ Generate AI Mind Map
+    </button>
+
+    <p id="aiMapStatus" class="muted smalltext">
+      Select your notes to get started.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h3>📝 Create a Manual Mind Map</h3>
+
+    <div class="field">
+      <label for="mapTopic">Main topic</label>
+      <input id="mapTopic" maxlength="100"
+        placeholder="e.g. The Solar System">
+    </div>
+
+    <div class="field">
+      <label for="mapBranches">
+        Key ideas — separate each with a comma
+      </label>
+      <textarea id="mapBranches"
+        placeholder="Sun, planets, moons, asteroids, comets"></textarea>
+    </div>
+
+    <div class="row">
+      <button class="btn" id="makeMap">Generate Manual Map</button>
+      <button class="btn secondary" id="saveMap">Save Mind Map</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>🌌 Your Mind Map</h3>
+    <div id="mindmapView" class="mindmap">
+      <span class="muted smalltext">
+        Your mind map will appear here.
+      </span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>📚 Saved Mind Maps</h3>
+    <div id="mapList" class="smalltext muted">
+      No saved mind maps yet.
+    </div>
+  </div>
+
 </section>
 
 
