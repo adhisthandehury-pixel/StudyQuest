@@ -821,19 +821,6 @@ $("submitNotes").addEventListener("click", async () => {
   );
 
   try {
-     const response = await fetch(
-  STUDYQUEST_AI_API + "/generate-mindmap",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      notes,
-      topic: ""
-    })
-  }
-);
     if (pdf) {
       sourceType = "PDF";
       sourceName = pdf.name;
