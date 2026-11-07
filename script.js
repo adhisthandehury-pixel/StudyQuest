@@ -1739,15 +1739,18 @@ function normalizeMapBranches(branches) {
   });
 }
 
+
 function buildMindMapHTML(topic, branches) {
   function renderBranch(branch, depth = 1) {
     const children = normalizeMapBranches(branch.children);
 
     return `
-      <div class="mind-branch depth-${Math.min(depth, 4)}">
-        <div class="mind-node">
-          ${escapeHTML(branch.name)}
-        </div>
+      <details class="mind-branch depth-${Math.min(depth, 4)}" open>
+        <summary class="mind-node">
+          <span class="mind-node-dot"></span>
+          <span>${escapeHTML(branch.name)}</span>
+          ${children.length ? '<span class="mind-toggle">⌄</span>' : ''}
+        </summary>
 
         ${
           children.length
@@ -1758,14 +1761,16 @@ function buildMindMapHTML(topic, branches) {
               </div>`
             : ""
         }
-      </div>
+      </details>
     `;
   }
 
   return `
     <div class="mindmap-tree">
-      <div class="mind-node center-node">
-        ${escapeHTML(topic)}
+      <div class="mind-root">
+        <div class="mind-node center-node">
+          ✨ ${escapeHTML(topic)}
+        </div>
       </div>
 
       <div class="mindmap-branches">
@@ -1839,6 +1844,12 @@ async function generateAIMindMap() {
 Create a detailed hierarchical mind map using ONLY the supplied study material.
 
 IMPORTANT RULES:
+- Use short labels, not complete sentences.
+- Main branches should be major concepts.
+- Sub-branches should contain specific facts or details.
+- Each node should ideally contain 2–7 words.
+- Create at least 3 levels of hierarchy when the notes support them.
+- Never turn the entire explanation into one branch.
 - Do not invent facts or add outside knowledge.
 - Preserve important terminology from the notes.
 - Organise the information from broad concepts to smaller details.
