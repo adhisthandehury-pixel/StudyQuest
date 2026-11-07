@@ -1691,29 +1691,259 @@ $("flipCard").addEventListener("click", () => {
 
 let currentMindMap = null;
 
+function refreshMindMapNoteOptions() {
+  const selector = $("mapNoteSelect");
+  if (!selector) return;
+
+  const previous = selector.value;
+
+  const usableNotes = (state.notes || []).filter(note =>
+    typeof note.text === "string" && note.text.trim()
+  );
+
+  selector.innerHTML =
+    '<option value="all">All submitted study material</option>';
+
+  usableNotes.forEach(note => {
+    const option = document.createElement("option");
+    option.value = note.id;
+    option.textContent = note.title || "Untitled notes";
+    selector.appendChild(option);
+  });
+
+  if (
+    previous === "all" ||
+    usableNotes.some(note => note.id === previous)
+  ) {
+    selector.value = previous;
+  } else {
+    selector.value = "all";
+  }
+}
+
+function normalizeMapBranches(branches) {
+  if (!Array.isArray(branches)) return [];
+
+  return branches.slice(0, 20).map(branch => {
+    if (typeof branch === "string") {
+      return {
+        name: branch,
+        children: []
+      };
+    }
+
+    return {
+      name: String(branch.name || branch.title || "Key idea"),
+      children: normalizeMapBranches(branch.children)
+    };
+  });
+}
+
 function buildMindMapHTML(topic, branches) {
+  function renderBranch(branch, depth = 1) {
+    const children = normalizeMapBranches(branch.children);
+
+    return `
+      <div class="mind-branch depth-${Math.min(depth, 4)}">
+        <div class="mind-node">
+          ${escapeHTML(branch.name)}
+        </div>
+
+        ${
+          children.length
+            ? `<div class="mind-children">
+                ${children.map(child =>
+                  renderBranch(child, depth + 1)
+                ).join("")}
+              </div>`
+            : ""
+        }
+      </div>
+    `;
+  }
+
   return `
-    <div class="mind-node center-node">${escapeHTML(topic)}</div>
-    ${branches.map(branch => `
-      <div class="mind-node">${escapeHTML(branch)}</div>
-    `).join("")}
+    <div class="mindmap-tree">
+      <div class="mind-node center-node">
+        ${escapeHTML(topic)}
+      </div>
+
+      <div class="mindmap-branches">
+        ${normalizeMapBranches(branches)
+          .map(branch => renderBranch(branch))
+          .join("")}
+      </div>
+    </div>
   `;
 }
 
+function extractMindMapJSON(answer) {
+  let cleaned = String(answer || "")
+    .replace(/```json/gi, "")
+    .replace(/```/g, "")
+    .trim();
+
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+
+  if (firstBrace === -1 || lastBrace === -1) {
+    throw new Error("The AI did not return a valid mind map.");
+  }
+
+  cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+
+  const parsed = JSON.parse(cleaned);
+
+  if (!parsed.topic || !Array.isArray(parsed.branches)) {
+    throw new Error("The AI returned an incomplete mind map.");
+  }
+
+  return {
+    topic: String(parsed.topic),
+    branches: normalizeMapBranches(parsed.branches),
+    id: makeId(),
+    source: "AI"
+  };
+}
+
+async function generateAIMindMap() {
+  const status = $("aiMapStatus");
+  const button = $("generateAIMindMap");
+
+  refreshMindMapNoteOptions();
+
+  const selected = $("mapNoteSelect").value;
+
+  const usableNotes = (state.notes || []).filter(note =>
+    typeof note.text === "string" && note.text.trim()
+  );
+
+  const chosenNotes = selected === "all"
+    ? usableNotes
+    : usableNotes.filter(note => note.id === selected);
+
+  if (!chosenNotes.length) {
+    status.textContent =
+      "No usable study notes found. Submit your study material first.";
+    showToast("Submit study notes before generating a mind map.");
+    return;
+  }
+
+  const notes = chosenNotes.map(note =>
+    "TITLE: " + (note.title || "Untitled") +
+    "\nSOURCE: " + (note.sourceType || "Study material") +
+    "\n\n" + note.text
+  ).join("\n\n--------------------\n\n").slice(0, 80000);
+
+  const question = `
+Create a detailed hierarchical mind map using ONLY the supplied study material.
+
+IMPORTANT RULES:
+- Do not invent facts or add outside knowledge.
+- Preserve important terminology from the notes.
+- Organise the information from broad concepts to smaller details.
+- Include important definitions, processes, examples and relationships when present.
+- Avoid repeating the same idea.
+- Make the map useful for revision.
+- Return ONLY valid JSON. No Markdown fences or extra explanation.
+
+Use exactly this structure:
+{
+  "topic": "Main topic",
+  "branches": [
+    {
+      "name": "Main subtopic",
+      "children": [
+        {
+          "name": "Smaller idea",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
+
+Create 3 to 8 main branches when the material supports them.
+Use smaller nested branches where useful.
+Do not create empty or unrelated branches.
+`;
+
+  button.disabled = true;
+  button.textContent = "✨ Creating your map...";
+  status.textContent = "StudyQuest AI is analysing your notes...";
+
+  try {
+    const response = await fetch(STUDYQUEST_AI_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        question,
+        notes,
+        history: []
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "The AI request failed.");
+    }
+
+    if (!data.answer) {
+      throw new Error("The AI returned an empty response.");
+    }
+
+    currentMindMap = extractMindMapJSON(data.answer);
+
+    $("mindmapView").innerHTML = buildMindMapHTML(
+      currentMindMap.topic,
+      currentMindMap.branches
+    );
+
+    status.textContent =
+      "Your AI mind map is ready! You can save it below.";
+
+    showToast("AI mind map generated! ✨");
+
+  } catch (error) {
+    status.textContent =
+      "Could not generate the map: " +
+      (error.message || "Please try again.");
+
+    showToast("Mind map generation failed.");
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "✨ Generate AI Mind Map";
+  }
+}
+
+$("generateAIMindMap").addEventListener(
+  "click",
+  generateAIMindMap
+);
+
 $("makeMap").addEventListener("click", () => {
   const topic = $("mapTopic").value.trim();
+
   const branches = $("mapBranches").value
     .split(/[,;\n]+/)
     .map(branch => branch.trim())
     .filter(Boolean)
-    .slice(0, 30);
+    .slice(0, 30)
+    .map(name => ({
+      name,
+      children: []
+    }));
 
   if (!topic) {
     showToast("Give your mind map a main topic.");
     return;
   }
 
-  if (branches.length === 0) {
+  if (!branches.length) {
     showToast("Add at least one key idea.");
     return;
   }
@@ -1721,12 +1951,16 @@ $("makeMap").addEventListener("click", () => {
   currentMindMap = {
     topic,
     branches,
-    id: makeId()
+    id: makeId(),
+    source: "Manual"
   };
 
-  $("mindmapView").innerHTML = buildMindMapHTML(topic, branches);
+  $("mindmapView").innerHTML = buildMindMapHTML(
+    topic,
+    branches
+  );
 
-  showToast("Mind map generated! 🕸️");
+  showToast("Manual mind map generated! 🕸️");
 });
 
 $("saveMap").addEventListener("click", () => {
@@ -1752,26 +1986,41 @@ function renderMindmaps() {
 
   if (!container) return;
 
-  if (state.mindmaps.length === 0) {
+  if (!state.mindmaps.length) {
     container.innerHTML = "No saved mind maps yet.";
     return;
   }
 
-  container.innerHTML = state.mindmaps.map(map => `
-    <div class="list-item">
-      <div style="flex:1;min-width:0">
-        <strong>🕸️ ${escapeHTML(map.topic)}</strong>
-        <div class="muted smalltext">
-          ${map.branches.length} key ideas:
-          ${escapeHTML(map.branches.join(", "))}
+  container.innerHTML = state.mindmaps.map(map => {
+    const branches = normalizeMapBranches(map.branches);
+
+    return `
+      <div class="list-item">
+        <div style="flex:1;min-width:0">
+          <strong>
+            🕸️ ${escapeHTML(map.topic)}
+          </strong>
+
+          <div class="muted smalltext">
+            ${branches.length} main ideas
+            · ${escapeHTML(map.source || "Saved map")}
+          </div>
+        </div>
+
+        <div class="row" style="align-items:center">
+          <button class="btn secondary small"
+            data-open-map="${escapeHTML(map.id)}">
+            Open
+          </button>
+
+          <button class="btn ghost small"
+            data-delete-map="${escapeHTML(map.id)}">
+            Delete
+          </button>
         </div>
       </div>
-      <div class="row" style="align-items:center">
-        <button class="btn secondary small" data-open-map="${escapeHTML(map.id)}">Open</button>
-        <button class="btn ghost small" data-delete-map="${escapeHTML(map.id)}">Delete</button>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 
   container.querySelectorAll("[data-open-map]").forEach(button => {
     button.addEventListener("click", () => {
@@ -1781,16 +2030,25 @@ function renderMindmaps() {
 
       if (!map) return;
 
-      currentMindMap = { ...map };
+      currentMindMap = {
+        ...map,
+        branches: normalizeMapBranches(map.branches)
+      };
 
       $("mapTopic").value = map.topic;
-      $("mapBranches").value = map.branches.join(", ");
+
+      $("mapBranches").value =
+        currentMindMap.branches.map(branch => branch.name).join(", ");
+
       $("mindmapView").innerHTML = buildMindMapHTML(
         map.topic,
-        map.branches
+        currentMindMap.branches
       );
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
     });
   });
 
@@ -1798,7 +2056,9 @@ function renderMindmaps() {
     button.addEventListener("click", () => {
       const id = button.dataset.deleteMap;
 
-      state.mindmaps = state.mindmaps.filter(map => map.id !== id);
+      state.mindmaps = state.mindmaps.filter(
+        map => map.id !== id
+      );
 
       saveState();
       renderMindmaps();
@@ -1807,7 +2067,6 @@ function renderMindmaps() {
     });
   });
 }
-
 
 /* -------------------- PAST PAPERS -------------------- */
 
