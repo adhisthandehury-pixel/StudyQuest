@@ -319,7 +319,15 @@ function renderProfile() {
      $("profileTitle").textContent = state.selectedTitle
   ? ({
       "flow-spammer": "⚡ Flow Spammer",
-      "david-goggins": "🏆 David Goggins"
+      "david-goggins": "👑 God of Consistency",
+      "deep-focus": "🧠 Deep Focus",
+      "time-traveler": "⌛ Time Traveler",
+      "note-master": "📚 Note Master",
+      "flashcard-forge": "🃏 Flashcard Forge",
+      "mind-map-architect": "🗺️ Mind Map Architect",
+      "quiz-champion": "🏅 Quiz Champion",
+      "paper-strategist": "📝 Paper Strategist",
+      "task-tactician": "🎯 Task Tactician"
     }[state.selectedTitle] || "No title equipped")
   : "No title equipped";
   $("greeting").textContent = state.profile.name
@@ -335,21 +343,77 @@ function renderTitles() {
   const profileTitle = $("profileTitle");
 
   const titles = [
-    {
-      id: "flow-spammer",
-      name: "Flow Spammer",
-      icon: "⚡",
-      requirement: "Complete 3 focus sessions",
-      unlocked: state.focusSessionsCompleted >= 3
-    },
-    {
-      id: "david-goggins",
-      name: "David Goggins",
-      icon: "🏆",
-      requirement: "Reach a 365-day streak",
-      unlocked: state.currentStreak >= 365
-    }
-  ];
+  {
+    id: "flow-spammer",
+    name: "Flow Spammer",
+    icon: "⚡",
+    requirement: "Complete 3 focus sessions",
+    unlocked: state.focusSessionsCompleted >= 3
+  },
+  {
+    id: "david-goggins",
+    name: "God of Consistency",
+    icon: "👑",
+    requirement: "Reach a 365-day streak",
+    unlocked: state.currentStreak >= 365
+  },
+  {
+    id: "deep-focus",
+    name: "Deep Focus",
+    icon: "🧠",
+    requirement: "Complete 10 focus sessions",
+    unlocked: state.focusSessionsCompleted >= 10
+  },
+  {
+    id: "time-traveler",
+    name: "Time Traveler",
+    icon: "⌛",
+    requirement: "Complete 600 focus minutes",
+    unlocked: state.focusMinutes >= 600
+  },
+  {
+    id: "note-master",
+    name: "Note Master",
+    icon: "📚",
+    requirement: "Create 10 study materials",
+    unlocked: state.notes.length >= 10
+  },
+  {
+    id: "flashcard-forge",
+    name: "Flashcard Forge",
+    icon: "🃏",
+    requirement: "Create 50 flashcards",
+    unlocked: state.flashcards.length >= 50
+  },
+  {
+    id: "mind-map-architect",
+    name: "Mind Map Architect",
+    icon: "🗺️",
+    requirement: "Create 5 mind maps",
+    unlocked: state.mindmaps.length >= 5
+  },
+  {
+    id: "quiz-champion",
+    name: "Quiz Champion",
+    icon: "🏅",
+    requirement: "Answer 50 quiz questions correctly",
+    unlocked: state.quizResults.correct >= 50
+  },
+  {
+    id: "paper-strategist",
+    name: "Paper Strategist",
+    icon: "📝",
+    requirement: "Save 10 past papers",
+    unlocked: state.papers.length >= 10
+  },
+  {
+    id: "task-tactician",
+    name: "Task Tactician",
+    icon: "🎯",
+    requirement: "Complete 25 to-do tasks",
+    unlocked: (state.todoTasks || []).filter(task => task.completed).length >= 25
+  }
+];
 
   // Keep unlocked titles saved permanently.
   titles.forEach(title => {
@@ -514,19 +578,13 @@ function renderQuests() {
 }
 
       if (task.completed && !task.rewardClaimed) {
-        const key = task.rewardKey || todoKey(task.title);
+  state.stars += 5;
+  task.rewardClaimed = true;
 
-        if (!state.todoRewardedKeys.includes(key)) {
-          state.stars += 5;
-triggerAchievementEffect(5);
-state.todoRewardedKeys.push(key);
-          task.rewardClaimed = true;
-          showToast("⭐ Task completed! +5 Stars");
-        } else {
-          task.rewardClaimed = true;
-          showToast("This task title has already earned Stars.");
-        }
-      }
+  triggerAchievementEffect(5);
+
+  showToast("⭐ Task completed! +5 Stars");
+}
 
       saveState();
       updateDashboard();
@@ -594,8 +652,7 @@ function addTodoTask() {
     id: makeId(),
     title,
     completed: false,
-    rewardClaimed: state.todoRewardedKeys.includes(key),
-    rewardKey: key
+    rewardClaimed: false
   });
 
   input.value = "";
