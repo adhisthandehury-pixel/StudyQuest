@@ -6353,6 +6353,335 @@ textarea::placeholder {
   display: block;
   object-fit: cover;
   }
+  /* =====================================================
+   STAR SHOP 2.0 — DASHBOARD DESIGNS + REWARD EFFECTS
+   ===================================================== */
+
+/* Shop category tabs */
+#page-shop .shop-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#page-shop .shop-tab {
+  border-radius: 13px;
+  min-height: 43px;
+}
+
+#page-shop .shop-tab.active {
+  background: linear-gradient(135deg, #c05cff, #762bdf);
+  border-color: #e0b4ff;
+  color: white;
+  box-shadow: 0 0 18px #a020ff45;
+}
+
+/* Shop item cards */
+#page-shop .shop-item {
+  position: relative;
+  isolation: isolate;
+  padding: 19px;
+  border: 1px solid #7545a0;
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 90% 5%, #a34dff25, transparent 45%),
+    linear-gradient(145deg, #28143e, #160a27);
+  box-shadow:
+    inset 0 1px 0 #ffffff12,
+    0 12px 28px #0003;
+  transition: transform .22s ease, border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+#page-shop .shop-item::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 130px;
+  height: 130px;
+  right: -65px;
+  top: -65px;
+  border-radius: 50%;
+  background: #b44dff;
+  filter: blur(35px);
+  opacity: .17;
+}
+
+#page-shop .shop-item-art {
+  display: grid;
+  place-items: center;
+  min-height: 115px;
+  margin-bottom: 15px;
+  border: 1px solid #a66bd65c;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle, #8d50b9 0%, #392052 55%, #170d29 100%);
+  font-size: 48px;
+  text-shadow: 0 0 20px #e4baff80;
+}
+
+#page-shop .shop-rarity {
+  display: inline-block;
+  padding: 5px 9px;
+  margin-bottom: 9px;
+  border-radius: 20px;
+  background: #8d52b32b;
+  border: 1px solid #bd83e65c;
+  color: #e5c6ff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+#page-shop .shop-item h3 {
+  margin: 0 0 8px;
+  color: #fff0ff;
+}
+
+#page-shop .shop-item p {
+  color: #c5b0dc;
+  line-height: 1.55;
+  min-height: 38px;
+  font-size: 12px;
+}
+
+#page-shop .shop-item .shop-price {
+  margin: 13px 0;
+  color: #ffdc75;
+  font-weight: 900;
+}
+
+#page-shop .shop-item .shop-owned {
+  color: #9ff0c5;
+  font-weight: 800;
+}
+
+#page-shop .shop-item .btn {
+  width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #page-shop .shop-item:hover {
+    transform: translateY(-5px);
+    border-color: #d5a5ff;
+    box-shadow: 0 17px 35px #8b35ff30;
+  }
+}
+
+/* Inventory empty state */
+#page-shop .shop-empty {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  border: 1px dashed #8152a5;
+  border-radius: 18px;
+  background: #24113780;
+}
+
+/* =====================================================
+   DASHBOARD DESIGNS
+   These only affect the dashboard page.
+   ===================================================== */
+
+/* Midnight */
+body[data-dashboard-design="theme_midnight"] #page-dashboard {
+  background:
+    radial-gradient(ellipse at 15% 5%, #31517b55, transparent 45%),
+    radial-gradient(ellipse at 90% 80%, #253d6550, transparent 45%);
+  border-radius: 24px;
+}
+
+body[data-dashboard-design="theme_midnight"] #page-dashboard .hero {
+  background:
+    radial-gradient(ellipse at 85% 20%, #78baff45, transparent 45%),
+    linear-gradient(120deg, #142b4b, #1c4266 60%, #182b4c);
+  border-color: #6c9dc9;
+}
+
+body[data-dashboard-design="theme_midnight"] #page-dashboard .stat,
+body[data-dashboard-design="theme_midnight"] #page-dashboard .panel,
+body[data-dashboard-design="theme_midnight"] #page-dashboard .feature {
+  background: linear-gradient(145deg, #1b304b, #101e34);
+  border-color: #496b91;
+}
+
+/* Cosmic Purple */
+body[data-dashboard-design="theme_cosmic"] #page-dashboard {
+  background:
+    radial-gradient(ellipse at 10% 10%, #9b43ff30, transparent 45%),
+    radial-gradient(ellipse at 90% 80%, #5724a330, transparent 45%);
+  border-radius: 24px;
+}
+
+body[data-dashboard-design="theme_cosmic"] #page-dashboard .hero {
+  background:
+    radial-gradient(ellipse at 85% 20%, #ed6bff50, transparent 45%),
+    linear-gradient(120deg, #45116b, #7927a8 60%, #38106a);
+  border-color: #d18cff;
+}
+
+body[data-dashboard-design="theme_cosmic"] #page-dashboard .stat,
+body[data-dashboard-design="theme_cosmic"] #page-dashboard .panel,
+body[data-dashboard-design="theme_cosmic"] #page-dashboard .feature {
+  background: linear-gradient(145deg, #32164e, #1c0b32);
+  border-color: #8951b4;
+}
+
+/* Solar System */
+body[data-dashboard-design="theme_crystal"] #page-dashboard {
+  background:
+    radial-gradient(circle at 15% 15%, #e9a33a25, transparent 25%),
+    radial-gradient(circle at 85% 35%, #487fd52b, transparent 28%),
+    radial-gradient(circle at 55% 90%, #9b52cb25, transparent 30%),
+    #0b1023;
+  border-radius: 24px;
+}
+
+body[data-dashboard-design="theme_crystal"] #page-dashboard .hero {
+  background:
+    radial-gradient(circle at 80% 25%, #f3bb5a45, transparent 35%),
+    radial-gradient(circle at 15% 100%, #7843b855, transparent 45%),
+    linear-gradient(120deg, #17234b, #253e70 60%, #171b3c);
+  border-color: #d8ad68;
+}
+
+body[data-dashboard-design="theme_crystal"] #page-dashboard .stat,
+body[data-dashboard-design="theme_crystal"] #page-dashboard .panel,
+body[data-dashboard-design="theme_crystal"] #page-dashboard .feature {
+  background:
+    radial-gradient(circle at 90% 5%, #dba54c16, transparent 45%),
+    linear-gradient(145deg, #1d2948, #10182e);
+  border-color: #7b7392;
+}
+
+body[data-dashboard-design="theme_crystal"] #page-dashboard .stat strong {
+  color: #f5cf82;
+}
+
+/* Dashboard design mobile spacing */
+@media (max-width: 680px) {
+  #page-shop .shop-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #page-shop .shop-tab {
+    width: 100%;
+    padding: 10px 7px;
+    font-size: 11px;
+  }
+
+  #page-shop .shop-item {
+    padding: 15px;
+  }
+
+  #page-shop .shop-item-art {
+    min-height: 95px;
+  }
+}
+
+/* =====================================================
+   ACHIEVEMENT EFFECTS — STAR REWARD ANIMATIONS
+   ===================================================== */
+
+#starRewardFx {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+#starRewardFx.active {
+  animation: sqRewardFade 1.5s ease-out both;
+}
+
+#starRewardFx .star-effect-title {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  color: #ffe69a;
+  font-size: clamp(25px, 5vw, 42px);
+  font-weight: 950;
+  text-shadow: 0 0 15px #ffbd43, 0 0 35px #ff9e43;
+  white-space: nowrap;
+  transform: translate(-50%, 20px) scale(.6);
+  animation: sqRewardTitle .8s cubic-bezier(.2,.8,.2,1) both;
+}
+
+#starRewardFx span {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  font-size: clamp(18px, 3vw, 30px);
+  opacity: 0;
+  animation: sqRewardParticle 1.2s ease-out calc(var(--i) * .025s) both;
+}
+
+#starRewardFx.cos_lightning .star-effect-title {
+  color: #a8eaff;
+  text-shadow: 0 0 16px #31cfff, 0 0 35px #277cff;
+}
+
+#starRewardFx.cos_champion .star-effect-title {
+  color: #ffe18a;
+  text-shadow: 0 0 16px #ffb52e, 0 0 38px #ff8a22;
+}
+
+@keyframes sqRewardFade {
+  0% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes sqRewardTitle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 25px) scale(.6);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.08);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -8px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -30px) scale(.9);
+  }
+}
+
+@keyframes sqRewardParticle {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) scale(.3) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-95px) scale(1.35) rotate(130deg);
+  }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  #starRewardFx.active,
+  #starRewardFx .star-effect-title,
+  #starRewardFx span {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  #page-shop .shop-item {
+    transition: none !important;
+  }
+}
 </style>
 </head>
 <body>
