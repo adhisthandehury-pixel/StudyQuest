@@ -6336,13 +6336,35 @@ textarea::placeholder {
     scroll-behavior: auto !important;
   }
 }
+.brand .logo {
+  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  border: 1px solid #bd78ff;
+  border-radius: 14px;
+  box-shadow: 0 0 22px #a34dff80;
+}
 
+.brand .logo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  }
 </style>
 </head>
 <body>
 <div class="app">
 <aside>
-  <div class="brand"><div class="logo">✦</div><div><strong>StudyQuest</strong><small>Learn a little. Level up.</small></div></div>
+  <div class="brand">
+  <div class="logo">
+    <img src="favicon.png" alt="StudyQuest logo">
+  </div>
+  <div>
+    <strong>StudyQuest</strong>
+    <small>Learn a little. Level up.</small>
+  </div>
+  </div>
   <div><div class="nav-label">YOUR SPACE</div><nav class="nav" id="nav">
     <button class="active" data-page="dashboard"><span>🏠</span>Dashboard</button>
     <button data-page="notes"><span>📚</span>Study Notes</button>
