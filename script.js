@@ -17,8 +17,8 @@ const DEFAULT_STATE = {
 shopOwned: [],
 shopEquipped: {
   skin: "",
-  cosmetic: "",
-  theme: ""
+  dashboard: "",
+  effect: ""
 },
 
   focusMinutes: 0,
@@ -3245,13 +3245,13 @@ const SHOP_ITEMS = [
     description: "A vibrant cosmic-purple theme."
   },
   {
-    id: "theme_crystal",
-    category: "themes",
-    name: "Crystal Galaxy",
-    icon: "💎",
-    price: 400,
-    description: "A bright crystal-galaxy theme."
-  }
+  id: "theme_crystal",
+  category: "themes",
+  name: "Solar System",
+  icon: "🪐",
+  price: 400,
+  description: "Explore a cosmic dashboard inspired by the planets, stars and our solar system."
+}
 ];
 
 let currentShopCategory = "skins";
