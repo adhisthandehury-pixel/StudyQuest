@@ -255,9 +255,13 @@ if (progress) {
 
 function awardStars(amount, reason) {
   state.stars += amount;
+
   saveState();
   updateDashboard();
   renderQuests();
+  renderShop();
+
+  triggerAchievementEffect(amount);
 
   showToast(`⭐ +${amount} Stars! ${reason}`);
 }
@@ -514,7 +518,8 @@ function renderQuests() {
 
         if (!state.todoRewardedKeys.includes(key)) {
           state.stars += 5;
-          state.todoRewardedKeys.push(key);
+triggerAchievementEffect(5);
+state.todoRewardedKeys.push(key);
           task.rewardClaimed = true;
           showToast("⭐ Task completed! +5 Stars");
         } else {
@@ -1523,7 +1528,10 @@ function finishQuiz() {
   state.quizResults.attempts++;
   state.quizResults.correct += correct;
 
-  if (earned > 0) state.stars += earned;
+  if (earned > 0) {
+  state.stars += earned;
+  triggerAchievementEffect(earned);
+}
 
    recordDailyStreak();
 
@@ -2789,6 +2797,7 @@ function completeTimerSession() {
 
   state.focusMinutes += sessionMinutes;
   state.stars += 3;
+   triggerAchievementEffect(3);
    state.focusSessionsCompleted += 1;
    recordDailyStreak();
 state.freezeProgress += 1;
@@ -3176,16 +3185,17 @@ function initStudyQuest() {
 }
 
 initStudyQuest();
-
-/* ================= STAR SHOP SYSTEM ================= */
+/* ================= STAR SHOP SYSTEM 2.0 ================= */
 
 const SHOP_ITEMS = [
+  // SKINS — existing items preserved
   {
     id: "skin_galaxy",
     category: "skins",
     name: "Galaxy Skin",
     icon: "🌌",
     price: 100,
+    rarity: "Rare",
     description: "A cosmic look for your learner profile."
   },
   {
@@ -3194,6 +3204,7 @@ const SHOP_ITEMS = [
     name: "Neon Flame",
     icon: "🔥",
     price: 250,
+    rarity: "Epic",
     description: "Bring fiery neon energy to your profile."
   },
   {
@@ -3202,56 +3213,67 @@ const SHOP_ITEMS = [
     name: "Royal Champion",
     icon: "👑",
     price: 500,
+    rarity: "Legendary",
     description: "A legendary champion style."
   },
-  {
-    id: "cos_sparkle",
-    category: "cosmetics",
-    name: "Sparkle Effect",
-    icon: "✨",
-    price: 75,
-    description: "Add a magical sparkle effect to your profile."
-  },
-  {
-    id: "cos_lightning",
-    category: "cosmetics",
-    name: "Lightning Badge",
-    icon: "⚡",
-    price: 150,
-    description: "Show off your lightning badge."
-  },
-  {
-    id: "cos_champion",
-    category: "cosmetics",
-    name: "Champion Badge",
-    icon: "🏆",
-    price: 300,
-    description: "Celebrate your study achievements."
-  },
+
+  // DASHBOARD DESIGNS — old theme IDs preserved
   {
     id: "theme_midnight",
-    category: "themes",
+    category: "dashboards",
     name: "Midnight",
     icon: "🌙",
     price: 100,
-    description: "A deep midnight theme."
+    rarity: "Common",
+    description: "A sleek midnight-blue dashboard."
   },
   {
     id: "theme_cosmic",
-    category: "themes",
+    category: "dashboards",
     name: "Cosmic Purple",
     icon: "🪐",
     price: 250,
-    description: "A vibrant cosmic-purple theme."
+    rarity: "Epic",
+    description: "A glowing purple cosmic dashboard."
   },
   {
-  id: "theme_crystal",
-  category: "themes",
-  name: "Solar System",
-  icon: "🪐",
-  price: 400,
-  description: "Explore a cosmic dashboard inspired by the planets, stars and our solar system."
-}
+    id: "theme_crystal",
+    category: "dashboards",
+    name: "Solar System",
+    icon: "☀️",
+    price: 400,
+    rarity: "Legendary",
+    description: "A planetary dashboard with solar-system inspired colours."
+  },
+
+  // ACHIEVEMENT EFFECTS — old cosmetic IDs preserved
+  {
+    id: "cos_sparkle",
+    category: "effects",
+    name: "Star Burst",
+    icon: "✨",
+    price: 75,
+    rarity: "Common",
+    description: "A magical sparkle burst whenever you earn Stars."
+  },
+  {
+    id: "cos_lightning",
+    category: "effects",
+    name: "Lightning Strike",
+    icon: "⚡",
+    price: 150,
+    rarity: "Rare",
+    description: "An electric flash when you earn Stars."
+  },
+  {
+    id: "cos_champion",
+    category: "effects",
+    name: "Champion Celebration",
+    icon: "🏆",
+    price: 300,
+    rarity: "Legendary",
+    description: "A special champion celebration whenever you earn Stars."
+  }
 ];
 
 let currentShopCategory = "skins";
@@ -3260,28 +3282,80 @@ function getShopItem(id) {
   return SHOP_ITEMS.find(item => item.id === id);
 }
 
+function getShopSlot(category) {
+  if (category === "skins") return "skin";
+  if (category === "dashboards") return "dashboard";
+  if (category === "effects") return "effect";
+  return "";
+}
+
 function showShopMessage(message) {
   const element = $("shopMessage");
   if (element) element.textContent = message;
 }
 
+/* Migrate old equipped slots without deleting old saved data. */
+function migrateShopEquipment() {
+  if (!state.shopEquipped) {
+    state.shopEquipped = {};
+  }
+
+  const equipped = state.shopEquipped;
+
+  equipped.skin = equipped.skin || "";
+  equipped.dashboard = equipped.dashboard || equipped.theme || "";
+  equipped.effect = equipped.effect || equipped.cosmetic || "";
+
+  // Keep legacy keys for compatibility with older saved data.
+  equipped.theme = equipped.dashboard;
+  equipped.cosmetic = equipped.effect;
+
+  if (!Array.isArray(state.shopOwned)) {
+    state.shopOwned = [];
+  }
+
+  saveState();
+}
+
+migrateShopEquipment();
+
+/* Render shop cards and the inventory. */
 function renderShop() {
   const balance = $("shopBalance");
   const container = $("shopItems");
 
   if (!balance || !container) return;
 
-  const items = SHOP_ITEMS.filter(
-    item => item.category === currentShopCategory
-  );
-
   balance.textContent = `${state.stars} ⭐`;
+
+  document.querySelectorAll("[data-shop-category]").forEach(button => {
+    const active = button.dataset.shopCategory === currentShopCategory;
+
+    button.classList.toggle("active", active);
+    button.classList.toggle("secondary", !active);
+  });
+
+  let items;
+
+  if (currentShopCategory === "inventory") {
+    items = SHOP_ITEMS.filter(item =>
+      state.shopOwned.includes(item.id)
+    );
+  } else {
+    items = SHOP_ITEMS.filter(item =>
+      item.category === currentShopCategory
+    );
+  }
 
   if (items.length === 0) {
     container.innerHTML = `
-      <div class="empty">
+      <div class="empty shop-empty">
         <div class="big">🎒</div>
-        <p>No items here yet. Visit another category!</p>
+        <h3>Your inventory is waiting!</h3>
+        <p>
+          Items you purchase will appear here.
+          Visit another category to explore the shop.
+        </p>
       </div>
     `;
     return;
@@ -3289,8 +3363,9 @@ function renderShop() {
 
   container.innerHTML = items.map(item => {
     const owned = state.shopOwned.includes(item.id);
-    const slot = item.category.slice(0, -1);
-const equipped = state.shopEquipped[slot] === item.id;
+    const slot = getShopSlot(item.category);
+    const equipped = slot &&
+      state.shopEquipped[slot] === item.id;
 
     let actionButton = "";
 
@@ -3302,25 +3377,34 @@ const equipped = state.shopEquipped[slot] === item.id;
       `;
     } else {
       actionButton = `
-        <button class="btn ${equipped ? "secondary" : ""}"
+        <button
+          class="btn ${equipped ? "secondary" : ""}"
           data-shop-equip="${item.id}">
-          ${equipped ? "Unequip" : "Equip"}
+          ${equipped ? "✓ Equipped" : "Equip"}
         </button>
       `;
     }
 
     return `
-      <div class="shop-item">
-        <div class="shop-item-art">${item.icon}</div>
+      <article class="shop-item">
+        <div class="shop-item-art">
+          <span>${item.icon}</span>
+        </div>
+
+        <span class="shop-rarity">
+          ${escapeHTML(item.rarity)}
+        </span>
+
         <h3>${escapeHTML(item.name)}</h3>
+
         <p>${escapeHTML(item.description)}</p>
-        <div class="shop-price">⭐ ${item.price} Stars</div>
-        ${owned
-          ? `<div class="shop-owned">✓ Owned</div>`
-          : ""
-        }
+
+        <div class="shop-price">
+          ${owned ? "✓ Owned" : `⭐ ${item.price} Stars`}
+        </div>
+
         ${actionButton}
-      </div>
+      </article>
     `;
   }).join("");
 
@@ -3337,6 +3421,7 @@ const equipped = state.shopEquipped[slot] === item.id;
   });
 }
 
+/* Purchase an item. */
 function buyShopItem(id) {
   const item = getShopItem(id);
 
@@ -3365,18 +3450,39 @@ function buyShopItem(id) {
   showToast(`Purchased ${item.name}! ⭐`);
 }
 
+/* Equip or unequip an item. */
 function equipShopItem(id) {
   const item = getShopItem(id);
 
   if (!item || !state.shopOwned.includes(id)) return;
 
-    const slot = item.category.slice(0, -1);
+  const slot = getShopSlot(item.category);
+
+  if (!slot) return;
 
   if (state.shopEquipped[slot] === id) {
     state.shopEquipped[slot] = "";
+
+    if (slot === "dashboard") {
+      state.shopEquipped.theme = "";
+    }
+
+    if (slot === "effect") {
+      state.shopEquipped.cosmetic = "";
+    }
+
     showShopMessage(`${item.name} unequipped.`);
   } else {
     state.shopEquipped[slot] = id;
+
+    if (slot === "dashboard") {
+      state.shopEquipped.theme = id;
+    }
+
+    if (slot === "effect") {
+      state.shopEquipped.cosmetic = id;
+    }
+
     showShopMessage(`${item.name} equipped! ✨`);
   }
 
@@ -3385,14 +3491,18 @@ function equipShopItem(id) {
   renderShop();
 }
 
+/* Apply purchased designs to the actual dashboard. */
 function applyShopAppearance() {
-  const theme = getShopItem(state.shopEquipped.theme);
   const skin = getShopItem(state.shopEquipped.skin);
-  const cosmetic = getShopItem(state.shopEquipped.cosmetic);
+  const dashboard = getShopItem(state.shopEquipped.dashboard);
+  const effect = getShopItem(state.shopEquipped.effect);
 
-  document.body.dataset.shopTheme = theme ? theme.id : "";
   document.body.dataset.shopSkin = skin ? skin.id : "";
-  document.body.dataset.shopCosmetic = cosmetic ? cosmetic.id : "";
+  document.body.dataset.dashboardDesign =
+    dashboard ? dashboard.id : "";
+
+  document.body.dataset.starRewardEffect =
+    effect ? effect.id : "";
 
   const profileAvatar = document.querySelector(".profile .avatar");
 
@@ -3401,11 +3511,59 @@ function applyShopAppearance() {
 
     profileAvatar.title = [
       skin ? skin.name : "",
-      cosmetic ? cosmetic.name : ""
+      dashboard ? dashboard.name : "",
+      effect ? effect.name : ""
     ].filter(Boolean).join(" · ");
   }
 }
-// Star Shop category buttons
+
+/* Show the selected effect when Stars are earned. */
+function triggerAchievementEffect(amount) {
+  const effectId = state.shopEquipped.effect ||
+    state.shopEquipped.cosmetic;
+
+  if (!effectId) return;
+
+  const effect = getShopItem(effectId);
+
+  if (!effect || !state.shopOwned.includes(effectId)) return;
+
+  let overlay = $("starRewardFx");
+
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "starRewardFx";
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.appendChild(overlay);
+  }
+
+  const symbols = {
+    cos_sparkle: "✨",
+    cos_lightning: "⚡",
+    cos_champion: "🏆"
+  };
+
+  const symbol = symbols[effectId] || "⭐";
+
+  overlay.innerHTML = `
+    <div class="star-effect-title">
+      +${amount} ⭐
+    </div>
+    ${Array.from({ length: 12 }, (_, index) => `
+      <span style="
+        --i:${index};
+        --x:${(index * 37) % 100}%;
+        --y:${(index * 23) % 75}%;
+      ">${symbol}</span>
+    `).join("")}
+  `;
+
+  overlay.className = "";
+  void overlay.offsetWidth;
+  overlay.classList.add("active", effectId);
+}
+
+/* Category navigation. */
 document.querySelectorAll("[data-shop-category]").forEach(button => {
   button.addEventListener("click", () => {
     currentShopCategory = button.dataset.shopCategory;
@@ -3413,8 +3571,9 @@ document.querySelectorAll("[data-shop-category]").forEach(button => {
   });
 });
 
-// Initialize the Star Shop
+/* Initialize the Star Shop. */
 renderShop();
 applyShopAppearance();
-/* =============== END STAR SHOP SYSTEM =============== */
+
+/* =============== END STAR SHOP SYSTEM 2.0 =============== */
 
