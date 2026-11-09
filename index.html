@@ -736,6 +736,371 @@ h1, h2, h3,
     letter-spacing: -2px;
   }
 }
+    
+/* =========================================
+   STUDYQUEST — COSMIC LANDING PAGE 2.0
+   ========================================= */
+
+:root {
+  --cosmic-purple: #a855f7;
+  --cosmic-blue: #38bdf8;
+  --cosmic-pink: #e879f9;
+}
+
+/* Deep-space atmosphere */
+body {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 15% 10%, #7924c544, transparent 38%),
+    radial-gradient(ellipse at 85% 35%, #244bb544, transparent 40%),
+    radial-gradient(ellipse at 50% 85%, #651a9c30, transparent 45%),
+    #0b0616;
+}
+
+/* Animated starfield */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .55;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 90px 80px, #c4b5fd, transparent),
+    radial-gradient(2px 2px at 160px 140px, #67e8f9, transparent),
+    radial-gradient(1px 1px at 220px 40px, #fff, transparent),
+    radial-gradient(1px 1px at 280px 180px, #d8b4fe, transparent);
+  background-size: 320px 220px;
+  animation: starDrift 65s linear infinite;
+}
+
+/* Nebula light sweeping across the page */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -30%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 35%, #9333ea20, transparent 35%),
+    radial-gradient(ellipse at 70% 65%, #2563eb18, transparent 35%),
+    radial-gradient(ellipse at 50% 50%, #db277710, transparent 45%);
+  filter: blur(45px);
+  animation: nebulaDrift 22s ease-in-out infinite alternate;
+}
+
+@keyframes starDrift {
+  from { background-position: 0 0; }
+  to { background-position: 320px 440px; }
+}
+
+@keyframes nebulaDrift {
+  from { transform: translate3d(-2%, -1%, 0) rotate(0deg); }
+  to { transform: translate3d(2%, 1%, 0) rotate(5deg); }
+}
+
+/* Compass branding */
+.logo-icon {
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #d8b4fe80;
+  background: #160925;
+  box-shadow:
+    0 0 18px #a855f780,
+    0 0 42px #7c3aed45;
+}
+
+.logo-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cinematic hero */
+.hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 650px;
+  height: 650px;
+  top: -90px;
+  right: -220px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle, #9333ea24, #2563eb0c 45%, transparent 70%);
+  filter: blur(12px);
+  animation: heroGlow 9s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  from { transform: scale(.85); opacity: .55; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+
+.hero h1 {
+  text-shadow: 0 0 35px #a855f725;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    100deg,
+    #e9d5ff,
+    #b44dff 38%,
+    #67e8f9 75%,
+    #f0abfc
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientTravel 8s linear infinite;
+}
+
+@keyframes gradientTravel {
+  to { background-position: 220% center; }
+}
+
+/* Compass portal */
+.game-scene {
+  perspective: 900px;
+}
+
+.orbit {
+  border-color: #c084fc75;
+  box-shadow: 0 0 24px #9333ea20;
+}
+
+.orbit-two {
+  border-color: #67e8f970;
+  box-shadow: 0 0 25px #22d3ee18;
+}
+
+.planet {
+  width: 205px;
+  height: 205px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #160925;
+  border: 2px solid #d8b4fe99;
+  box-shadow:
+    0 0 25px #a855f7aa,
+    0 0 65px #7c3aed66,
+    0 0 110px #2563eb35,
+    inset 0 0 25px #fff2;
+  animation: float 5s ease-in-out infinite, portalPulse 4s ease-in-out infinite alternate;
+}
+
+.planet img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes portalPulse {
+  from { box-shadow: 0 0 25px #a855f7aa, 0 0 55px #7c3aed55; }
+  to { box-shadow: 0 0 40px #c084fcdd, 0 0 100px #2563eb66; }
+}
+
+/* Floating holographic cards */
+.floating-card {
+  border: 1px solid #c084fc65;
+  background: linear-gradient(135deg, #291044ee, #101326ee);
+  box-shadow:
+    0 15px 45px #0008,
+    0 0 25px #9333ea25;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Feature cards become glowing glass panels */
+.feature-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #a855f747;
+  background:
+    radial-gradient(circle at 90% 5%, #a855f728, transparent 45%),
+    linear-gradient(145deg, #251039eF, #10091eF5);
+  box-shadow:
+    0 12px 35px #0005,
+    inset 0 1px 0 #ffffff12;
+  transition:
+    transform .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 20%, #ffffff12 50%, transparent 80%);
+  transform: translateX(-100%);
+  transition: opacity .3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-9px) scale(1.015);
+  border-color: #d8b4feaa;
+  box-shadow:
+    0 20px 50px #0007,
+    0 0 30px #9333ea30;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+  animation: cardShine .9s ease;
+}
+
+@keyframes cardShine {
+  to { transform: translateX(100%); }
+}
+
+.feature-icon {
+  border: 1px solid #c084fc55;
+  box-shadow: 0 0 22px #9333ea25;
+  transition: transform .35s, box-shadow .35s;
+}
+
+.feature-card:hover .feature-icon {
+  transform: rotate(-7deg) scale(1.12);
+  box-shadow: 0 0 30px #a855f755;
+}
+
+/* Navigation glow */
+.nav-links a:not(.button) {
+  transition: color .25s, text-shadow .25s;
+}
+
+.nav-links a:not(.button):hover {
+  color: #fff;
+  text-shadow: 0 0 15px #c084fc;
+}
+
+/* Buttons */
+.button {
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+
+.button-primary {
+  background: linear-gradient(110deg, #7c3aed, #b44dff, #c026d3);
+  background-size: 180% auto;
+  box-shadow: 0 0 25px #9333ea55;
+}
+
+.button-primary:hover {
+  background-position: right center;
+  box-shadow: 0 0 38px #a855f799;
+}
+
+.button-secondary:hover {
+  border-color: #c084fc;
+  box-shadow: 0 0 24px #9333ea35;
+}
+
+/* Healthy habits panel */
+.habit-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #a855f755;
+  background:
+    radial-gradient(ellipse at 0% 0%, #9333ea35, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, #2563eb22, transparent 55%),
+    #180c29;
+  box-shadow: 0 20px 65px #0005;
+}
+
+.habit-item {
+  border-color: #c084fc30;
+  background: #ffffff08;
+  transition: transform .25s, border-color .25s, background .25s;
+}
+
+.habit-item:hover {
+  transform: translateX(5px);
+  border-color: #a855f777;
+  background: #a855f715;
+}
+
+/* Final call-to-action portal */
+.final-cta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #c084fc77;
+  background:
+    radial-gradient(ellipse at 50% 0%, #a855f755, transparent 65%),
+    radial-gradient(ellipse at 100% 100%, #2563eb22, transparent 55%),
+    #160a27;
+  box-shadow:
+    0 20px 65px #0006,
+    0 0 45px #9333ea20;
+}
+
+.final-cta::before {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  top: -170px;
+  left: calc(50% - 125px);
+  border: 1px solid #d8b4fe55;
+  border-radius: 50%;
+  box-shadow: 0 0 35px #a855f755;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0616;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#9333ea, #2563eb);
+  border-radius: 20px;
+}
+
+/* Phone performance and accessibility */
+@media (max-width: 560px) {
+  .planet {
+    width: 165px;
+    height: 165px;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-3px);
+  }
+
+  body::after {
+    filter: blur(25px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after,
+  .hero::before,
+  .planet,
+  .gradient-text {
+    animation: none !important;
+  }
+}
+
 
   </style>
 </head>
@@ -746,7 +1111,9 @@ h1, h2, h3,
 
   <header class="navbar">
     <a class="logo" href="#top" aria-label="StudyQuest home">
-      <span class="logo-icon">⚡</span>
+      <span class="logo-icon">
+  <img src="favicon.png" alt="StudyQuest compass">
+      </span>
       <span>Study<span>Quest</span></span>
     </a>
 
@@ -794,7 +1161,9 @@ h1, h2, h3,
         <div class="orbit"></div>
         <div class="orbit orbit-two"></div>
 
-        <div class="planet" aria-hidden="true">🚀</div>
+        <div class="planet">
+  <img src="favicon.png" alt="StudyQuest cosmic compass">
+        </div>
 
         <div class="floating-card card-stars">
           <span class="mini-icon">⭐</span>
