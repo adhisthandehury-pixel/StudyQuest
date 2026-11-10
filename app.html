@@ -6682,6 +6682,37 @@ body[data-dashboard-design="theme_crystal"] #page-dashboard .stat strong {
     transition: none !important;
   }
 }
+  /* MOBILE NAVIGATION — PREVENT SECTION BUTTONS FROM SQUEEZING */
+@media (max-width: 680px) {
+  aside {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding: 4px 2px 9px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav button {
+    flex: 0 0 auto;
+    width: auto;
+    white-space: nowrap;
+    padding: 10px 13px;
+  }
+
+  main {
+    width: 100%;
+    padding: 16px 12px 30px;
+  }
+  }
 </style>
 </head>
 <body>
