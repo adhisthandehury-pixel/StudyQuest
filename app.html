@@ -6869,6 +6869,1160 @@ button:active,
     animation-duration: 0.25s;
   }
 }
+  
+/* ==========================================
+   STUDYQUEST — COSMIC GRAPHICS EXPANSION
+   CSS ONLY — ADDITIVE UPGRADE
+========================================== */
+
+/* 1. Animated nebula atmosphere */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 35%,
+      rgba(178, 65, 255, .13), transparent 32%),
+    radial-gradient(ellipse at 75% 65%,
+      rgba(75, 55, 220, .13), transparent 35%),
+    radial-gradient(ellipse at 55% 10%,
+      rgba(235, 105, 255, .08), transparent 28%);
+  animation: nebulaMove 22s ease-in-out infinite alternate;
+}
+
+@keyframes nebulaMove {
+  0% {
+    transform: translate3d(-2%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -2%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(0, 2%, 0) scale(1.02);
+  }
+}
+
+/* Keep the interface above the nebula */
+.app {
+  position: relative;
+  z-index: 1;
+}
+
+/* 2. Holographic dashboard hero */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-size: 200% 200%;
+  animation: heroGradient 12s ease infinite;
+}
+
+@keyframes heroGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Decorative planetary rings around the rocket */
+.hero-art {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+  animation: rocketFloat 4s ease-in-out infinite;
+}
+
+.hero-art::before {
+  content: "";
+  position: absolute;
+  width: 105px;
+  height: 105px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(235, 185, 255, .55);
+  border-radius: 50%;
+  box-shadow:
+    0 0 18px rgba(190, 100, 255, .35),
+    inset 0 0 18px rgba(190, 100, 255, .18);
+  z-index: -1;
+  animation: planetOrbit 12s linear infinite;
+}
+
+.hero-art::after {
+  content: "";
+  position: absolute;
+  width: 125px;
+  height: 48px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  border: 1px dashed rgba(255, 220, 255, .5);
+  border-radius: 50%;
+  z-index: -1;
+  animation: planetOrbit 18s linear infinite reverse;
+}
+
+@keyframes rocketFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+@keyframes planetOrbit {
+  to { rotate: 360deg; }
+}
+
+/* 3. Premium holographic panels */
+.panel,
+.stat,
+.feature,
+.shop-item {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+.panel::before,
+.stat::before,
+.feature::before,
+.shop-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15px;
+  right: 15px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(205, 135, 255, .7),
+    transparent
+  );
+  pointer-events: none;
+  opacity: .65;
+}
+
+@media (hover: hover) {
+  .panel:hover,
+  .stat:hover,
+  .feature:hover,
+  .shop-item:hover {
+    transform: translateY(-4px);
+    border-color: #a968e8;
+    box-shadow:
+      0 12px 35px rgba(115, 40, 190, .16),
+      0 0 20px rgba(180, 77, 255, .12);
+  }
+}
+
+/* 4. Floating study-tool icons */
+.feature-icon,
+.stat-icon {
+  transition: transform .3s ease, filter .3s ease;
+}
+
+@media (hover: hover) {
+  .feature:hover .feature-icon {
+    transform: translateY(-5px) scale(1.12);
+    filter: drop-shadow(0 0 9px #c77aff);
+  }
+}
+
+/* 5. Animated focus timer aura */
+.timer-ring {
+  animation: timerAura 4s ease-in-out infinite;
+}
+
+@keyframes timerAura {
+  0%, 100% {
+    box-shadow:
+      0 0 22px rgba(160, 32, 255, .18),
+      inset 0 0 18px rgba(160, 32, 255, .10);
+  }
+  50% {
+    box-shadow:
+      0 0 38px rgba(180, 77, 255, .35),
+      inset 0 0 28px rgba(160, 32, 255, .20);
+  }
+}
+
+/* 6. Mind map holographic nodes */
+.mind-node {
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
+}
+
+@media (hover: hover) {
+  .mind-node:hover {
+    transform: translateY(-4px) scale(1.03);
+    border-color: #e0a2ff;
+    box-shadow: 0 0 18px rgba(180, 77, 255, .35);
+  }
+}
+
+/* 7. Glowing input focus */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #d18aff !important;
+  box-shadow:
+    0 0 0 3px rgba(180, 77, 255, .15),
+    0 0 16px rgba(180, 77, 255, .12) !important;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+/* 8. Mobile-friendly performance */
+@media (max-width: 680px) {
+  body::after {
+    opacity: .55;
+    animation-duration: 30s;
+  }
+
+  .hero-art::before {
+    width: 75px;
+    height: 75px;
+  }
+
+  .hero-art::after {
+    width: 90px;
+    height: 38px;
+  }
+
+  .timer-ring {
+    animation-duration: 6s;
+  }
+}
+
+/* 9. Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  .hero,
+  .hero-art,
+  .hero-art::before,
+  .hero-art::after,
+  .timer-ring {
+    animation: none !important;
+  }
+}
+
+/* =========================================
+   STUDYQUEST — COSMIC VISUAL UPGRADE 3
+========================================= */
+
+/* 1. Animated gradient borders */
+@keyframes cosmicBorder {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.card,
+.panel,
+.shop-item {
+  background-clip: padding-box;
+}
+
+@media (hover: hover) {
+  .card:hover,
+  .panel:hover,
+  .shop-item:hover {
+    outline: 1px solid rgba(190, 110, 255, .35);
+    box-shadow:
+      0 0 20px rgba(170, 70, 255, .16),
+      0 12px 35px rgba(0, 0, 0, .18);
+  }
+}
+
+/* 2. Shooting star streaks */
+body {
+  position: relative;
+}
+
+@keyframes shootingStar {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-35deg);
+    opacity: 0;
+  }
+  10% { opacity: .8; }
+  60% { opacity: .7; }
+  100% {
+    transform: translate3d(-180px, 180px, 0) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 12%;
+  right: 8%;
+  width: 100px;
+  height: 2px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(230, 190, 255, .9),
+    transparent
+  );
+  filter: drop-shadow(0 0 5px #c77aff);
+  animation: shootingStar 8s ease-in-out infinite;
+}
+
+/* 3. Glowing section headings */
+.page h1,
+.page h2 {
+  text-shadow: 0 0 18px rgba(180, 77, 255, .17);
+}
+
+/* 4. Premium glowing badges */
+.badge,
+.tag,
+.pill {
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+@media (hover: hover) {
+  .badge:hover,
+  .tag:hover,
+  .pill:hover {
+    box-shadow: 0 0 15px rgba(180, 77, 255, .3);
+    transform: translateY(-2px);
+  }
+}
+
+/* 5. Star currency visual effect */
+#starBalance,
+#questStarBalance {
+  text-shadow:
+    0 0 8px rgba(255, 210, 90, .45),
+    0 0 18px rgba(255, 180, 50, .2);
+}
+
+/* 6. Animated divider */
+.page hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180, 77, 255, .7),
+    rgba(120, 100, 255, .5),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: dividerFlow 7s linear infinite;
+}
+
+@keyframes dividerFlow {
+  to { background-position: 200% 0; }
+}
+
+/* 7. Glowing scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8038bd transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #c16aff,
+    #7130bd
+  );
+  border-radius: 20px;
+}
+
+/* 8. Animated progress bars */
+progress,
+.progress-bar,
+.progress-fill {
+  transition: width .6s ease;
+}
+
+.progress-fill {
+  box-shadow: 0 0 12px rgba(180, 77, 255, .4);
+}
+
+/* 9. Glowing interactive navigation */
+.nav button {
+  transition:
+    background .25s ease,
+    color .25s ease,
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+@media (hover: hover) {
+  .nav button:not(.active):hover {
+    transform: translateX(4px);
+    background: rgba(180, 77, 255, .10);
+  }
+}
+
+/* 10. Mobile performance protection */
+@media (max-width: 680px) {
+  body::before {
+    opacity: .4;
+    width: 60px;
+  }
+
+  .card,
+  .panel,
+  .shop-item {
+    transition-duration: .2s;
+  }
+}
+
+/* 11. Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  .page hr {
+    animation: none !important;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — IMMERSIVE COSMIC EXPERIENCE
+========================================== */
+
+/* 1. Atmospheric energy waves */
+.page {
+  position: relative;
+  isolation: isolate;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(175, 70, 255, .10),
+    transparent 70%
+  );
+  filter: blur(25px);
+  pointer-events: none;
+  z-index: -1;
+  animation: energyPulse 7s ease-in-out infinite alternate;
+}
+
+@keyframes energyPulse {
+  from {
+    transform: translate(15px, 10px) scale(.85);
+    opacity: .4;
+  }
+  to {
+    transform: translate(-35px, 45px) scale(1.2);
+    opacity: .9;
+  }
+}
+
+/* 2. Premium glowing card corners */
+.card,
+.panel,
+.shop-item {
+  overflow: hidden;
+}
+
+.card::after,
+.panel::after,
+.shop-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55px;
+  height: 55px;
+  background: radial-gradient(
+    circle at top right,
+    rgba(195, 105, 255, .14),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* 3. Shimmering shop items */
+.shop-item {
+  background-size: 200% 200%;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+@media (hover: hover) {
+  .shop-item:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 0 28px rgba(180, 77, 255, .20);
+  }
+}
+
+/* 4. Animated achievement glow */
+@keyframes achievementGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(255, 190, 80, .15));
+  }
+  50% {
+    filter: drop-shadow(0 0 9px rgba(255, 190, 80, .45));
+  }
+}
+
+.achievement,
+.title-card,
+.achievement-card {
+  animation: achievementGlow 4s ease-in-out infinite;
+}
+
+/* 5. Energy shimmer for buttons */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  transform: skewX(-25deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, .12),
+    transparent
+  );
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .btn:hover::after {
+    animation: buttonShimmer .7s ease;
+  }
+}
+
+@keyframes buttonShimmer {
+  to { left: 150%; }
+}
+
+/* 6. Constellation-inspired background pattern */
+.page {
+  background-image:
+    radial-gradient(
+      1px 1px at 20% 25%,
+      rgba(220, 190, 255, .24) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 75% 60%,
+      rgba(220, 190, 255, .20) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 45% 85%,
+      rgba(220, 190, 255, .18) 50%,
+      transparent 100%
+    );
+}
+
+/* 7. Progress energy animation */
+@keyframes progressEnergy {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.progress-fill {
+  background-size: 200% 100%;
+  animation: progressEnergy 4s linear infinite;
+}
+
+/* 8. Smooth floating stat icons */
+.stat-icon {
+  animation: statFloat 5s ease-in-out infinite;
+}
+
+@keyframes statFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(3deg); }
+}
+
+/* 9. Focus timer energy */
+.timer-ring {
+  position: relative;
+}
+
+.timer-ring::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+  border: 1px solid rgba(180, 77, 255, .22);
+  animation: timerOrbit 5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes timerOrbit {
+  to { transform: rotate(360deg); }
+}
+
+/* 10. Mobile optimization */
+@media (max-width: 680px) {
+  .page::before {
+    width: 140px;
+    height: 140px;
+    opacity: .5;
+  }
+
+  .achievement,
+  .title-card,
+  .achievement-card {
+    animation: none;
+  }
+
+  .stat-icon {
+    animation-duration: 7s;
+  }
+
+  .timer-ring::after {
+    animation-duration: 9s;
+  }
+}
+
+/* 11. Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .page::before,
+  .achievement,
+  .title-card,
+  .achievement-card,
+  .btn::after,
+  .progress-fill,
+  .stat-icon,
+  .timer-ring::after {
+    animation: none !important;
+  }
+}
+
+/* =========================================
+   STUDYQUEST — COSMIC INTERFACE EXPANSION 5
+========================================= */
+
+/* 1. DASHBOARD HERO — PLANETARY REACTOR */
+
+#page-dashboard .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 82% 50%,
+      rgba(210, 130, 255, .25),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 10% 100%,
+      rgba(100, 40, 220, .3),
+      transparent 45%
+    ),
+    linear-gradient(115deg, #321052, #7025a5 60%, #281052);
+}
+
+#page-dashboard .hero-art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 125px;
+  min-height: 125px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(220, 165, 255, .25),
+    rgba(120, 45, 200, .08) 55%,
+    transparent 72%
+  );
+  filter: drop-shadow(0 0 20px rgba(200, 120, 255, .5));
+  animation: reactorFloat 5s ease-in-out infinite;
+}
+
+#page-dashboard .hero-art::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(225, 180, 255, .55);
+  border-radius: 50%;
+  transform: rotateX(65deg);
+  box-shadow: 0 0 15px rgba(190, 100, 255, .35);
+}
+
+#page-dashboard .hero-art::after {
+  content: "";
+  position: absolute;
+  inset: 15px -8px;
+  border: 1px dashed rgba(230, 190, 255, .5);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+}
+
+@keyframes reactorFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* 2. DASHBOARD STAT TILES */
+
+#page-dashboard .stat {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(175, 90, 255, .14),
+      transparent 45%
+    ),
+    linear-gradient(145deg, #251039, #130b24);
+  border: 1px solid rgba(160, 100, 210, .4);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.04),
+    0 8px 25px rgba(0,0,0,.18);
+}
+
+#page-dashboard .stat-icon {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(210, 150, 255, .3);
+  box-shadow:
+    0 0 15px rgba(180, 77, 255, .16),
+    inset 0 0 12px rgba(180, 77, 255, .12);
+  border-radius: 14px;
+}
+
+#page-dashboard .stat strong {
+  text-shadow: 0 0 15px rgba(195, 115, 255, .25);
+}
+
+/* 3. STUDY TOOL CARDS */
+
+#page-dashboard .feature {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(180, 77, 255, .12),
+      transparent 50%
+    ),
+    linear-gradient(145deg, #251039, #170b29);
+  border: 1px solid #583477;
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+#page-dashboard .feature-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(
+    145deg,
+    rgba(180, 77, 255, .28),
+    rgba(100, 40, 180, .12)
+  );
+  border: 1px solid rgba(200, 140, 255, .35);
+  box-shadow: 0 0 18px rgba(180, 77, 255, .12);
+}
+
+@media (hover: hover) {
+  #page-dashboard .feature:hover {
+    transform: translateY(-6px);
+    border-color: #c17aff;
+    box-shadow: 0 12px 30px rgba(140, 50, 220, .2);
+  }
+
+  #page-dashboard .feature:hover .feature-icon {
+    transform: scale(1.1) rotate(-5deg);
+  }
+}
+
+/* 4. HOLOGRAPHIC FLASHCARDS */
+
+.flashcard {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(190, 100, 255, .35),
+      transparent 55%
+    ),
+    linear-gradient(145deg, #32164e, #150b29);
+  border: 1px solid #a45bd4;
+  box-shadow:
+    inset 0 0 35px rgba(180, 77, 255, .12),
+    0 10px 30px rgba(0,0,0,.2);
+}
+
+.flashcard strong {
+  text-shadow: 0 0 15px rgba(210, 160, 255, .4);
+}
+
+/* 5. MIND MAP ENERGY NODES */
+
+.mind-node {
+  background: linear-gradient(145deg, #43205f, #241039);
+  border: 1px solid #a05bd0;
+  box-shadow:
+    inset 0 0 12px rgba(180, 77, 255, .12),
+    0 4px 14px rgba(0,0,0,.15);
+}
+
+.mind-node.center-node {
+  background: linear-gradient(135deg, #d16aff, #702bdb);
+  border-color: #e5baff;
+  box-shadow:
+    0 0 22px rgba(180, 77, 255, .45),
+    inset 0 0 15px rgba(255,255,255,.15);
+}
+
+/* 6. FOCUS TIMER — ENERGY CORE */
+
+.timer-ring {
+  border-width: 11px;
+  border-color: #39234f;
+  border-top-color: #e2a2ff;
+  border-right-color: #a34cff;
+  background: radial-gradient(
+    circle,
+    rgba(180, 77, 255, .13),
+    transparent 70%
+  );
+  box-shadow:
+    0 0 35px rgba(170, 70, 255, .24),
+    inset 0 0 30px rgba(170, 70, 255, .15);
+}
+
+.timer-face {
+  text-shadow:
+    0 0 12px rgba(210, 140, 255, .65),
+    0 0 30px rgba(160, 60, 255, .35);
+}
+
+/* 7. STAR SHOP — PREMIUM DISPLAY */
+
+#page-shop .shop-item-art {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(190, 120, 255, .3);
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(200, 120, 255, .35),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #32164e, #160b28);
+  box-shadow: inset 0 0 25px rgba(180, 77, 255, .15);
+}
+
+#page-shop .shop-price {
+  text-shadow: 0 0 12px rgba(255, 205, 90, .3);
+}
+
+/* 8. PAST PAPER CARDS */
+
+.paper-card {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(180, 77, 255, .13),
+      transparent 55%
+    ),
+    #211032;
+  border-color: #67418a;
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+@media (hover: hover) {
+  .paper-card:hover {
+    transform: translateY(-4px);
+    border-color: #c17aff;
+  }
+}
+
+/* 9. GENERAL PANEL DEPTH */
+
+.panel {
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.025),
+    0 8px 28px rgba(0,0,0,.16);
+}
+
+/* 10. MOBILE PERFORMANCE */
+
+@media (max-width: 680px) {
+  #page-dashboard .hero-art {
+    min-width: 80px;
+    min-height: 80px;
+  }
+
+  #page-dashboard .hero-art::before {
+    inset: 4px;
+  }
+
+  #page-dashboard .hero-art::after {
+    inset: 12px -5px;
+  }
+
+  #page-dashboard .feature-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  #page-dashboard .feature:hover {
+    transform: none;
+  }
+}
+
+/* 11. ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+  #page-dashboard .hero-art {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — COSMIC GRAPHICS UPGRADE 6
+========================================== */
+
+/* 1. COSMIC ENERGY BACKDROP */
+.page {
+  background-image:
+    radial-gradient(circle at 10% 15%,
+      rgba(180, 77, 255, .10), transparent 28%),
+    radial-gradient(circle at 90% 75%,
+      rgba(100, 80, 255, .09), transparent 30%);
+}
+
+/* 2. ANIMATED ORBITING DASHBOARD PLANET */
+#page-dashboard .hero-art {
+  isolation: isolate;
+}
+
+#page-dashboard .hero-art::before {
+  animation: orbitSpin 12s linear infinite;
+}
+
+#page-dashboard .hero-art::after {
+  animation: orbitSpin 18s linear infinite reverse;
+}
+
+@keyframes orbitSpin {
+  to { rotate: 360deg; }
+}
+
+/* 3. COSMIC ENERGY BORDER */
+@keyframes energyBorder {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+#page-dashboard .stat,
+#page-dashboard .feature,
+#page-shop .shop-item {
+  background-clip: padding-box;
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+
+@media (hover: hover) {
+  #page-dashboard .stat:hover,
+  #page-dashboard .feature:hover,
+  #page-shop .shop-item:hover {
+    border-color: rgba(220, 155, 255, .8);
+    box-shadow: 0 0 25px rgba(180, 77, 255, .22);
+  }
+}
+
+/* 4. HOLOGRAPHIC HEADING UNDERLINES */
+.page h1,
+.page h2 {
+  position: relative;
+  text-shadow: 0 0 18px rgba(180, 77, 255, .2);
+}
+
+.page h2::after {
+  content: "";
+  display: block;
+  width: 45px;
+  height: 2px;
+  margin-top: 7px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #d28aff, transparent);
+  box-shadow: 0 0 10px #a94dff;
+}
+
+/* 5. FLASHCARD DEPTH */
+.flashcard {
+  transform-style: preserve-3d;
+  perspective: 900px;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+@media (hover: hover) {
+  .flashcard:hover {
+    transform: translateY(-5px) rotateX(2deg);
+    box-shadow: 0 15px 35px rgba(140, 60, 220, .22);
+  }
+}
+
+/* 6. CONSTELLATION-STYLE MIND MAP NODES */
+.mind-node {
+  position: relative;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.mind-node::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(195, 125, 255, .25);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .mind-node:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 20px rgba(180, 77, 255, .3);
+  }
+}
+
+/* 7. REACTOR-LIKE FOCUS TIMER */
+.timer-ring {
+  position: relative;
+  isolation: isolate;
+}
+
+.timer-ring::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(195, 125, 255, .35);
+  animation: reactorSpin 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes reactorSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* 8. PREMIUM BUTTON LIGHTING */
+.btn {
+  transition: transform .2s ease, box-shadow .25s ease;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    box-shadow:
+      0 0 12px rgba(180, 77, 255, .2),
+      0 0 25px rgba(180, 77, 255, .1);
+  }
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+/* 9. STAR CURRENCY GLOW */
+#starBalance,
+#questStarBalance {
+  text-shadow:
+    0 0 8px rgba(255, 210, 90, .6),
+    0 0 20px rgba(255, 170, 40, .25);
+}
+
+/* 10. ANIMATED INPUT FOCUS */
+input,
+textarea,
+select {
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #bd75ff;
+  box-shadow: 0 0 14px rgba(180, 77, 255, .18);
+}
+
+/* 11. COSMIC SCROLLBAR */
+* {
+  scrollbar-color: #9748d4 transparent;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #d18aff, #7634c4);
+  border-radius: 20px;
+}
+
+/* 12. MOBILE OPTIMIZATION */
+@media (max-width: 680px) {
+  .timer-ring::before {
+    inset: -7px;
+    animation-duration: 30s;
+  }
+
+  .flashcard:hover {
+    transform: none;
+  }
+
+  .page h2::after {
+    width: 32px;
+  }
+}
+
+/* 13. ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  #page-dashboard .hero-art::before,
+  #page-dashboard .hero-art::after,
+  .timer-ring::before {
+    animation: none !important;
+  }
+
+  * {
+    transition-duration: .01ms !important;
+  }
+}
 </style>
 </head>
 <body>
