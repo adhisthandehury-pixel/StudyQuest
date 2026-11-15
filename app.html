@@ -8641,6 +8641,130 @@ select {
     background-attachment: scroll;
   }
 }
+
+/* ==========================================
+   COSMIC UPGRADE 12 — PLANETARY DASHBOARD
+========================================== */
+
+/* Miniature planets */
+#page-dashboard .sq-planet-scene {
+  overflow: visible;
+}
+
+#page-dashboard .sq-mini-planet {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+#page-dashboard .sq-planet-one {
+  width: 19px;
+  height: 19px;
+  top: 8%;
+  left: 12%;
+  background: radial-gradient(circle at 30% 30%, #fff0bd, #ff9b54 55%, #a83c83);
+  box-shadow: 0 0 14px rgba(255,160,100,.7);
+  animation: sqPlanetFloat 4s ease-in-out infinite;
+}
+
+#page-dashboard .sq-planet-two {
+  width: 13px;
+  height: 13px;
+  bottom: 12%;
+  right: 8%;
+  background: radial-gradient(circle at 30% 30%, #c9ffff, #42b9e8 65%, #4541a6);
+  box-shadow: 0 0 13px rgba(80,200,255,.65);
+  animation: sqPlanetFloat 5s ease-in-out infinite reverse;
+}
+
+#page-dashboard .sq-planet-three {
+  width: 9px;
+  height: 9px;
+  top: 20%;
+  right: 15%;
+  background: radial-gradient(circle at 30% 30%, #fff, #c084fc 65%, #7134b4);
+  box-shadow: 0 0 12px #bd78ff;
+  animation: sqPlanetFloat 3.5s ease-in-out infinite;
+}
+
+#page-dashboard .sq-rocket {
+  position: relative;
+  z-index: 3;
+  display: block;
+  font-size: 1em;
+  filter: drop-shadow(0 0 12px rgba(230,170,255,.7));
+}
+
+@keyframes sqPlanetFloat {
+  0%,100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+
+/* Star balance becomes a glowing energy orb */
+#page-dashboard .stat:first-child .stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3b0, #ffbd48 55%, #a85bff) !important;
+  color: white;
+  border: 1px solid rgba(255,230,150,.7);
+  box-shadow: 0 0 15px rgba(255,190,75,.45);
+  animation: sqStarOrb 3s ease-in-out infinite;
+}
+
+@keyframes sqStarOrb {
+  0%,100% {
+    box-shadow: 0 0 12px rgba(255,190,75,.35);
+  }
+  50% {
+    box-shadow: 0 0 23px rgba(255,190,75,.7);
+  }
+}
+
+/* Constellation-style achievement rows */
+#dashboardTitles .quest {
+  position: relative;
+  border: 1px solid rgba(190,145,255,.18);
+  border-radius: 13px;
+  margin: 9px 0;
+  padding: 12px;
+  background:
+    radial-gradient(circle at 95% 20%, rgba(190,130,255,.13), transparent 35%),
+    linear-gradient(110deg, rgba(80,40,120,.15), rgba(20,10,40,.2));
+  transition: border-color .25s ease, background .25s ease;
+}
+
+#dashboardTitles .quest-icon {
+  border: 1px solid rgba(205,165,255,.35);
+  box-shadow: 0 0 12px rgba(180,100,255,.2);
+}
+
+@media (hover:hover) {
+  #dashboardTitles .quest:hover {
+    border-color: rgba(210,165,255,.65);
+    background-color: rgba(130,70,190,.12);
+  }
+}
+
+/* Mobile and accessibility */
+@media (max-width:680px) {
+  #page-dashboard .sq-mini-planet {
+    animation: none;
+  }
+
+  #page-dashboard .stat:first-child .stat-icon {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  #page-dashboard .sq-mini-planet,
+  #page-dashboard .stat:first-child .stat-icon {
+    animation: none !important;
+  }
+}
 </style>
 </head>
 <body>
