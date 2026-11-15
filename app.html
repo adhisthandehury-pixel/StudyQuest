@@ -10201,6 +10201,707 @@ img {
 /* ============================================================
    END — STUDYQUEST COSMIC ARENA
 ============================================================ */
+  
+/* ==========================================================
+   STUDYQUEST: COSMIC OVERDRIVE
+   GRAPHICS EXPANSION — VISUAL LAYER
+========================================================== */
+
+/* 01 — OVERDRIVE COLOR SYSTEM */
+
+:root {
+  --overdrive-purple: #a855f7;
+  --overdrive-pink: #ff4fd8;
+  --overdrive-blue: #426bff;
+  --overdrive-cyan: #42eaff;
+  --overdrive-gold: #ffd166;
+  --overdrive-green: #5cffb1;
+  --overdrive-deep: #080416;
+  --overdrive-glass: rgba(24, 12, 48, .78);
+  --overdrive-border: rgba(192, 139, 255, .32);
+}
+
+/* 02 — DEEP SPACE ATMOSPHERE */
+
+body {
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(121, 45, 230, .18), transparent 35%),
+    radial-gradient(ellipse at 85% 15%, rgba(35, 112, 255, .13), transparent 32%),
+    radial-gradient(ellipse at 75% 85%, rgba(255, 63, 196, .09), transparent 35%),
+    linear-gradient(145deg, #080416, #100725 50%, #080416);
+}
+
+.page {
+  isolation: isolate;
+}
+
+/* 03 — COSMIC AMBIENT LIGHT */
+
+.page::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .4;
+  background:
+    radial-gradient(circle at 12% 28%, rgba(168,85,247,.12), transparent 18%),
+    radial-gradient(circle at 88% 65%, rgba(66,234,255,.08), transparent 20%);
+  animation: odAtmosphere 12s ease-in-out infinite alternate;
+}
+
+@keyframes odAtmosphere {
+  from { transform: translate3d(-1%,0,0) scale(1); }
+  to { transform: translate3d(1%,1%,0) scale(1.04); }
+}
+
+/* 04 — GLASS PANELS */
+
+.panel,
+.card,
+.stat,
+.shop-item,
+.paper-card,
+.flashcard,
+.achievement {
+  background:
+    linear-gradient(145deg, rgba(40,22,76,.88), rgba(13,8,31,.94));
+  border: 1px solid var(--overdrive-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 15px 35px rgba(0,0,0,.25);
+  transition:
+    transform .3s cubic-bezier(.2,.8,.2,1),
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+/* 05 — PANEL HOVER ENERGY */
+
+@media (hover:hover) {
+  .panel:hover,
+  .card:hover,
+  .stat:hover,
+  .flashcard:hover {
+    border-color: rgba(66,234,255,.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.12),
+      0 18px 40px rgba(0,0,0,.32),
+      0 0 24px rgba(168,85,247,.2);
+    transform: translateY(-4px);
+  }
+}
+
+/* 06 — HOLOGRAPHIC EDGE */
+
+.od-hologram {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#160c2b,#160c2b) padding-box,
+    linear-gradient(120deg,#a855f7,#42eaff,#ff4fd8,#ffd166) border-box;
+}
+
+/* 07 — ELECTRIC BUTTONS */
+
+.btn {
+  isolation: isolate;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.17),
+    0 5px 18px rgba(111,55,232,.2);
+  transition:
+    transform .2s ease,
+    filter .2s ease,
+    box-shadow .25s ease;
+}
+
+@media (hover:hover) {
+  .btn:hover {
+    filter: brightness(1.17) saturate(1.15);
+    box-shadow:
+      0 0 12px rgba(168,85,247,.3),
+      0 0 28px rgba(66,234,255,.12);
+  }
+}
+
+.btn:active {
+  transform: scale(.96);
+}
+
+/* 08 — SPECIAL BUTTON VARIANTS */
+
+.od-button-cyan {
+  background: linear-gradient(110deg,#147eaa,#42eaff);
+  color: #061322;
+  box-shadow: 0 0 22px rgba(66,234,255,.25);
+}
+
+.od-button-gold {
+  background: linear-gradient(110deg,#d18a20,#ffd166);
+  color: #241300;
+  box-shadow: 0 0 22px rgba(255,209,102,.25);
+}
+
+.od-button-pink {
+  background: linear-gradient(110deg,#a51d8b,#ff4fd8);
+  color: white;
+  box-shadow: 0 0 22px rgba(255,79,216,.25);
+}
+
+/* 09 — NAVIGATION ENERGY */
+
+.nav button {
+  transition:
+    background .25s ease,
+    transform .25s ease,
+    color .25s ease;
+}
+
+.nav button.active {
+  background: linear-gradient(100deg,rgba(168,85,247,.3),rgba(66,234,255,.09));
+  border-color: rgba(168,85,247,.35);
+  box-shadow: inset 3px 0 #42eaff, 0 0 20px rgba(168,85,247,.13);
+}
+
+@media (hover:hover) {
+  .nav button:hover {
+    background: rgba(168,85,247,.15);
+    transform: translateX(4px);
+  }
+}
+
+/* 10 — SECTION TITLES */
+
+.page h1,
+.page h2 {
+  text-shadow: 0 0 18px rgba(168,85,247,.23);
+}
+
+.od-title {
+  background: linear-gradient(100deg,#fff,#d8aaff,#42eaff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 11 — DASHBOARD HERO OVERDRIVE */
+
+#page-dashboard .hero {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(192,139,255,.4);
+  background:
+    radial-gradient(circle at 80% 20%,rgba(66,234,255,.2),transparent 30%),
+    radial-gradient(circle at 15% 90%,rgba(168,85,247,.3),transparent 45%),
+    linear-gradient(125deg,#28134b,#100a2b 60%,#15264d);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 20px 45px rgba(0,0,0,.3),
+    0 0 35px rgba(168,85,247,.13);
+}
+
+/* 12 — HERO LIGHT ORBS */
+
+.od-orb {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle,rgba(66,234,255,.2),transparent 70%);
+  filter: blur(5px);
+  animation: odOrbFloat 7s ease-in-out infinite alternate;
+}
+
+@keyframes odOrbFloat {
+  from { transform: translateY(8px) scale(.9); }
+  to { transform: translateY(-12px) scale(1.15); }
+}
+
+/* 13 — ORBITAL RINGS */
+
+.od-orbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.od-orbit::before,
+.od-orbit::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(168,85,247,.4);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.od-orbit::before {
+  width: 135%;
+  height: 55%;
+  transform: rotate(-25deg);
+  animation: odOrbit 12s linear infinite;
+}
+
+.od-orbit::after {
+  width: 155%;
+  height: 70%;
+  border-color: rgba(66,234,255,.25);
+  transform: rotate(35deg);
+  animation: odOrbitReverse 18s linear infinite;
+}
+
+@keyframes odOrbit {
+  to { transform: rotate(335deg); }
+}
+
+@keyframes odOrbitReverse {
+  to { transform: rotate(-325deg); }
+}
+
+/* 14 — ROCKET SCENE */
+
+#page-dashboard .sq-rocket {
+  filter:
+    drop-shadow(0 0 10px rgba(255,255,255,.3))
+    drop-shadow(0 0 22px rgba(168,85,247,.55));
+  animation: odRocketFloat 4s ease-in-out infinite;
+}
+
+@keyframes odRocketFloat {
+  0%,100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-13px) rotate(4deg); }
+}
+
+/* 15 — PLANET DEPTH */
+
+#page-dashboard .sq-planet-one,
+#page-dashboard .sq-planet-two,
+#page-dashboard .sq-planet-three {
+  animation: odPlanetFloat 5s ease-in-out infinite alternate;
+}
+
+#page-dashboard .sq-planet-two {
+  animation-delay: -1.7s;
+}
+
+#page-dashboard .sq-planet-three {
+  animation-delay: -3.1s;
+}
+
+@keyframes odPlanetFloat {
+  from { translate: 0 5px; }
+  to { translate: 0 -8px; }
+}
+
+/* 16 — STAT CARD NUMBERS */
+
+.stat strong,
+.stat .value {
+  text-shadow: 0 0 15px rgba(168,85,247,.35);
+}
+
+.stat-icon {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 0 20px rgba(168,85,247,.2);
+  transition: transform .3s ease;
+}
+
+@media (hover:hover) {
+  .stat:hover .stat-icon {
+    transform: rotate(-9deg) scale(1.1);
+  }
+}
+
+/* 17 — FEATURE CARD ICONS */
+
+.feature-icon {
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    0 0 18px rgba(168,85,247,.2);
+}
+
+/* 18 — NEON PROGRESS */
+
+.progress-fill {
+  background: linear-gradient(90deg,#7137e8,#a855f7,#42eaff);
+  box-shadow: 0 0 15px rgba(168,85,247,.35);
+  border-radius: 99px;
+}
+
+/* 19 — PROGRESS SHIMMER */
+
+.od-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.od-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg,transparent,rgba(255,255,255,.2),transparent);
+  transform: translateX(-120%);
+  animation: odShimmer 3s ease-in-out infinite;
+}
+
+@keyframes odShimmer {
+  to { transform: translateX(120%); }
+}
+
+/* 20 — FOCUS TIMER GLOW */
+
+.timer-display {
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 0 12px rgba(66,234,255,.3),
+    0 0 28px rgba(168,85,247,.2);
+}
+
+.timer-ring {
+  filter: drop-shadow(0 0 14px rgba(66,234,255,.22));
+}
+
+/* 21 — FLASHCARD DEPTH */
+
+.flashcard {
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 12px 32px rgba(0,0,0,.25);
+}
+
+/* 22 — QUIZ OPTION INTERACTION */
+
+.quiz-option,
+.answer-option {
+  border: 1px solid rgba(192,139,255,.25);
+  border-radius: 12px;
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+@media (hover:hover) {
+  .quiz-option:hover,
+  .answer-option:hover {
+    border-color: #42eaff;
+    transform: translateX(4px);
+  }
+}
+
+/* 23 — MIND MAP NODE GLOW */
+
+.mind-node {
+  box-shadow: 0 0 16px rgba(66,234,255,.12);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+@media (hover:hover) {
+  .mind-node:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(66,234,255,.24);
+  }
+}
+
+/* 24 — TO-DO TASK DEPTH */
+
+.todo-task {
+  border: 1px solid rgba(192,139,255,.2);
+  border-radius: 14px;
+  transition: background .25s ease, border-color .25s ease;
+}
+
+/* 25 — STAR CURRENCY */
+
+#starBalance,
+#questStarBalance {
+  color: #ffe2a0;
+  text-shadow:
+    0 0 8px rgba(255,209,102,.6),
+    0 0 24px rgba(255,166,45,.25);
+}
+
+/* 26 — LEGENDARY SHOP ITEMS */
+
+.od-legendary {
+  border: 1px solid rgba(255,209,102,.7) !important;
+  box-shadow:
+    inset 0 0 20px rgba(255,209,102,.06),
+    0 0 24px rgba(255,209,102,.2);
+  animation: odLegendary 3s ease-in-out infinite;
+}
+
+@keyframes odLegendary {
+  0%,100% { box-shadow: 0 0 12px rgba(255,209,102,.12); }
+  50% { box-shadow: 0 0 26px rgba(255,209,102,.3); }
+}
+
+/* 27 — EPIC SHOP ITEMS */
+
+.od-epic {
+  border: 1px solid rgba(168,85,247,.7) !important;
+  box-shadow: 0 0 20px rgba(168,85,247,.2);
+}
+
+/* 28 — RARE SHOP ITEMS */
+
+.od-rare {
+  border: 1px solid rgba(66,234,255,.65) !important;
+  box-shadow: 0 0 18px rgba(66,234,255,.15);
+}
+
+/* 29 — ACHIEVEMENT MEDALS */
+
+.od-medal {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%,#fff0bd,#ffd166 45%,#a65b13);
+  color: #271500;
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,.5),
+    0 0 20px rgba(255,209,102,.3);
+}
+
+/* 30 — ACHIEVEMENT SHINE */
+
+.od-achievement {
+  position: relative;
+  overflow: hidden;
+}
+
+.od-achievement::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg,transparent 35%,rgba(255,255,255,.09) 50%,transparent 65%);
+  transform: translateX(-130%);
+  transition: transform .8s ease;
+}
+
+@media (hover:hover) {
+  .od-achievement:hover::after {
+    transform: translateX(130%);
+  }
+}
+
+/* 31 — SECTION DIVIDERS */
+
+.page hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg,transparent,#a855f7,#42eaff,transparent);
+  opacity: .7;
+}
+
+/* 32 — INPUT FOCUS */
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #42eaff;
+  box-shadow: 0 0 0 3px rgba(66,234,255,.1), 0 0 18px rgba(66,234,255,.13);
+}
+
+/* 33 — CUSTOM SCROLLBAR */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7137e8 #100a20;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #100a20;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#a855f7,#426bff);
+  border-radius: 20px;
+}
+
+/* 34 — PAGE ARRIVAL */
+
+.page.active {
+  animation: odPageEnter .4s cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes odPageEnter {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 35 — FLOATING UTILITY */
+
+.od-float {
+  animation: odFloat 4s ease-in-out infinite;
+}
+
+@keyframes odFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* 36 — PURPLE PULSE */
+
+.od-purple-pulse {
+  animation: odPurplePulse 3s ease-in-out infinite;
+}
+
+@keyframes odPurplePulse {
+  0%,100% { box-shadow: 0 0 10px rgba(168,85,247,.12); }
+  50% { box-shadow: 0 0 28px rgba(168,85,247,.4); }
+}
+
+/* 37 — CYAN PULSE */
+
+.od-cyan-pulse {
+  animation: odCyanPulse 3s ease-in-out infinite;
+}
+
+@keyframes odCyanPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(66,234,255,.12); }
+  50% { box-shadow: 0 0 28px rgba(66,234,255,.4); }
+}
+
+/* 38 — GOLD PULSE */
+
+.od-gold-pulse {
+  animation: odGoldPulse 3s ease-in-out infinite;
+}
+
+@keyframes odGoldPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(255,209,102,.12); }
+  50% { box-shadow: 0 0 28px rgba(255,209,102,.4); }
+}
+
+/* 39 — PINK PULSE */
+
+.od-pink-pulse {
+  animation: odPinkPulse 3s ease-in-out infinite;
+}
+
+@keyframes odPinkPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(255,79,216,.12); }
+  50% { box-shadow: 0 0 28px rgba(255,79,216,.4); }
+}
+
+/* 40 — MOBILE PERFORMANCE */
+
+@media (max-width:680px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .panel,
+  .card,
+  .stat,
+  .shop-item {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  #page-dashboard .sq-rocket {
+    font-size: 48px;
+  }
+
+  #page-dashboard .sq-planet-scene {
+    min-width: 95px;
+    min-height: 100px;
+  }
+
+  .page::before {
+    opacity: .2;
+  }
+}
+
+/* 41 — TABLET PERFORMANCE */
+
+@media (min-width:681px) and (max-width:1050px) {
+  .panel,
+  .card {
+    border-radius: 16px;
+  }
+}
+
+/* 42 — ACCESSIBILITY */
+
+:focus-visible {
+  outline: 2px solid #42eaff;
+  outline-offset: 3px;
+}
+
+::selection {
+  color: white;
+  background: rgba(168,85,247,.55);
+}
+
+/* 43 — REDUCED MOTION */
+
+@media (prefers-reduced-motion:reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 44 — OPTIONAL VISUAL CLASSES */
+
+.od-glow-purple {
+  box-shadow: 0 0 22px rgba(168,85,247,.25);
+}
+
+.od-glow-cyan {
+  box-shadow: 0 0 22px rgba(66,234,255,.25);
+}
+
+.od-glow-gold {
+  box-shadow: 0 0 22px rgba(255,209,102,.25);
+}
+
+.od-rounded {
+  border-radius: 20px;
+}
+
+.od-gradient-border {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#160c2b,#160c2b) padding-box,
+    linear-gradient(120deg,#a855f7,#42eaff) border-box;
+}
+
+.od-text-glow {
+  text-shadow: 0 0 14px rgba(168,85,247,.5);
+}
+
+.od-text-cyan {
+  color: #42eaff;
+  text-shadow: 0 0 12px rgba(66,234,255,.35);
+}
+
+.od-text-gold {
+  color: #ffd166;
+  text-shadow: 0 0 12px rgba(255,209,102,.35);
+}
+
+/* 45 — FINAL COSMIC FINISH */
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+}
 </style>
 </head>
 <body>
