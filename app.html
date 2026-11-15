@@ -8809,6 +8809,1398 @@ select {
   }
 }
 
+/* =====================================================
+   STUDYQUEST COSMIC ARENA
+   PART 1 — THE VISUAL ENGINE
+   Original arcade-inspired cosmic design
+===================================================== */
+
+:root {
+  --arena-bg: #090516;
+  --arena-panel: #180e30;
+  --arena-purple: #a855f7;
+  --arena-violet: #7137e8;
+  --arena-cyan: #48e5ff;
+  --arena-blue: #438bff;
+  --arena-pink: #ff5fc8;
+  --arena-gold: #ffc857;
+  --arena-orange: #ff8748;
+  --arena-green: #62f5b0;
+  --arena-white: #ffffff;
+  --arena-muted: #b9a9d4;
+  --arena-border: rgba(190,145,255,.24);
+  --arena-glow: 0 0 25px rgba(168,85,247,.25);
+  --arena-radius: 18px;
+}
+
+/* GLOBAL ATMOSPHERE */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--arena-bg);
+  color: var(--arena-white);
+  overflow-x: clip;
+}
+
+.page {
+  isolation: isolate;
+}
+
+.page h1 {
+  color: white;
+  text-shadow:
+    0 0 15px rgba(168,85,247,.35),
+    0 0 35px rgba(113,55,232,.2);
+}
+
+.page h2 {
+  color: #eadbff;
+  text-shadow: 0 0 14px rgba(168,85,247,.2);
+}
+
+.page h3 {
+  color: #f4eaff;
+}
+
+/* CINEMATIC PANELS */
+
+.panel,
+.card,
+.stat,
+.shop-item,
+.paper-card {
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(38,22,68,.92),
+      rgba(15,10,34,.96)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 12px 35px rgba(0,0,0,.22);
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+/* PANEL HOVER */
+
+@media (hover:hover) {
+  .panel:hover,
+  .card:hover,
+  .shop-item:hover,
+  .paper-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(72,229,255,.48);
+    box-shadow:
+      0 15px 38px rgba(0,0,0,.3),
+      0 0 22px rgba(168,85,247,.16);
+  }
+}
+
+/* BUTTON SYSTEM */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  transition:
+    transform .2s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+}
+
+.btn:not(.secondary):not(.ghost) {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 5px 18px rgba(113,55,232,.22);
+}
+
+@media (hover:hover) {
+  .btn:hover {
+    filter: brightness(1.13);
+    box-shadow:
+      0 0 18px rgba(168,85,247,.35),
+      0 8px 22px rgba(0,0,0,.2);
+  }
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+/* BUTTON LIGHT SWEEP */
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255,255,255,.16) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform .65s ease;
+}
+
+@media (hover:hover) {
+  .btn:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+/* NAVIGATION ARENA */
+
+.nav button {
+  border-radius: 11px;
+  transition:
+    background .25s ease,
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.nav button.active {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(168,85,247,.28),
+      rgba(72,229,255,.08)
+    );
+  box-shadow:
+    inset 3px 0 var(--arena-cyan),
+    0 0 18px rgba(168,85,247,.15);
+}
+
+@media (hover:hover) {
+  .nav button:hover {
+    transform: translateX(3px);
+    background-color: rgba(168,85,247,.12);
+  }
+}
+
+/* INPUTS */
+
+input,
+textarea,
+select {
+  border-radius: 10px;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--arena-cyan);
+  box-shadow:
+    0 0 0 3px rgba(72,229,255,.1),
+    0 0 18px rgba(72,229,255,.13);
+}
+
+/* DASHBOARD HERO */
+
+#page-dashboard .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(181,133,255,.35);
+  background:
+    radial-gradient(
+      ellipse at 80% 20%,
+      rgba(72,229,255,.19),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 15% 90%,
+      rgba(168,85,247,.24),
+      transparent 45%
+    ),
+    linear-gradient(
+      125deg,
+      #241344,
+      #100b2d 58%,
+      #17234c
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 18px 45px rgba(0,0,0,.3),
+    0 0 35px rgba(168,85,247,.15);
+}
+
+/* HERO HEADING */
+
+#page-dashboard .hero h1 {
+  background: linear-gradient(
+    100deg,
+    #ffffff,
+    #e2c4ff,
+    #78eaff
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* HERO PLANET SCENE */
+
+#page-dashboard .sq-planet-scene {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  min-height: 130px;
+  isolation: isolate;
+}
+
+/* ROCKET */
+
+#page-dashboard .sq-rocket {
+  position: relative;
+  z-index: 5;
+  font-size: 72px;
+  filter: drop-shadow(0 0 16px rgba(205,157,255,.7));
+  animation: arenaRocket 4s ease-in-out infinite;
+}
+
+@keyframes arenaRocket {
+  0%,100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+/* PLANETS */
+
+#page-dashboard .sq-mini-planet {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(255,255,255,.45);
+}
+
+#page-dashboard .sq-planet-one {
+  width: 23px;
+  height: 23px;
+  background: radial-gradient(
+    circle at 30% 25%,
+    #fff0bd,
+    #ff9b54 55%,
+    #9b367c
+  );
+  box-shadow: 0 0 20px rgba(255,155,84,.7);
+}
+
+#page-dashboard .sq-planet-two {
+  width: 17px;
+  height: 17px;
+  background: radial-gradient(
+    circle at 30% 25%,
+    #d5ffff,
+    #42b9e8 60%,
+    #4541a6
+  );
+  box-shadow: 0 0 20px rgba(72,229,255,.7);
+}
+
+#page-dashboard .sq-planet-three {
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(
+    circle at 30% 25%,
+    white,
+    #c084fc 60%,
+    #7137e8
+  );
+  box-shadow: 0 0 18px rgba(192,132,252,.8);
+}
+
+/* PLANET ORBITS */
+
+#page-dashboard .sq-planet-scene::before {
+  content: "";
+  position: absolute;
+  width: 115px;
+  height: 55px;
+  border: 1px solid rgba(190,145,255,.45);
+  border-radius: 50%;
+  transform: rotate(-28deg);
+  pointer-events: none;
+}
+
+#page-dashboard .sq-planet-scene::after {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 75px;
+  border: 1px solid rgba(72,229,255,.2);
+  border-radius: 50%;
+  transform: rotate(35deg);
+  pointer-events: none;
+}
+
+/* STAT CARDS */
+
+#page-dashboard .stat {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(43,25,77,.95),
+      rgba(17,12,40,.96)
+    );
+}
+
+#page-dashboard .stat strong,
+#page-dashboard .stat .value {
+  color: white;
+  text-shadow: 0 0 14px rgba(190,145,255,.35);
+}
+
+/* STAT ICONS */
+
+#page-dashboard .stat-icon {
+  border: 1px solid rgba(205,165,255,.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 0 16px rgba(168,85,247,.25);
+  transition: transform .3s ease;
+}
+
+@media (hover:hover) {
+  #page-dashboard .stat:hover .stat-icon {
+    transform: rotate(-8deg) scale(1.12);
+  }
+}
+
+/* FEATURE CARDS */
+
+#page-dashboard .feature {
+  border: 1px solid rgba(181,133,255,.24);
+  border-radius: 17px;
+  background: linear-gradient(
+    145deg,
+    rgba(36,21,66,.9),
+    rgba(15,10,35,.96)
+  );
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+@media (hover:hover) {
+  #page-dashboard .feature:hover {
+    transform: translateY(-5px);
+    box-shadow:
+      0 12px 30px rgba(0,0,0,.25),
+      0 0 20px rgba(72,229,255,.13);
+  }
+}
+
+/* FEATURE ICONS */
+
+.feature-icon {
+  border-radius: 15px;
+  box-shadow:
+    0 0 18px rgba(168,85,247,.22),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+/* COSMIC HEADINGS */
+
+.page h1,
+.page h2 {
+  letter-spacing: -.025em;
+}
+
+/* GRADIENT TEXT UTILITY */
+
+.arena-gradient-text {
+  background: linear-gradient(
+    100deg,
+    #fff,
+    #c69aff,
+    #48e5ff
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* PROGRESS BAR */
+
+.progress-fill {
+  background: linear-gradient(
+    90deg,
+    #7137e8,
+    #a855f7,
+    #48e5ff
+  );
+  box-shadow: 0 0 14px rgba(168,85,247,.35);
+}
+
+/* TIMER */
+
+.timer-ring {
+  filter: drop-shadow(0 0 15px rgba(72,229,255,.25));
+}
+
+.timer-display {
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 18px rgba(72,229,255,.25);
+}
+
+/* FLASHCARDS */
+
+.flashcard {
+  border: 1px solid rgba(181,133,255,.35);
+  border-radius: 18px;
+  background: linear-gradient(
+    145deg,
+    rgba(43,24,77,.96),
+    rgba(14,10,36,.98)
+  );
+  box-shadow: 0 12px 30px rgba(0,0,0,.2);
+}
+
+@media (hover:hover) {
+  .flashcard:hover {
+    border-color: rgba(72,229,255,.55);
+    box-shadow: 0 0 24px rgba(72,229,255,.15);
+  }
+}
+
+/* MIND MAP */
+
+.mind-node {
+  border: 1px solid rgba(72,229,255,.35);
+  box-shadow: 0 0 15px rgba(72,229,255,.1);
+}
+
+/* QUIZ */
+
+.quiz-option,
+.answer-option {
+  border: 1px solid rgba(181,133,255,.24);
+  border-radius: 12px;
+  background: rgba(30,18,54,.8);
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+@media (hover:hover) {
+  .quiz-option:hover,
+  .answer-option:hover {
+    transform: translateX(3px);
+    border-color: var(--arena-cyan);
+  }
+}
+
+/* TO-DO TASKS */
+
+.todo-task {
+  border: 1px solid rgba(181,133,255,.22);
+  border-radius: 13px;
+  background: rgba(25,15,48,.8);
+}
+
+.todo-task.todo-done {
+  border-color: rgba(72,229,255,.35);
+  background: rgba(21,43,57,.45);
+}
+
+/* STAR CURRENCY */
+
+#starBalance,
+#questStarBalance {
+  color: #ffe6a1;
+  text-shadow:
+    0 0 9px rgba(255,200,87,.5),
+    0 0 22px rgba(255,170,50,.25);
+}
+
+/* SHOP */
+
+#page-shop .shop-item-art {
+  border-radius: 16px;
+  box-shadow: 0 0 22px rgba(168,85,247,.2);
+}
+
+/* ACHIEVEMENTS */
+
+.achievement,
+.title-card,
+.achievement-card {
+  border: 1px solid rgba(181,133,255,.25);
+  border-radius: 15px;
+  background: linear-gradient(
+    145deg,
+    rgba(35,20,64,.95),
+    rgba(14,10,34,.96)
+  );
+}
+
+/* REWARD GOLD */
+
+.reward {
+  color: var(--arena-gold);
+  text-shadow: 0 0 12px rgba(255,200,87,.35);
+}
+
+/* PAGE TRANSITIONS */
+
+.page.active {
+  animation: arenaPageIn .35s ease both;
+}
+
+@keyframes arenaPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* COSMIC GLOW ANIMATIONS */
+
+@keyframes arenaPurplePulse {
+  0%,100% {
+    box-shadow: 0 0 10px rgba(168,85,247,.15);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(168,85,247,.4);
+  }
+}
+
+@keyframes arenaCyanPulse {
+  0%,100% {
+    box-shadow: 0 0 10px rgba(72,229,255,.12);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(72,229,255,.4);
+  }
+}
+
+@keyframes arenaGoldPulse {
+  0%,100% {
+    box-shadow: 0 0 10px rgba(255,200,87,.12);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255,200,87,.4);
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width:680px) {
+  #page-dashboard .sq-rocket {
+    font-size: 48px;
+  }
+
+  #page-dashboard .sq-planet-scene {
+    min-width: 95px;
+    min-height: 100px;
+  }
+
+  .panel,
+  .card,
+  .shop-item {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion:reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* END OF COSMIC ARENA PART 1 */
+
+/* ============================================================
+   STUDYQUEST — COSMIC ARENA MEGA UPGRADE
+   Complete visual expansion
+   CSS ONLY — preserves existing JavaScript and functionality
+============================================================ */
+
+/* 01 — DESIGN TOKENS */
+
+:root {
+  --arena-bg: #090516;
+  --arena-panel: #180e30;
+  --arena-purple: #a855f7;
+  --arena-violet: #7137e8;
+  --arena-cyan: #48e5ff;
+  --arena-blue: #438bff;
+  --arena-pink: #ff5fc8;
+  --arena-gold: #ffc857;
+  --arena-orange: #ff8748;
+  --arena-green: #62f5b0;
+  --arena-white: #ffffff;
+  --arena-muted: #b9a9d4;
+  --arena-border: rgba(190,145,255,.24);
+  --arena-radius: 18px;
+  --arena-glow-purple: 0 0 25px rgba(168,85,247,.25);
+  --arena-glow-cyan: 0 0 25px rgba(72,229,255,.22);
+  --arena-glow-gold: 0 0 25px rgba(255,200,87,.2);
+}
+
+/* 02 — GLOBAL FOUNDATION */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--arena-bg);
+  color: var(--arena-white);
+  overflow-x: clip;
+}
+
+.page {
+  isolation: isolate;
+}
+
+.page h1 {
+  color: white;
+  text-shadow: 0 0 15px rgba(168,85,247,.35);
+}
+
+.page h2 {
+  color: #eadbff;
+  text-shadow: 0 0 14px rgba(168,85,247,.2);
+}
+
+.page h3 {
+  color: #f4eaff;
+}
+
+/* 03 — COSMIC BACKGROUND */
+
+body {
+  background-image:
+    radial-gradient(ellipse at 10% 15%, rgba(113,55,232,.12), transparent 35%),
+    radial-gradient(ellipse at 90% 75%, rgba(72,229,255,.07), transparent 38%),
+    linear-gradient(145deg, #090516, #100821 55%, #090516);
+  background-attachment: fixed;
+}
+
+.page {
+  position: relative;
+}
+
+.page > * {
+  position: relative;
+}
+
+/* 04 — CINEMATIC PANELS */
+
+.panel,
+.card,
+.stat,
+.shop-item,
+.paper-card {
+  border: 1px solid var(--arena-border);
+  border-radius: var(--arena-radius);
+  background: linear-gradient(145deg, rgba(38,22,68,.92), rgba(15,10,34,.96));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 12px 35px rgba(0,0,0,.22);
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+@media (hover:hover) {
+  .panel:hover,
+  .card:hover,
+  .shop-item:hover,
+  .paper-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(72,229,255,.48);
+    box-shadow:
+      0 15px 38px rgba(0,0,0,.3),
+      0 0 22px rgba(168,85,247,.16);
+  }
+}
+
+/* 05 — HOLOGRAPHIC BORDER */
+
+.arena-holographic {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#160d2b,#160d2b) padding-box,
+    linear-gradient(120deg,#a855f7,#48e5ff,#ff5fc8) border-box;
+}
+
+/* 06 — BUTTON SYSTEM */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  transition:
+    transform .2s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+}
+
+.btn:not(.secondary):not(.ghost) {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 5px 18px rgba(113,55,232,.22);
+}
+
+@media (hover:hover) {
+  .btn:hover {
+    filter: brightness(1.13);
+    box-shadow:
+      0 0 18px rgba(168,85,247,.35),
+      0 8px 22px rgba(0,0,0,.2);
+  }
+}
+
+.btn:active {
+  transform: scale(.97);
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg,transparent 30%,rgba(255,255,255,.16) 50%,transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .65s ease;
+}
+
+@media (hover:hover) {
+  .btn:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+/* 07 — NAVIGATION ARENA */
+
+.nav button {
+  border-radius: 11px;
+  transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+.nav button.active {
+  background: linear-gradient(100deg,rgba(168,85,247,.28),rgba(72,229,255,.08));
+  box-shadow: inset 3px 0 var(--arena-cyan), 0 0 18px rgba(168,85,247,.15);
+}
+
+@media (hover:hover) {
+  .nav button:hover {
+    transform: translateX(3px);
+    background-color: rgba(168,85,247,.12);
+  }
+}
+
+/* 08 — INPUTS */
+
+input,
+textarea,
+select {
+  border-radius: 10px;
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--arena-cyan);
+  box-shadow: 0 0 0 3px rgba(72,229,255,.1), 0 0 18px rgba(72,229,255,.13);
+}
+
+/* 09 — DASHBOARD HERO */
+
+#page-dashboard .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(181,133,255,.35);
+  background:
+    radial-gradient(ellipse at 80% 20%,rgba(72,229,255,.19),transparent 35%),
+    radial-gradient(ellipse at 15% 90%,rgba(168,85,247,.24),transparent 45%),
+    linear-gradient(125deg,#241344,#100b2d 58%,#17234c);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 18px 45px rgba(0,0,0,.3),
+    0 0 35px rgba(168,85,247,.15);
+}
+
+#page-dashboard .hero h1 {
+  background: linear-gradient(100deg,#fff,#e2c4ff,#78eaff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 10 — DASHBOARD ROCKET SCENE */
+
+#page-dashboard .sq-planet-scene {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  min-height: 130px;
+  isolation: isolate;
+}
+
+#page-dashboard .sq-rocket {
+  position: relative;
+  z-index: 5;
+  font-size: 72px;
+  filter: drop-shadow(0 0 16px rgba(205,157,255,.7));
+  animation: arenaRocket 4s ease-in-out infinite;
+}
+
+@keyframes arenaRocket {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+#page-dashboard .sq-mini-planet {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(255,255,255,.45);
+}
+
+#page-dashboard .sq-planet-one {
+  width: 23px;
+  height: 23px;
+  background: radial-gradient(circle at 30% 25%,#fff0bd,#ff9b54 55%,#9b367c);
+  box-shadow: 0 0 20px rgba(255,155,84,.7);
+}
+
+#page-dashboard .sq-planet-two {
+  width: 17px;
+  height: 17px;
+  background: radial-gradient(circle at 30% 25%,#d5ffff,#42b9e8 60%,#4541a6);
+  box-shadow: 0 0 20px rgba(72,229,255,.7);
+}
+
+#page-dashboard .sq-planet-three {
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 25%,white,#c084fc 60%,#7137e8);
+  box-shadow: 0 0 18px rgba(192,132,252,.8);
+}
+
+#page-dashboard .sq-planet-scene::before {
+  content: "";
+  position: absolute;
+  width: 115px;
+  height: 55px;
+  border: 1px solid rgba(190,145,255,.45);
+  border-radius: 50%;
+  transform: rotate(-28deg);
+  pointer-events: none;
+}
+
+#page-dashboard .sq-planet-scene::after {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 75px;
+  border: 1px solid rgba(72,229,255,.2);
+  border-radius: 50%;
+  transform: rotate(35deg);
+  pointer-events: none;
+}
+
+/* 11 — STAT CARDS */
+
+#page-dashboard .stat {
+  background: linear-gradient(145deg,rgba(43,25,77,.95),rgba(17,12,40,.96));
+}
+
+#page-dashboard .stat strong,
+#page-dashboard .stat .value {
+  color: white;
+  text-shadow: 0 0 14px rgba(190,145,255,.35);
+}
+
+#page-dashboard .stat-icon {
+  border: 1px solid rgba(205,165,255,.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 0 16px rgba(168,85,247,.25);
+  transition: transform .3s ease;
+}
+
+@media (hover:hover) {
+  #page-dashboard .stat:hover .stat-icon {
+    transform: rotate(-8deg) scale(1.12);
+  }
+}
+
+/* 12 — FEATURE CARDS */
+
+#page-dashboard .feature {
+  border: 1px solid rgba(181,133,255,.24);
+  border-radius: 17px;
+  background: linear-gradient(145deg,rgba(36,21,66,.9),rgba(15,10,35,.96));
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+@media (hover:hover) {
+  #page-dashboard .feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.25), 0 0 20px rgba(72,229,255,.13);
+  }
+}
+
+.feature-icon {
+  border-radius: 15px;
+  box-shadow: 0 0 18px rgba(168,85,247,.22), inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+/* 13 — GRADIENT TEXT */
+
+.arena-gradient-text {
+  background: linear-gradient(100deg,#fff,#c69aff,#48e5ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 14 — PROGRESS BARS */
+
+.progress-fill {
+  background: linear-gradient(90deg,#7137e8,#a855f7,#48e5ff);
+  box-shadow: 0 0 14px rgba(168,85,247,.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  transform: translateX(-100%);
+  animation: arenaProgressShine 3s ease-in-out infinite;
+}
+
+@keyframes arenaProgressShine {
+  to { transform: translateX(100%); }
+}
+
+/* 15 — FOCUS TIMER */
+
+.timer-ring {
+  filter: drop-shadow(0 0 15px rgba(72,229,255,.25));
+}
+
+.timer-display {
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 18px rgba(72,229,255,.25);
+}
+
+/* 16 — FLASHCARDS */
+
+.flashcard {
+  border: 1px solid rgba(181,133,255,.35);
+  border-radius: 18px;
+  background: linear-gradient(145deg,rgba(43,24,77,.96),rgba(14,10,36,.98));
+  box-shadow: 0 12px 30px rgba(0,0,0,.2);
+}
+
+@media (hover:hover) {
+  .flashcard:hover {
+    border-color: rgba(72,229,255,.55);
+    box-shadow: 0 0 24px rgba(72,229,255,.15);
+  }
+}
+
+/* 17 — MIND MAP */
+
+.mind-node {
+  border: 1px solid rgba(72,229,255,.35);
+  box-shadow: 0 0 15px rgba(72,229,255,.1);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+@media (hover:hover) {
+  .mind-node:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 22px rgba(72,229,255,.25);
+  }
+}
+
+/* 18 — QUIZ ARENA */
+
+.quiz-option,
+.answer-option {
+  border: 1px solid rgba(181,133,255,.24);
+  border-radius: 12px;
+  background: rgba(30,18,54,.8);
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+@media (hover:hover) {
+  .quiz-option:hover,
+  .answer-option:hover {
+    transform: translateX(3px);
+    border-color: var(--arena-cyan);
+  }
+}
+
+/* 19 — TO-DO TASKS */
+
+.todo-task {
+  border: 1px solid rgba(181,133,255,.22);
+  border-radius: 13px;
+  background: rgba(25,15,48,.8);
+  transition: border-color .25s ease, background .25s ease;
+}
+
+.todo-task.todo-done {
+  border-color: rgba(72,229,255,.35);
+  background: rgba(21,43,57,.45);
+}
+
+/* 20 — STAR CURRENCY */
+
+#starBalance,
+#questStarBalance {
+  color: #ffe6a1;
+  text-shadow: 0 0 9px rgba(255,200,87,.5), 0 0 22px rgba(255,170,50,.25);
+}
+
+/* 21 — STAR REWARD EFFECT */
+
+@keyframes arenaStarReward {
+  0% { transform: scale(.8); opacity: .5; }
+  50% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.arena-star-reward {
+  animation: arenaStarReward .65s ease;
+}
+
+/* 22 — SHOP ITEMS */
+
+#page-shop .shop-item-art {
+  border-radius: 16px;
+  box-shadow: 0 0 22px rgba(168,85,247,.2);
+}
+
+#page-shop .shop-item {
+  position: relative;
+  overflow: hidden;
+}
+
+#page-shop .shop-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg,transparent 35%,rgba(255,255,255,.05) 50%,transparent 65%);
+  transform: translateX(-120%);
+  transition: transform .7s ease;
+}
+
+@media (hover:hover) {
+  #page-shop .shop-item:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+/* 23 — ACHIEVEMENTS */
+
+.achievement,
+.title-card,
+.achievement-card {
+  border: 1px solid rgba(181,133,255,.25);
+  border-radius: 15px;
+  background: linear-gradient(145deg,rgba(35,20,64,.95),rgba(14,10,34,.96));
+}
+
+.reward {
+  color: var(--arena-gold);
+  text-shadow: 0 0 12px rgba(255,200,87,.35);
+}
+
+/* 24 — RARITY COLORS */
+
+.arena-common {
+  border-color: rgba(200,200,200,.45) !important;
+}
+
+.arena-rare {
+  border-color: rgba(72,229,255,.6) !important;
+  box-shadow: 0 0 16px rgba(72,229,255,.15);
+}
+
+.arena-epic {
+  border-color: rgba(168,85,247,.7) !important;
+  box-shadow: 0 0 18px rgba(168,85,247,.2);
+}
+
+.arena-legendary {
+  border-color: rgba(255,200,87,.8) !important;
+  box-shadow: 0 0 22px rgba(255,200,87,.22);
+}
+
+/* 25 — BADGES */
+
+.badge,
+.pill {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+@media (hover:hover) {
+  .badge:hover,
+  .pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 14px rgba(168,85,247,.22);
+  }
+}
+
+/* 26 — SECTION DIVIDERS */
+
+.page hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg,transparent,rgba(190,115,255,.65),rgba(105,75,220,.5),transparent);
+}
+
+/* 27 — SCROLLBARS */
+
+* {
+  scrollbar-color: #7137e8 #100a20;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #100a20;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#a855f7,#438bff);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c084fc;
+}
+
+/* 28 — PAGE TRANSITIONS */
+
+.page.active {
+  animation: arenaPageIn .35s ease both;
+}
+
+@keyframes arenaPageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 29 — ANIMATION LIBRARY */
+
+@keyframes arenaPurplePulse {
+  0%,100% { box-shadow: 0 0 10px rgba(168,85,247,.15); }
+  50% { box-shadow: 0 0 25px rgba(168,85,247,.4); }
+}
+
+@keyframes arenaCyanPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(72,229,255,.12); }
+  50% { box-shadow: 0 0 25px rgba(72,229,255,.4); }
+}
+
+@keyframes arenaGoldPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(255,200,87,.12); }
+  50% { box-shadow: 0 0 25px rgba(255,200,87,.4); }
+}
+
+@keyframes arenaFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes arenaGlow {
+  0%,100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
+}
+
+@keyframes arenaRotate {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes arenaSlide {
+  from { transform: translateX(-10px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* 30 — OPTIONAL UTILITY CLASSES */
+
+.arena-float {
+  animation: arenaFloat 4s ease-in-out infinite;
+}
+
+.arena-glow {
+  animation: arenaGlow 3s ease-in-out infinite;
+}
+
+.arena-pulse-purple {
+  animation: arenaPurplePulse 3s ease-in-out infinite;
+}
+
+.arena-pulse-cyan {
+  animation: arenaCyanPulse 3s ease-in-out infinite;
+}
+
+.arena-pulse-gold {
+  animation: arenaGoldPulse 3s ease-in-out infinite;
+}
+
+.arena-slide {
+  animation: arenaSlide .4s ease both;
+}
+
+/* 31 — TABLES */
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  color: #e7d5ff;
+  background: rgba(168,85,247,.12);
+}
+
+td,
+th {
+  border-color: rgba(181,133,255,.15);
+}
+
+/* 32 — EMPTY STATES */
+
+.empty {
+  border: 1px dashed rgba(181,133,255,.35);
+  border-radius: 15px;
+  background: rgba(168,85,247,.035);
+}
+
+/* 33 — TOOLTIP SUPPORT */
+
+[title] {
+  cursor: help;
+}
+
+/* 34 — MOBILE OPTIMIZATION */
+
+@media (max-width:680px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  #page-dashboard .sq-rocket {
+    font-size: 48px;
+  }
+
+  #page-dashboard .sq-planet-scene {
+    min-width: 95px;
+    min-height: 100px;
+  }
+
+  .panel,
+  .card,
+  .shop-item {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .page h1 {
+    text-shadow: 0 0 10px rgba(168,85,247,.25);
+  }
+
+  .btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* 35 — TABLET OPTIMIZATION */
+
+@media (min-width:681px) and (max-width:1050px) {
+  .panel,
+  .card {
+    border-radius: 15px;
+  }
+}
+
+/* 36 — REDUCED MOTION */
+
+@media (prefers-reduced-motion:reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 37 — FINAL POLISH */
+
+::selection {
+  color: white;
+  background: rgba(168,85,247,.55);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ============================================================
+   END — STUDYQUEST COSMIC ARENA
+============================================================ */
 </style>
 </head>
 <body>
