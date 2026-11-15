@@ -8228,6 +8228,419 @@ body::before {
     animation: none !important;
   }
 }
+  
+/* ==========================================
+   STUDYQUEST — COSMIC UPGRADE 8
+   HOLOGRAPHIC GLASS UI
+========================================== */
+
+/* Futuristic glass surfaces */
+.panel,
+.card,
+.stat,
+.shop-item,
+.flashcard,
+.paper-card {
+  background-color: rgba(25, 10, 43, 0.78);
+  border: 1px solid rgba(190, 125, 255, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.055),
+    0 8px 28px rgba(0,0,0,0.2);
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+/* Holographic hover effect */
+@media (hover: hover) {
+  .panel:hover,
+  .card:hover,
+  .stat:hover,
+  .shop-item:hover,
+  .flashcard:hover,
+  .paper-card:hover {
+    border-color: rgba(205, 150, 255, 0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.1),
+      0 0 22px rgba(180,77,255,0.16),
+      0 14px 35px rgba(0,0,0,0.3);
+    transform: translateY(-3px);
+  }
+}
+
+/* Neon gradient headings */
+.page h1,
+.page h2 {
+  background: linear-gradient(
+    100deg,
+    #ffffff,
+    #d9aaff,
+    #a96cff
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Glowing stat values */
+.stat strong,
+.stat .value {
+  text-shadow:
+    0 0 10px rgba(190,120,255,0.35),
+    0 0 22px rgba(150,70,255,0.18);
+}
+
+/* Futuristic buttons */
+.btn {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 4px 14px rgba(100,40,170,0.12);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Neon focus indicators */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #c77aff;
+  box-shadow:
+    0 0 0 3px rgba(180,77,255,0.12),
+    0 0 18px rgba(180,77,255,0.16);
+}
+
+/* Respect users who prefer less animation */
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .card,
+  .stat,
+  .shop-item,
+  .flashcard,
+  .paper-card,
+  .btn {
+    transition: none !important;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — COSMIC UPGRADE 9
+   COSMIC ENERGY EFFECTS
+========================================== */
+
+/* Animated energy border */
+.panel,
+.card,
+.stat,
+.shop-item {
+  position: relative;
+  isolation: isolate;
+}
+
+.panel::after,
+.card::after,
+.stat::after,
+.shop-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(190,120,255,.5),
+    transparent,
+    rgba(120,90,255,.35),
+    transparent
+  );
+  background-size: 250% 250%;
+  animation: cosmicBorderFlow 8s linear infinite;
+  pointer-events: none;
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@keyframes cosmicBorderFlow {
+  from { background-position: 0% 50%; }
+  to { background-position: 250% 50%; }
+}
+
+/* Glowing active indicators */
+.nav button.active {
+  text-shadow: 0 0 12px rgba(210,160,255,.55);
+}
+
+/* Energy glow on progress bars */
+.progress-fill {
+  box-shadow:
+    0 0 8px rgba(180,77,255,.35),
+    0 0 18px rgba(140,70,255,.2);
+}
+
+/* Subtle animated dashboard glow */
+#page-dashboard .hero {
+  position: relative;
+  overflow: hidden;
+}
+
+#page-dashboard .hero::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -90px;
+  top: -110px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(180,77,255,.18),
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: heroEnergy 7s ease-in-out infinite alternate;
+}
+
+@keyframes heroEnergy {
+  from { transform: scale(.8); opacity: .45; }
+  to { transform: scale(1.25); opacity: .9; }
+}
+
+/* Mobile performance */
+@media (max-width: 680px) {
+  .panel::after,
+  .card::after,
+  .stat::after,
+  .shop-item::after {
+    animation-duration: 14s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel::after,
+  .card::after,
+  .stat::after,
+  .shop-item::after,
+  #page-dashboard .hero::after {
+    animation: none !important;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — COSMIC UPGRADE 10
+   LIVING COSMIC DASHBOARD
+========================================== */
+
+/* Dashboard stat icon glow */
+#page-dashboard .stat .icon,
+#page-dashboard .stat-icon {
+  filter: drop-shadow(0 0 9px rgba(190,110,255,.65));
+  transition: transform .35s ease, filter .35s ease;
+}
+
+@media (hover:hover) {
+  #page-dashboard .stat:hover .icon,
+  #page-dashboard .stat:hover .stat-icon {
+    transform: rotate(-8deg) scale(1.18);
+    filter: drop-shadow(0 0 16px rgba(210,150,255,.9));
+  }
+}
+
+/* Glowing feature icons */
+.feature-icon {
+  position: relative;
+  isolation: isolate;
+  box-shadow:
+    0 0 15px rgba(180,77,255,.18),
+    inset 0 0 12px rgba(255,255,255,.06);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+@media (hover:hover) {
+  .feature:hover .feature-icon {
+    transform: translateY(-5px) scale(1.08);
+    box-shadow:
+      0 0 24px rgba(180,77,255,.4),
+      inset 0 0 15px rgba(255,255,255,.1);
+  }
+}
+
+/* Cosmic section separators */
+.page h2 {
+  position: relative;
+}
+
+.page h2::after {
+  content: "";
+  display: block;
+  width: min(100px, 35%);
+  height: 2px;
+  margin-top: 9px;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    #b44dff,
+    rgba(180,77,255,0)
+  );
+  box-shadow: 0 0 10px rgba(180,77,255,.6);
+}
+
+/* Floating highlight on the hero */
+#page-dashboard .hero {
+  background-image:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(180,77,255,.14),
+      transparent 35%
+    );
+}
+
+/* Focus timer glow */
+.timer-ring {
+  filter: drop-shadow(0 0 12px rgba(180,77,255,.35));
+}
+
+/* Flashcard depth */
+.flashcard {
+  transform-style: preserve-3d;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+@media (hover:hover) {
+  .flashcard:hover {
+    box-shadow: 0 12px 35px rgba(120,50,220,.2);
+  }
+}
+
+/* Smooth appearance for page content */
+.page.active {
+  animation: cosmicPageEnter .45s ease both;
+}
+
+@keyframes cosmicPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility and mobile performance */
+@media (max-width:680px) {
+  #page-dashboard .stat .icon,
+  #page-dashboard .stat-icon {
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .page.active {
+    animation: none !important;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — COSMIC UPGRADE 11
+   INTERACTIVE COSMIC ATMOSPHERE
+========================================== */
+
+/* Subtle starfield overlay */
+body {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.65) 50%, transparent 100%),
+    radial-gradient(2px 2px at 75% 32%, rgba(205,155,255,.5) 50%, transparent 100%),
+    radial-gradient(1px 1px at 42% 75%, rgba(255,255,255,.5) 50%, transparent 100%),
+    radial-gradient(2px 2px at 90% 85%, rgba(180,77,255,.4) 50%, transparent 100%),
+    linear-gradient(135deg, #10051f, #160829 55%, #0d061b);
+  background-attachment: fixed;
+}
+
+/* Premium section headings */
+.page h1 {
+  text-shadow:
+    0 0 18px rgba(180,77,255,.22),
+    0 0 35px rgba(140,70,255,.12);
+  letter-spacing: -.5px;
+}
+
+/* Animated glowing navigation indicator */
+.nav button.active {
+  background-image: linear-gradient(
+    100deg,
+    rgba(180,77,255,.17),
+    rgba(180,77,255,.04)
+  );
+}
+
+/* Premium input surfaces */
+input,
+textarea,
+select {
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease,
+    background-color .25s ease;
+}
+
+/* Star currency glow */
+#starBalance,
+#questStarBalance {
+  text-shadow:
+    0 0 8px rgba(255,210,90,.5),
+    0 0 18px rgba(255,170,50,.25);
+}
+
+/* Smooth button highlight */
+.btn {
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255,255,255,.055) 45%,
+    transparent 70%
+  );
+  background-size: 220% 100%;
+  background-position: 100% 0;
+}
+
+@media (hover:hover) {
+  .btn:hover {
+    background-position: 0 0;
+  }
+}
+
+/* Premium scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180,77,255,.55) rgba(20,8,35,.5);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion:reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Mobile performance */
+@media (max-width:680px) {
+  body {
+    background-attachment: scroll;
+  }
+}
 </style>
 </head>
 <body>
