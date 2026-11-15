@@ -8765,6 +8765,50 @@ select {
     animation: none !important;
   }
 }
+  
+/* PLANETARY SCENE — POSITIONING FIX */
+#page-dashboard .sq-planet-scene {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 130px;
+  flex: 0 0 150px;
+  padding: 0;
+  isolation: isolate;
+}
+
+#page-dashboard .sq-rocket {
+  position: relative;
+  z-index: 3;
+  font-size: 72px;
+  animation: sqRocketFloat 4s ease-in-out infinite;
+}
+
+@keyframes sqRocketFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-9px) rotate(3deg); }
+}
+
+@media (max-width: 680px) {
+  #page-dashboard .sq-rocket {
+    font-size: 47px;
+  }
+}
+
+@media (max-width: 380px) {
+  #page-dashboard .sq-planet-scene {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-dashboard .sq-rocket {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 <body>
