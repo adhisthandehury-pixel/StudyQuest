@@ -1370,7 +1370,8 @@ if ($("tryBlurtAgain")) {
 
 /* -------------------- END BLURTING ARENA -------------------- */
 
-/* -------------------- QUIZ ARENA -------------------- */
+
+/* -------------------- AI QUIZ ARENA -------------------- */
 
 let activeQuiz = null;
 
@@ -1387,7 +1388,8 @@ function updateQuizLock() {
 
   selector.innerHTML = state.notes.map(note => `
     <option value="${escapeHTML(note.id)}">
-      ${escapeHTML(note.title)}${note.text ? "" : " (no text for quiz)"}
+      ${escapeHTML(note.title || "Untitled notes")}
+      ${note.text ? "" : " (no text available)"}
     </option>
   `).join("");
 
@@ -1395,104 +1397,153 @@ function updateQuizLock() {
     selector.value = previousValue;
   }
 
-  $("quizTitle").textContent = "Your notes quiz";
+  updateQuizSourceFields();
 }
 
-function makeQuizQuestions(note, requestedCount) {
-  if (!note || !note.text) return [];
+function updateQuizSourceFields() {
+  const source = $("quizSourceType")?.value || "notes";
+  const noteField = $("quizNoteField");
+  const topicField = $("quizTopicField");
 
-  const sentences = note.text
-    .replace(/\s+/g, " ")
-    .split(/(?<=[.!?])\s+|[\n;]+/)
-    .map(sentence => sentence.trim())
-    .filter(sentence => sentence.length >= 20);
+  if (noteField) noteField.hidden = source !== "notes";
+  if (topicField) topicField.hidden = source !== "general";
 
-  const candidates = [];
-
-  sentences.forEach(sentence => {
-    const words = sentence.match(/\b[\p{L}\p{N}][\p{L}\p{N}'-]*\b/gu) || [];
-    const possibleAnswers = words.filter(word =>
-      word.length >= 4 &&
-      !/^\d+$/.test(word)
-    );
-
-    if (possibleAnswers.length < 2) return;
-
-    const answer = possibleAnswers
-      .slice()
-      .sort((a, b) => b.length - a.length)[0];
-
-    const escapedAnswer = answer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-    const questionText = sentence.replace(
-      new RegExp(`\\b${escapedAnswer}\\b`, "i"),
-      "________"
-    );
-
-    if (questionText === sentence) return;
-
-    const distractors = [...new Set(
-      (note.text.match(/\b[\p{L}][\p{L}'-]{3,}\b/gu) || [])
-        .filter(word => word.toLowerCase() !== answer.toLowerCase())
-        .filter(word => !sentence.toLowerCase().includes(word.toLowerCase()))
-        .filter(word => word.length >= 4)
-    )];
-
-    const shuffledDistractors = distractors
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3);
-
-    const options = [answer, ...shuffledDistractors];
-
-    if (options.length < 2) return;
-
-    candidates.push({
-      question: `Complete the sentence: ${questionText}`,
-      answer,
-      options: options.sort(() => Math.random() - 0.5)
-    });
-  });
-
-  return candidates
-    .sort(() => Math.random() - 0.5)
-    .slice(0, requestedCount);
+  const title = $("quizTitle");
+  if (title) {
+    title.textContent = source === "general"
+      ? "General Knowledge Quiz"
+      : "AI Notes Quiz";
+  }
 }
 
-$("startQuiz").addEventListener("click", () => {
-  const noteId = $("quizNoteSelect").value;
-  const note = state.notes.find(item => item.id === noteId);
+if ($("quizSourceType")) {
+  $("quizSourceType").addEventListener(
+    "change",
+    updateQuizSourceFields
+  );
+}
 
-  if (!note) {
-    showToast("Please choose your submitted notes.");
-    return;
+async function generateAIQuiz() {
+  const button = $("startQuiz");
+  const area = $("quizArea");
+  const sourceType = $("quizSourceType").value;
+  const count = Number($("quizQuestionCount").value) || 5;
+  const difficulty = $("quizDifficulty").value;
+  const format = $("quizFormat").value;
+
+  let notes = "";
+  let topic = "";
+
+  if (sourceType === "notes") {
+    const note = state.notes.find(
+      item => item.id === $("quizNoteSelect").value
+    );
+
+    if (!note || !note.text || note.text.trim().length < 20) {
+      showToast("Choose submitted notes containing enough text.");
+      return;
+    }
+
+    notes = note.text.slice(0, 28000);
+    topic = note.title || "Study notes";
+  } else {
+    topic = $("quizTopic").value.trim();
+
+    if (!topic) {
+      showToast("Enter a topic for your general knowledge quiz.");
+      $("quizTopic").focus();
+      return;
+    }
   }
 
-  if (!note.text || note.text.trim().length < 20) {
-    showToast("Add more note text to create quiz questions.");
-    showPage("notes");
-    return;
+  button.disabled = true;
+  button.textContent = "✨ Generating AI questions...";
+  area.innerHTML = `
+    <div class="notice">
+      StudyQuest AI is creating your questions. Please wait...
+    </div>
+  `;
+
+  try {
+    const response = await fetch(
+      STUDYQUEST_AI_API + "/generate-quiz",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          sourceType,
+          notes,
+          topic,
+          count,
+          difficulty,
+          format
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Quiz generation failed.");
+    }
+
+    if (!Array.isArray(data.questions) || !data.questions.length) {
+      throw new Error("The AI did not return any questions.");
+    }
+
+    const questions = data.questions.map(question => ({
+      type: String(question.type || "mcq").toLowerCase(),
+      question: String(question.question || ""),
+      options: Array.isArray(question.options)
+        ? question.options.map(String)
+        : [],
+      answer: Array.isArray(question.answer)
+        ? question.answer.map(String)
+        : [String(question.answer || "")],
+      explanation: String(question.explanation || ""),
+      topic: String(question.topic || topic)
+    })).filter(question =>
+      question.question &&
+      question.options.length >= 2 &&
+      question.answer.length > 0
+    );
+
+    if (!questions.length) {
+      throw new Error("The AI returned invalid questions. Try again.");
+    }
+
+    activeQuiz = {
+      questions,
+      index: 0,
+      correct: 0,
+      selected: [],
+      answered: false,
+      sourceTitle: topic
+    };
+
+    $("quizTitle").textContent = topic;
+    renderQuizQuestion();
+
+  } catch (error) {
+    area.innerHTML = `
+      <div class="notice warn">
+        ${escapeHTML(error.message || "Something went wrong.")}
+      </div>
+    `;
+
+    showToast("Could not generate your AI quiz.");
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "✨ Generate AI Quiz";
   }
+}
 
-  const requestedCount = Number($("quizQuestionCount").value) || 5;
-  const questions = makeQuizQuestions(note, requestedCount);
-
-  if (questions.length === 0) {
-    showToast("Add a few complete sentences to your notes first.");
-    showPage("notes");
-    return;
-  }
-
-  activeQuiz = {
-    noteId,
-    questions,
-    index: 0,
-    correct: 0,
-    answered: false
-  };
-
-  $("quizTitle").textContent = note.title;
-  renderQuizQuestion();
-});
+if ($("startQuiz")) {
+  $("startQuiz").addEventListener("click", generateAIQuiz);
+}
 
 function renderQuizQuestion() {
   const area = $("quizArea");
@@ -1511,62 +1562,140 @@ function renderQuizQuestion() {
   const number = activeQuiz.index + 1;
   const total = activeQuiz.questions.length;
 
+  activeQuiz.selected = [];
   activeQuiz.answered = false;
+
+  const multi = question.type === "multi";
+  const typeLabel = multi
+    ? "MULTIPLE SELECT"
+    : question.type === "truefalse"
+      ? "TRUE OR FALSE"
+      : "MULTIPLE CHOICE";
 
   area.innerHTML = `
     <div class="notice">
-      Question ${number} of ${total} · Correct answers: ${activeQuiz.correct}
+      Question ${number} of ${total}
+      · Correct: ${activeQuiz.correct}
     </div>
-    <h3 style="line-height:1.6;margin-top:20px">
+
+    <div class="pill">${typeLabel}</div>
+
+    <h3 style="line-height:1.6;margin:18px 0">
       ${escapeHTML(question.question)}
     </h3>
+
+    <p class="muted smalltext">
+      ${multi ? "Select all correct answers." : "Choose one answer."}
+    </p>
+
     <div id="quizOptions">
       ${question.options.map((option, index) => `
-        <button class="quiz-option" data-answer-index="${index}">
-          ${String.fromCharCode(65 + index)}. ${escapeHTML(option)}
+        <button
+          type="button"
+          class="quiz-option"
+          data-quiz-choice="${index}"
+          style="text-align:left;width:100%"
+        >
+          ${String.fromCharCode(65 + index)}.
+          ${escapeHTML(option)}
         </button>
       `).join("")}
     </div>
-    <div id="quizFeedback" class="smalltext" aria-live="polite"></div>
-    <button class="btn" id="nextQuizQuestion" hidden>
-      ${number === total ? "See results" : "Next question →"}
-    </button>
+
+    <div id="quizFeedback" aria-live="polite"></div>
+
+    <div class="row" style="margin-top:14px">
+      <button class="btn" id="checkQuizAnswer">
+        Check answer
+      </button>
+
+      <button class="btn secondary" id="nextQuizQuestion" hidden>
+        ${number === total ? "See results" : "Next question →"}
+      </button>
+    </div>
   `;
 
-  area.querySelectorAll("[data-answer-index]").forEach(button => {
+  area.querySelectorAll("[data-quiz-choice]").forEach(button => {
     button.addEventListener("click", () => {
       if (activeQuiz.answered) return;
 
-      activeQuiz.answered = true;
+      const index = Number(button.dataset.quizChoice);
+      const value = question.options[index];
 
-      const selectedIndex = Number(button.dataset.answerIndex);
-      const selectedAnswer = question.options[selectedIndex];
-
-      const correct = selectedAnswer.toLowerCase() ===
-        question.answer.toLowerCase();
-
-      if (correct) activeQuiz.correct++;
-
-      area.querySelectorAll("[data-answer-index]").forEach(optionButton => {
-        optionButton.disabled = true;
-
-        const answer = question.options[
-          Number(optionButton.dataset.answerIndex)
-        ];
-
-        if (answer.toLowerCase() === question.answer.toLowerCase()) {
-          optionButton.classList.add("correct");
-        } else if (optionButton === button) {
-          optionButton.classList.add("wrong");
+      if (multi) {
+        if (activeQuiz.selected.includes(value)) {
+          activeQuiz.selected =
+            activeQuiz.selected.filter(item => item !== value);
+          button.classList.remove("selected");
+        } else {
+          activeQuiz.selected.push(value);
+          button.classList.add("selected");
         }
-      });
+      } else {
+        activeQuiz.selected = [value];
 
-      $("quizFeedback").innerHTML = correct
-        ? '<div class="notice good">Correct! Nice work! ⭐</div>'
-        : `<div class="notice warn">Not quite. Correct answer: <strong>${escapeHTML(question.answer)}</strong></div>`;
+        area.querySelectorAll("[data-quiz-choice]").forEach(item => {
+          item.classList.remove("selected");
+        });
 
-      $("nextQuizQuestion").hidden = false;
+        button.classList.add("selected");
+      }
     });
+  });
+
+  $("checkQuizAnswer").addEventListener("click", () => {
+    if (activeQuiz.answered) return;
+
+    if (!activeQuiz.selected.length) {
+      showToast("Choose an answer first.");
+      return;
+    }
+
+    activeQuiz.answered = true;
+
+    const normalize = values => values
+      .map(value => value.trim().toLowerCase())
+      .sort();
+
+    const selected = normalize(activeQuiz.selected);
+    const correctAnswers = normalize(question.answer);
+
+    const correct =
+      selected.length === correctAnswers.length &&
+      selected.every((value, index) => value === correctAnswers[index]);
+
+    if (correct) activeQuiz.correct++;
+
+    area.querySelectorAll("[data-quiz-choice]").forEach(button => {
+      button.disabled = true;
+
+      const value = question.options[
+        Number(button.dataset.quizChoice)
+      ];
+
+      if (question.answer.some(answer =>
+        answer.toLowerCase() === value.toLowerCase()
+      )) {
+        button.classList.add("correct");
+      } else if (activeQuiz.selected.includes(value)) {
+        button.classList.add("wrong");
+      }
+    });
+
+    $("quizFeedback").innerHTML = `
+      <div class="notice ${correct ? "good" : "warn"}">
+        <strong>${correct ? "Correct! ⭐" : "Not quite!"}</strong>
+        <p>
+          Correct answer:
+          <strong>${escapeHTML(question.answer.join(", "))}</strong>
+        </p>
+        <p>${escapeHTML(question.explanation)}</p>
+        <small>Topic: ${escapeHTML(question.topic)}</small>
+      </div>
+    `;
+
+    $("checkQuizAnswer").hidden = true;
+    $("nextQuizQuestion").hidden = false;
   });
 
   $("nextQuizQuestion").addEventListener("click", () => {
@@ -1581,17 +1710,17 @@ function finishQuiz() {
   const total = activeQuiz.questions.length;
   const correct = activeQuiz.correct;
   const earned = Math.round((correct / total) * 10);
+  const accuracy = Math.round(correct / total * 100);
 
   state.quizResults.attempts++;
   state.quizResults.correct += correct;
 
   if (earned > 0) {
-  state.stars += earned;
-  triggerAchievementEffect(earned);
-}
+    state.stars += earned;
+    triggerAchievementEffect(earned);
+  }
 
-   recordDailyStreak();
-
+  recordDailyStreak();
   saveState();
   updateDashboard();
   checkQuestProgress();
@@ -1599,12 +1728,12 @@ function finishQuiz() {
 
   $("quizArea").innerHTML = `
     <div class="empty">
-      <div class="big">${correct === total ? "🏆" : "🎉"}</div>
-      <h3>Quiz complete!</h3>
-      <p>You got <strong>${correct} out of ${total}</strong> questions correct.</p>
-      <p>Accuracy: <strong>${Math.round(correct / total * 100)}%</strong></p>
-      <p>You earned <strong>⭐ ${earned} Stars</strong>.</p>
-      <button class="btn" id="retryQuiz">Try again</button>
+      <div class="big">${accuracy === 100 ? "🏆" : "🎉"}</div>
+      <h3>AI Quiz complete!</h3>
+      <p>You got <strong>${correct} out of ${total}</strong> correct.</p>
+      <p>Accuracy: <strong>${accuracy}%</strong></p>
+      <p>Earned: <strong>⭐ ${earned} Stars</strong></p>
+      <button class="btn" id="retryQuiz">Generate another quiz</button>
     </div>
   `;
 
@@ -1615,6 +1744,9 @@ function finishQuiz() {
 
   activeQuiz = null;
 }
+
+/* -------------------- END AI QUIZ ARENA -------------------- */
+
 
 /* -------------------- FLASHCARDS -------------------- */
 
