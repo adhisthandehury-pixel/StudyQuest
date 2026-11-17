@@ -525,6 +525,104 @@ function todoKey(title) {
   return String(title || "").trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+const AUTO_TODO_ACTIVITIES = [
+  "past_papers",
+  "quiz",
+  "blurting",
+  "focus",
+  "mindmap"
+];
+
+async function classifyTodoTask(task) {
+  try {
+    const response = await fetch(
+      STUDYQUEST_AI_API + "/match-task",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          task: task.title
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "AI matching failed.");
+    }
+
+    const activityType = AUTO_TODO_ACTIVITIES.includes(
+      data.activityType
+    ) && Number(data.confidence) >= 0.65
+      ? data.activityType
+      : "other";
+
+    // The task might have been deleted while AI was working.
+    if (!state.todoTasks.some(item => item.id === task.id)) {
+      return;
+    }
+
+    task.activityType = activityType;
+
+    saveState();
+    renderQuests();
+
+    if (activityType !== "other") {
+      showToast("🤖 AI matched your task to a StudyQuest activity!");
+    } else {
+      showToast("Task added! You can complete this one manually.");
+    }
+
+  } catch (error) {
+    console.error("AI To-Do matching error:", error);
+
+    if (!state.todoTasks.some(item => item.id === task.id)) {
+      return;
+    }
+
+    // Safe fallback: never block normal task creation.
+    task.activityType = "other";
+
+    saveState();
+    renderQuests();
+
+    showToast("AI matching unavailable. Manual task mode enabled.");
+  }
+}
+
+function completeMatchingTodoTasks(activityType) {
+  const matchingTasks = state.todoTasks.filter(task =>
+    task.activityType === activityType &&
+    !task.completed &&
+    !task.rewardClaimed
+  );
+
+  if (!matchingTasks.length) return;
+
+  matchingTasks.forEach(task => {
+    task.completed = true;
+    task.rewardClaimed = true;
+  });
+
+  const reward = matchingTasks.length * 5;
+
+  state.stars += reward;
+
+  saveState();
+  updateDashboard();
+  renderShop();
+
+  triggerAchievementEffect(reward);
+
+  showToast(
+    `🤖 Activity verified! ${matchingTasks.length} task(s) completed. +${reward} ⭐`
+  );
+}
+
+
 function renderQuests() {
   const list = $("allQuests");
   const preview = $("dashboardQuests");
@@ -534,10 +632,30 @@ function renderQuests() {
   const html = tasks.length ? tasks.map(task => `
     <div class="todo-task ${task.completed ? "todo-done" : ""}">
       <label class="todo-label">
-        <input type="checkbox" data-todo-toggle="${escapeHTML(task.id)}" ${task.completed ? "checked" : ""}>
+        <input
+  type="checkbox"
+  data-todo-toggle="${escapeHTML(task.id)}"
+  ${task.completed ? "checked" : ""}
+  ${
+    task.activityType === "pending" ||
+    (task.activityType && task.activityType !== "other")
+      ? "disabled"
+      : ""
+  }
+>
         <span>${escapeHTML(task.title)}</span>
       </label>
-      <span class="reward">${task.rewardClaimed ? "✓ Rewarded" : "⭐ 5"}</span>
+     <span class="reward">
+  ${
+    task.rewardClaimed
+      ? "✓ Rewarded"
+      : task.activityType === "pending"
+        ? "🤖 Matching..."
+        : task.activityType && task.activityType !== "other"
+          ? "🤖 Auto tracked"
+          : "⭐ 5"
+  }
+</span>
       <button class="btn ghost small" data-todo-edit="${escapeHTML(task.id)}" type="button">Edit</button>
       <button class="btn ghost small" data-todo-delete="${escapeHTML(task.id)}" type="button">Delete</button>
     </div>
@@ -572,7 +690,17 @@ function renderQuests() {
       const task = state.todoTasks.find(item => item.id === id);
       if (!task) return;
 
-      task.completed = event.target.checked;
+      if (
+  task.activityType === "pending" ||
+  (task.activityType && task.activityType !== "other")
+) {
+  event.target.checked = task.completed;
+
+  showToast("🤖 Complete the matching StudyQuest activity first!");
+  return;
+}
+
+task.completed = event.target.checked;
        if (task.completed) {
   recordDailyStreak();
 }
@@ -632,6 +760,7 @@ function checkQuestProgress() {
   // Old automatic quests are disabled.
 }
 
+
 function addTodoTask() {
   const input = $("todoInput");
 
@@ -648,17 +777,24 @@ function addTodoTask() {
     return;
   }
 
-  state.todoTasks.push({
+  const newTask = {
     id: makeId(),
     title,
     completed: false,
-    rewardClaimed: false
-  });
+    rewardClaimed: false,
+    activityType: "pending"
+  };
+
+  state.todoTasks.push(newTask);
 
   input.value = "";
+
   saveState();
   renderQuests();
   updateDashboard();
+
+  // AI identifies which StudyQuest activity matches this task.
+  classifyTodoTask(newTask);
 }
 
 const addTodoButton = $("addTodo");
@@ -1348,6 +1484,7 @@ if ($("checkBlurt")) {
 saveState();
 updateDashboard();
     completeWeekendObjective("blurting");
+     completeMatchingTodoTasks("blurting");
 
     if (!Array.isArray(state.completedBlurtingNotes)) {
       state.completedBlurtingNotes = [];
@@ -1725,6 +1862,7 @@ function finishQuiz() {
   updateDashboard();
   checkQuestProgress();
   completeWeekendObjective("quiz");
+   completeMatchingTodoTasks("quiz");
 
   $("quizArea").innerHTML = `
     <div class="empty">
@@ -2115,6 +2253,7 @@ Do not create empty or unrelated branches.
       "Your AI mind map is ready! You can save it below.";
 
     showToast("AI mind map generated! ✨");
+     completeMatchingTodoTasks("mindmap");
 
   } catch (error) {
     status.textContent =
@@ -2778,11 +2917,22 @@ if (submitPaperButton) {
       return;
     }
 
-    savePracticePaperResponses();
-    currentPracticePaper.submitted = true;
+   savePracticePaperResponses();
+
+const hasAnswers = currentPracticePaper.questions.some(
+  question => question.response.trim()
+);
+
+if (!hasAnswers) {
+  showToast("Answer at least one question before submitting.");
+  return;
+}
+
+currentPracticePaper.submitted = true;
 
     renderGeneratedPracticePaper();
     renderPracticePaperResults();
+     completeMatchingTodoTasks("past_papers");
 
     showToast("Your answers have been submitted! ✅");
   });
@@ -2962,7 +3112,7 @@ if (
   state.unlockedTitles.push("flow-spammer");
   showToast("🏆 Title unlocked: Flow Spammer!");
 }
-
+  completeMatchingTodoTasks("focus");
   saveState();
   renderTimer();
   updateDashboard();
