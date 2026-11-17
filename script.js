@@ -2206,11 +2206,6 @@ function renderMindmaps() {
         branches: normalizeMapBranches(map.branches)
       };
 
-      $("mapTopic").value = map.topic;
-
-      $("mapBranches").value =
-        currentMindMap.branches.map(branch => branch.name).join(", ");
-
       $("mindmapView").innerHTML = buildMindMapHTML(
         map.topic,
         currentMindMap.branches
