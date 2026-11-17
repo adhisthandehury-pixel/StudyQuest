@@ -10919,6 +10919,134 @@ img {
   margin-top: 16px;
   line-height: 1.7;
 }
+  
+/* =========================================
+   STUDYQUEST - REAL DASHBOARD DESIGNS
+   ========================================= */
+
+/* MIDNIGHT - Cool blue futuristic dashboard */
+body[data-shop-theme="theme_midnight"] #page-dashboard {
+  --dash-accent: #8bbdff;
+  --dash-glow: rgba(75, 145, 255, .24);
+  --dash-border: rgba(116, 169, 255, .42);
+  --dash-card: #101c35;
+  --dash-card2: #172b4c;
+}
+
+body[data-shop-theme="theme_midnight"] #page-dashboard .hero {
+  background:
+    radial-gradient(circle at 85% 20%, #6ba9ff55, transparent 40%),
+    linear-gradient(125deg, #102447, #1c3967 60%, #101a32) !important;
+  border-color: #78aaff;
+  box-shadow: 0 0 35px rgba(64, 130, 255, .22);
+}
+
+body[data-shop-theme="theme_midnight"] #page-dashboard .stat,
+body[data-shop-theme="theme_midnight"] #page-dashboard .panel,
+body[data-shop-theme="theme_midnight"] #page-dashboard .feature {
+  background:
+    linear-gradient(145deg, var(--dash-card2), var(--dash-card)) !important;
+  border-color: var(--dash-border);
+  box-shadow: 0 10px 30px var(--dash-glow);
+}
+
+body[data-shop-theme="theme_midnight"] #page-dashboard .stat strong,
+body[data-shop-theme="theme_midnight"] #page-dashboard .feature-icon {
+  color: var(--dash-accent);
+}
+
+/* COSMIC PURPLE - Deep space dashboard */
+body[data-shop-theme="theme_cosmic"] #page-dashboard {
+  --dash-accent: #e1a2ff;
+  --dash-glow: rgba(180, 77, 255, .28);
+  --dash-border: rgba(204, 130, 255, .48);
+  --dash-card: #190b32;
+  --dash-card2: #30124d;
+}
+
+body[data-shop-theme="theme_cosmic"] #page-dashboard .hero {
+  background:
+    radial-gradient(circle at 80% 15%, #ed8aff66, transparent 38%),
+    radial-gradient(circle at 15% 100%, #5730c766, transparent 45%),
+    linear-gradient(125deg, #35105c, #7024a1 60%, #220b42) !important;
+  border-color: #d18aff;
+  box-shadow: 0 0 42px rgba(180, 77, 255, .32);
+}
+
+body[data-shop-theme="theme_cosmic"] #page-dashboard .stat,
+body[data-shop-theme="theme_cosmic"] #page-dashboard .panel,
+body[data-shop-theme="theme_cosmic"] #page-dashboard .feature {
+  background:
+    radial-gradient(circle at 100% 0%, #b44dff25, transparent 55%),
+    linear-gradient(145deg, var(--dash-card2), var(--dash-card)) !important;
+  border-color: var(--dash-border);
+  box-shadow: 0 10px 32px var(--dash-glow);
+}
+
+body[data-shop-theme="theme_cosmic"] #page-dashboard .stat strong {
+  color: var(--dash-accent);
+}
+
+body[data-shop-theme="theme_cosmic"] #page-dashboard .feature-icon {
+  background: linear-gradient(145deg, #7834a8, #291044) !important;
+  border-color: #d18aff;
+  box-shadow: 0 0 22px var(--dash-glow);
+}
+
+/* SOLAR SYSTEM - Golden planetary dashboard */
+body[data-shop-theme="theme_crystal"] #page-dashboard {
+  --dash-accent: #ffd36b;
+  --dash-glow: rgba(255, 177, 65, .23);
+  --dash-border: rgba(255, 205, 112, .48);
+  --dash-card: #11172e;
+  --dash-card2: #28233d;
+}
+
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero {
+  background:
+    radial-gradient(circle at 80% 20%, #ffcc6b66, transparent 35%),
+    radial-gradient(circle at 15% 100%, #4588c955, transparent 45%),
+    linear-gradient(125deg, #39234c, #76502e 58%, #182b4a) !important;
+  border-color: #ffd36b;
+  box-shadow: 0 0 40px rgba(255, 190, 80, .25);
+}
+
+body[data-shop-theme="theme_crystal"] #page-dashboard .stat,
+body[data-shop-theme="theme_crystal"] #page-dashboard .panel,
+body[data-shop-theme="theme_crystal"] #page-dashboard .feature {
+  background:
+    radial-gradient(circle at 100% 0%, #ffca6920, transparent 55%),
+    linear-gradient(145deg, var(--dash-card2), var(--dash-card)) !important;
+  border-color: var(--dash-border);
+  box-shadow: 0 10px 30px var(--dash-glow);
+}
+
+body[data-shop-theme="theme_crystal"] #page-dashboard .stat strong {
+  color: var(--dash-accent);
+}
+
+body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
+  background: linear-gradient(145deg, #77552b, #25203b) !important;
+  border-color: #ffd36b;
+  box-shadow: 0 0 20px var(--dash-glow);
+}
+
+/* Smooth design transitions */
+#page-dashboard .hero,
+#page-dashboard .stat,
+#page-dashboard .panel,
+#page-dashboard .feature,
+#page-dashboard .feature-icon {
+  transition:
+    background .45s ease,
+    border-color .45s ease,
+    box-shadow .45s ease,
+    color .35s ease;
+}
+
+/* =========================================
+   END DASHBOARD DESIGNS
+   ========================================= */
 </style>
 </head>
 <body>
@@ -11346,7 +11474,6 @@ img {
   </div>
 
   <div class="panel">
-    <h3>📝 Create a Manual Mind Map</h3>
 
     <div class="field">
       <label for="mapTopic">Main topic</label>
