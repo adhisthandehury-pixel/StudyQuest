@@ -2134,44 +2134,6 @@ $("generateAIMindMap").addEventListener(
   generateAIMindMap
 );
 
-$("makeMap").addEventListener("click", () => {
-  const topic = $("mapTopic").value.trim();
-
-  const branches = $("mapBranches").value
-    .split(/[,;\n]+/)
-    .map(branch => branch.trim())
-    .filter(Boolean)
-    .slice(0, 30)
-    .map(name => ({
-      name,
-      children: []
-    }));
-
-  if (!topic) {
-    showToast("Give your mind map a main topic.");
-    return;
-  }
-
-  if (!branches.length) {
-    showToast("Add at least one key idea.");
-    return;
-  }
-
-  currentMindMap = {
-    topic,
-    branches,
-    id: makeId(),
-    source: "Manual"
-  };
-
-  $("mindmapView").innerHTML = buildMindMapHTML(
-    topic,
-    branches
-  );
-
-  showToast("Manual mind map generated! 🕸️");
-});
-
 $("saveMap").addEventListener("click", () => {
   if (!currentMindMap) {
     showToast("Generate a mind map before saving it.");
@@ -3611,6 +3573,7 @@ function renderShop() {
 }
 
 /* Purchase an item. */
+
 function buyShopItem(id) {
   const item = getShopItem(id);
 
@@ -3631,13 +3594,30 @@ function buyShopItem(id) {
   state.stars -= item.price;
   state.shopOwned.push(id);
 
+  // Dashboard designs automatically equip after purchase.
+  if (item.category === "dashboards") {
+    state.shopEquipped.dashboard = id;
+    state.shopEquipped.theme = id;
+  }
+
   saveState();
   updateDashboard();
+  applyShopAppearance();
   renderShop();
 
-  showShopMessage(`You purchased ${item.name}! 🎉`);
-  showToast(`Purchased ${item.name}! ⭐`);
+  showShopMessage(
+    item.category === "dashboards"
+      ? `${item.name} purchased and equipped! 🌌`
+      : `You purchased ${item.name}! 🎉`
+  );
+
+  showToast(
+    item.category === "dashboards"
+      ? `${item.name} is now your dashboard design!`
+      : `Purchased ${item.name}! ⭐`
+  );
 }
+
 
 /* Equip or unequip an item. */
 function equipShopItem(id) {
@@ -3681,14 +3661,29 @@ function equipShopItem(id) {
 }
 
 /* Apply purchased designs to the actual dashboard. */
+
 function applyShopAppearance() {
   const skin = getShopItem(state.shopEquipped.skin);
-  const dashboard = getShopItem(state.shopEquipped.dashboard);
-  const effect = getShopItem(state.shopEquipped.effect);
 
-  document.body.dataset.shopSkin = skin ? skin.id : "";
+  const dashboard = getShopItem(
+    state.shopEquipped.dashboard ||
+    state.shopEquipped.theme
+  );
+
+  const effect = getShopItem(
+    state.shopEquipped.effect ||
+    state.shopEquipped.cosmetic
+  );
+
+  // Keep both old and new theme attributes working.
   document.body.dataset.dashboardDesign =
     dashboard ? dashboard.id : "";
+
+  document.body.dataset.shopTheme =
+    dashboard ? dashboard.id : "";
+
+  document.body.dataset.shopSkin =
+    skin ? skin.id : "";
 
   document.body.dataset.starRewardEffect =
     effect ? effect.id : "";
@@ -3705,6 +3700,7 @@ function applyShopAppearance() {
     ].filter(Boolean).join(" · ");
   }
 }
+
 
 /* Show the selected effect when Stars are earned. */
 function triggerAchievementEffect(amount) {
