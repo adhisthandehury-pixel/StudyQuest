@@ -3564,24 +3564,24 @@ const SHOP_ITEMS = [
     description: "A legendary champion style."
   },
 
-  // DASHBOARD DESIGNS — old theme IDs preserved
+  // DASHBOARD ATMOSPHERES
   {
     id: "theme_midnight",
     category: "dashboards",
-    name: "Midnight",
-    icon: "🌙",
+    name: "Aurora",
+    icon: "🌌",
     price: 100,
-    rarity: "Common",
-    description: "A sleek midnight-blue dashboard."
+    rarity: "Rare",
+    description: "A cool blue atmosphere inspired by glowing northern lights."
   },
   {
     id: "theme_cosmic",
     category: "dashboards",
-    name: "Cosmic Purple",
+    name: "Nebula",
     icon: "🪐",
     price: 250,
     rarity: "Epic",
-    description: "A glowing purple cosmic dashboard."
+    description: "Transform your dashboard with a glowing purple cosmic atmosphere."
   },
   {
     id: "theme_crystal",
@@ -3590,14 +3590,14 @@ const SHOP_ITEMS = [
     icon: "☀️",
     price: 400,
     rarity: "Legendary",
-    description: "A planetary dashboard with solar-system inspired colours."
+    description: "A planetary atmosphere with golden and deep-space colours."
   },
 
-  // ACHIEVEMENT EFFECTS — old cosmetic IDs preserved
+  // CELEBRATION EFFECTS
   {
     id: "cos_sparkle",
     category: "effects",
-    name: "Star Burst",
+    name: "Starburst",
     icon: "✨",
     price: 75,
     rarity: "Common",
@@ -3606,20 +3606,29 @@ const SHOP_ITEMS = [
   {
     id: "cos_lightning",
     category: "effects",
-    name: "Lightning Strike",
+    name: "Thunder",
     icon: "⚡",
     price: 150,
     rarity: "Rare",
-    description: "An electric flash when you earn Stars."
+    description: "An electric-blue celebration when you earn Stars."
   },
   {
     id: "cos_champion",
     category: "effects",
-    name: "Champion Celebration",
+    name: "Golden Aura",
     icon: "🏆",
     price: 300,
     rarity: "Legendary",
-    description: "A special champion celebration whenever you earn Stars."
+    description: "A golden achievement-style celebration when you earn Stars."
+  },
+  {
+    id: "cos_portal",
+    category: "effects",
+    name: "Cosmic Portal",
+    icon: "🌌",
+    price: 450,
+    rarity: "Mythic",
+    description: "A cosmic portal-style particle celebration when you earn Stars."
   }
 ];
 
@@ -3790,10 +3799,19 @@ function buyShopItem(id) {
   state.stars -= item.price;
   state.shopOwned.push(id);
 
-  // Dashboard designs automatically equip after purchase.
-  if (item.category === "dashboards") {
-    state.shopEquipped.dashboard = id;
-    state.shopEquipped.theme = id;
+  // Automatically equip newly purchased dashboard atmospheres and effects.
+  const slot = getShopSlot(item.category);
+
+  if (slot) {
+    state.shopEquipped[slot] = id;
+
+    if (slot === "dashboard") {
+      state.shopEquipped.theme = id;
+    }
+
+    if (slot === "effect") {
+      state.shopEquipped.cosmetic = id;
+    }
   }
 
   saveState();
@@ -3801,18 +3819,17 @@ function buyShopItem(id) {
   applyShopAppearance();
   renderShop();
 
-  showShopMessage(
-    item.category === "dashboards"
-      ? `${item.name} purchased and equipped! 🌌`
+   showShopMessage(
+    slot
+      ? `${item.name} purchased and equipped! ✨`
       : `You purchased ${item.name}! 🎉`
   );
 
   showToast(
-    item.category === "dashboards"
-      ? `${item.name} is now your dashboard design!`
+    slot
+      ? `${item.name} is now equipped!`
       : `Purchased ${item.name}! ⭐`
   );
-}
 
 
 /* Equip or unequip an item. */
@@ -3918,10 +3935,11 @@ function triggerAchievementEffect(amount) {
     document.body.appendChild(overlay);
   }
 
-  const symbols = {
+    const symbols = {
     cos_sparkle: "✨",
     cos_lightning: "⚡",
-    cos_champion: "🏆"
+    cos_champion: "🏆",
+    cos_portal: "🌌"
   };
 
   const symbol = symbols[effectId] || "⭐";
