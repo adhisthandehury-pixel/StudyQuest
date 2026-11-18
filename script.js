@@ -3975,4 +3975,3 @@ renderShop();
 applyShopAppearance();
 
 /* =============== END STAR SHOP SYSTEM 2.0 =============== */
-
