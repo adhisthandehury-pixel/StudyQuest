@@ -3830,7 +3830,7 @@ function buyShopItem(id) {
       ? `${item.name} is now equipped!`
       : `Purchased ${item.name}! ⭐`
   );
-
+}
 
 /* Equip or unequip an item. */
 function equipShopItem(id) {
