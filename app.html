@@ -11069,7 +11069,7 @@ body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
     <button data-page="flashcards"><span>🗂️</span>Flashcards</button>
     <button data-page="mindmaps"><span>🕸️</span>Mind Maps</button>
     <button data-page="papers"><span>📄</span>Past Papers</button>
-    <button data-page="quests"><span>📝</span>To-Do List</button>
+    <button data-page="quests"><span>⚔️</span>AI Quest Board</button>
     <button data-page="shop"><span>🛒</span>Star Shop</button>
     <button data-page="timer"><span>⏳</span>Focus Timer</button>
     <button data-page="ai"><span>🤖</span>StudyQuest AI</button>
@@ -11576,25 +11576,67 @@ body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
 
 
 <section class="page" id="page-quests">
+
   <div class="section-title">
     <div>
-      <h2>📝 To-Do List</h2>
-      <p>Keep it simple. Finish a task and earn 5 Stars once.</p>
+      <h2>⚔️ AI Quest Board</h2>
+      <p>Your study notes become your next learning adventure.</p>
+    </div>
+    <span class="pill">POWERED BY STUDYQUEST AI</span>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h3>🧠 Generate your quests</h3>
+      <span class="pill">5 quests per generation</span>
+    </div>
+
+    <p class="muted smalltext">
+      Choose submitted study material. StudyQuest AI will create
+      five activities based on what you need to learn.
+    </p>
+
+    <div class="field">
+      <label for="questNoteSelect">Choose your study notes</label>
+      <select id="questNoteSelect">
+        <option value="">Submit study notes first</option>
+      </select>
+    </div>
+
+    <button class="btn" id="generateAIQuests" type="button">
+      ✨ Generate AI Quests
+    </button>
+
+    <div class="notice" id="questGenerationStatus" aria-live="polite">
+      📚 Submit study notes to unlock AI quest generation.
     </div>
   </div>
 
   <div class="panel">
-    <div class="todo-add-row">
-      <input id="todoInput" type="text" maxlength="120" placeholder="What do you need to do?">
-      <button class="btn" id="addTodo" type="button">+ Add task</button>
+    <div class="panel-head">
+      <h3>🚀 Your active quests</h3>
+      <span class="pill" id="questCount">0 quests</span>
     </div>
-    <div id="allQuests"></div>
+
+    <div id="allQuests">
+      <div class="empty">
+        <div class="big">⚔️</div>
+        Your adventure begins when you generate your first quests.
+      </div>
+    </div>
   </div>
 
   <div class="panel">
-    <h3>⭐ Star balance</h3>
-    <div style="font-size:30px;font-weight:900;margin-top:8px" id="questStarBalance">0 ⭐</div>
+    <h3>⭐ Your Star balance</h3>
+    <div
+      id="questStarBalance"
+      style="font-size:30px;font-weight:900;margin-top:8px"
+    >0 ⭐</div>
+    <p class="muted smalltext">
+      Complete a verified quest to earn 5 Stars.
+    </p>
   </div>
+
 </section>
 
 <section class="page" id="page-shop">
