@@ -35,8 +35,8 @@ selectedTitle: "",
   mindmaps: [],
   papers: [],
   completedQuests: [],
-  todoTasks: [],
-todoRewardedKeys: [],
+  aiQuests: [],
+aiQuestRewardedKeys: [],
   quizResults: {
     attempts: 0,
     correct: 0
@@ -68,6 +68,7 @@ function loadState() {
         ? parsed.completedQuests
         : [],
        todoTasks: Array.isArray(parsed.todoTasks) ? parsed.todoTasks : [],
+              aiQuests: Array.isArray(parsed.aiQuests) ? parsed.aiQuests : [],
 todoRewardedKeys: Array.isArray(parsed.todoRewardedKeys) ? parsed.todoRewardedKeys : [],
        focusSessionsCompleted: Math.max(
   0,
@@ -411,7 +412,7 @@ function renderTitles() {
     name: "Task Tactician",
     icon: "🎯",
     requirement: "Complete 25 to-do tasks",
-    unlocked: (state.todoTasks || []).filter(task => task.completed).length >= 25
+    unlocked: (state.aiQuests || []).filter(quest => quest.completed).length >= 25
   }
 ];
 
@@ -518,32 +519,82 @@ $("saveProfile").addEventListener("click", () => {
 
   showToast("Your study profile has been saved! 💜");
 });
+/* =========================================
+   STUDYQUEST AI QUEST SYSTEM
+========================================= */
 
-/* -------------------- SIMPLE TO-DO LIST -------------------- */
+const QUEST_REWARDS = 5;
 
-function todoKey(title) {
-  return String(title || "").trim().toLowerCase().replace(/\s+/g, " ");
+function refreshQuestNoteOptions() {
+  const selector = $("questNoteSelect");
+  if (!selector) return;
+
+  const previous = selector.value;
+
+  const usableNotes = (state.notes || []).filter(note =>
+    typeof note.text === "string" &&
+    note.text.trim().length >= 30
+  );
+
+  selector.innerHTML = usableNotes.length
+    ? usableNotes.map(note => `
+        <option value="${escapeHTML(note.id)}">
+          ${escapeHTML(note.title || "Untitled notes")}
+        </option>
+      `).join("")
+    : '<option value="">Submit study notes first</option>';
+
+  if (usableNotes.some(note => note.id === previous)) {
+    selector.value = previous;
+  }
+
+  const status = $("questGenerationStatus");
+
+  if (status && !usableNotes.length) {
+    status.textContent =
+      "📚 Submit study notes with enough text to generate quests.";
+  } else if (status && !status.dataset.generating) {
+    status.textContent =
+      `${usableNotes.length} study material item(s) ready for quest generation.`;
+  }
 }
 
-const AUTO_TODO_ACTIVITIES = [
-  "past_papers",
-  "quiz",
-  "blurting",
-  "focus",
-  "mindmap"
-];
+async function generateAIQuests() {
+  const button = $("generateAIQuests");
+  const selector = $("questNoteSelect");
+  const status = $("questGenerationStatus");
 
-async function classifyTodoTask(task) {
+  if (!button || button.disabled) return;
+
+  const note = state.notes.find(item =>
+    item.id === selector?.value
+  );
+
+  if (!note || !note.text || note.text.trim().length < 30) {
+    showToast("Please select submitted study notes first.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "✨ Creating your quests...";
+
+  if (status) {
+    status.dataset.generating = "yes";
+    status.textContent =
+      "StudyQuest AI is studying your material and designing five quests...";
+  }
+
   try {
     const response = await fetch(
-      STUDYQUEST_AI_API + "/match-task",
+      STUDYQUEST_AI_API + "/generate-quests",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          task: task.title
+          title: note.title,
+          notes: note.text.slice(0, 28000)
         })
       }
     );
@@ -551,273 +602,273 @@ async function classifyTodoTask(task) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "AI matching failed.");
+      throw new Error(
+        data.error || "Could not generate quests."
+      );
     }
 
-    const activityType = AUTO_TODO_ACTIVITIES.includes(
-      data.activityType
-    ) && Number(data.confidence) >= 0.65
-      ? data.activityType
-      : "other";
-
-    // The task might have been deleted while AI was working.
-    if (!state.todoTasks.some(item => item.id === task.id)) {
-      return;
+    if (!Array.isArray(data.quests) || data.quests.length !== 5) {
+      throw new Error("AI returned an incomplete quest list.");
     }
 
-    task.activityType = activityType;
+    // Keep completed quests. Replace only unfinished quests
+    // previously generated from this same study material.
+    state.aiQuests = (state.aiQuests || []).filter(quest =>
+      quest.noteId !== note.id || quest.completed
+    );
+
+    const allowedTypes = [
+      "quiz",
+      "blurting",
+      "mindmap",
+      "past_papers",
+      "focus"
+    ];
+
+    data.quests.forEach(item => {
+      const activityType = allowedTypes.includes(item.activityType)
+        ? item.activityType
+        : "quiz";
+
+      state.aiQuests.push({
+        id: makeId(),
+        noteId: note.id,
+        noteTitle: note.title,
+        title: String(item.title || "Study Quest").slice(0, 100),
+        description: String(item.description || "").slice(0, 300),
+        activityType,
+        completed: false,
+        rewardClaimed: false,
+        createdAt: new Date().toISOString()
+      });
+    });
 
     saveState();
     renderQuests();
+    updateDashboard();
 
-    if (activityType !== "other") {
-      showToast("🤖 AI matched your task to a StudyQuest activity!");
-    } else {
-      showToast("Task added! You can complete this one manually.");
+    if (status) {
+      status.textContent =
+        `🎉 Five new quests generated from "${note.title}"!`;
     }
+
+    showToast("⚔️ Your five AI quests are ready!");
 
   } catch (error) {
-    console.error("AI To-Do matching error:", error);
+    console.error("AI Quest generation error:", error);
 
-    if (!state.todoTasks.some(item => item.id === task.id)) {
-      return;
+    if (status) {
+      status.textContent =
+        "❌ " + (error.message || "Quest generation failed.");
     }
 
-    // Safe fallback: never block normal task creation.
-    task.activityType = "other";
+    showToast(error.message || "Could not generate quests.");
 
-    saveState();
-    renderQuests();
+  } finally {
+    button.disabled = false;
+    button.textContent = "✨ Generate AI Quests";
 
-    showToast("AI matching unavailable. Manual task mode enabled.");
+    if (status) {
+      delete status.dataset.generating;
+    }
+
+    refreshQuestNoteOptions();
   }
 }
 
-function completeMatchingTodoTasks(activityType) {
-  const matchingTasks = state.todoTasks.filter(task =>
-    task.activityType === activityType &&
-    !task.completed &&
-    !task.rewardClaimed
-  );
-
-  if (!matchingTasks.length) return;
-
-  matchingTasks.forEach(task => {
-    task.completed = true;
-    task.rewardClaimed = true;
-  });
-
-  const reward = matchingTasks.length * 5;
-
-  state.stars += reward;
-
-  saveState();
-  updateDashboard();
-  renderShop();
-
-  triggerAchievementEffect(reward);
-
-  showToast(
-    `🤖 Activity verified! ${matchingTasks.length} task(s) completed. +${reward} ⭐`
+if ($("generateAIQuests")) {
+  $("generateAIQuests").addEventListener(
+    "click",
+    generateAIQuests
   );
 }
 
+function getQuestActivityName(type) {
+  const names = {
+    quiz: "Quiz Arena",
+    blurting: "Blurting Arena",
+    mindmap: "AI Mind Maps",
+    past_papers: "Past Papers",
+    focus: "Focus Timer"
+  };
+
+  return names[type] || "Study Activity";
+}
+
+function openQuestActivity(type) {
+  const pages = {
+    quiz: "quiz",
+    blurting: "blurting",
+    mindmap: "mindmaps",
+    past_papers: "papers",
+    focus: "timer"
+  };
+
+  const page = pages[type];
+
+  if (page) {
+    showPage(page);
+  }
+}
 
 function renderQuests() {
   const list = $("allQuests");
   const preview = $("dashboardQuests");
   const balance = $("questStarBalance");
-  const tasks = Array.isArray(state.todoTasks) ? state.todoTasks : [];
+  const count = $("questCount");
 
-  const html = tasks.length ? tasks.map(task => `
-    <div class="todo-task ${task.completed ? "todo-done" : ""}">
-      <label class="todo-label">
-        <input
-  type="checkbox"
-  data-todo-toggle="${escapeHTML(task.id)}"
-  ${task.completed ? "checked" : ""}
-  ${
-    task.activityType === "pending" ||
-    (task.activityType && task.activityType !== "other")
-      ? "disabled"
-      : ""
-  }
->
-        <span>${escapeHTML(task.title)}</span>
-      </label>
-     <span class="reward">
-  ${
-    task.rewardClaimed
-      ? "✓ Rewarded"
-      : task.activityType === "pending"
-        ? "🤖 Matching..."
-        : task.activityType && task.activityType !== "other"
-          ? "🤖 Auto tracked"
-          : "⭐ 5"
-  }
-</span>
-      <button class="btn ghost small" data-todo-edit="${escapeHTML(task.id)}" type="button">Edit</button>
-      <button class="btn ghost small" data-todo-delete="${escapeHTML(task.id)}" type="button">Delete</button>
-    </div>
-  `).join("") : '<div class="empty">📝 Your list is empty. Add your first task above!</div>';
+  const quests = Array.isArray(state.aiQuests)
+    ? state.aiQuests
+    : [];
 
-  if (list) list.innerHTML = html;
+  const active = quests.filter(quest => !quest.completed);
+  const completed = quests.filter(quest => quest.completed);
+
+  if (count) {
+    count.textContent = `${active.length} active`;
+  }
+
+  if (list) {
+    if (!quests.length) {
+      list.innerHTML = `
+        <div class="empty">
+          <div class="big">⚔️</div>
+          Generate your first AI quests using your study notes.
+        </div>
+      `;
+    } else {
+      list.innerHTML = `
+        ${active.length ? `
+          <h3 class="muted smalltext">ACTIVE QUESTS</h3>
+          ${active.map(quest => `
+            <div class="quest" style="align-items:flex-start">
+              <div class="quest-icon">⚔️</div>
+              <div class="quest-info">
+                <strong>${escapeHTML(quest.title)}</strong>
+                <small>${escapeHTML(quest.description)}</small>
+                <small>
+                  📚 ${escapeHTML(quest.noteTitle || "Study material")}
+                </small>
+                <small>
+                  🎯 ${escapeHTML(getQuestActivityName(quest.activityType))}
+                </small>
+              </div>
+              <div style="text-align:right">
+                <span class="reward">⭐ ${QUEST_REWARDS}</span>
+                <br>
+                <button
+                  class="btn secondary small"
+                  type="button"
+                  data-quest-go="${escapeHTML(quest.id)}"
+                >Open</button>
+              </div>
+            </div>
+          `).join("")}
+        ` : ""}
+
+        ${completed.length ? `
+          <h3 class="muted smalltext" style="margin-top:20px">
+            COMPLETED QUESTS
+          </h3>
+          ${completed.map(quest => `
+            <div class="quest" style="opacity:.7">
+              <div class="quest-icon">✅</div>
+              <div class="quest-info">
+                <strong>${escapeHTML(quest.title)}</strong>
+                <small>Completed · ${escapeHTML(quest.noteTitle || "Study material")}</small>
+              </div>
+              <span class="reward">✓ Rewarded</span>
+            </div>
+          `).join("")}
+        ` : ""}
+      `;
+    }
+  }
 
   if (preview) {
-    preview.innerHTML = tasks.length
-      ? tasks.slice(0, 3).map(task => `
-        <div class="quest">
-          <div class="quest-icon">${task.completed ? "✅" : "📝"}</div>
-          <div class="quest-info">
-            <strong>${escapeHTML(task.title)}</strong>
-            <small>${task.completed ? "Completed" : "One small step at a time"}</small>
+    preview.innerHTML = quests.length
+      ? quests.slice(-3).reverse().map(quest => `
+          <div class="quest">
+            <div class="quest-icon">
+              ${quest.completed ? "✅" : "⚔️"}
+            </div>
+            <div class="quest-info">
+              <strong>${escapeHTML(quest.title)}</strong>
+              <small>
+                ${quest.completed ? "Completed" : "Ready for your next step"}
+              </small>
+            </div>
+            <span class="reward">
+              ${quest.completed ? "✓" : "⭐ 5"}
+            </span>
           </div>
-          <span class="reward">${task.rewardClaimed ? "✓" : "⭐ 5"}</span>
-        </div>
-      `).join("")
-      : '<div class="empty">Add a small task to get started.</div>';
+        `).join("")
+      : '<div class="empty">Generate your first AI quest!</div>';
   }
 
-  if (balance) balance.textContent = `${state.stars} ⭐`;
+  if (balance) {
+    balance.textContent = `${state.stars} ⭐`;
+  }
 
-  if (list && !list.dataset.todoBound) {
-    list.dataset.todoBound = "yes";
-
-    list.addEventListener("change", event => {
-      const id = event.target.dataset.todoToggle;
-      if (!id) return;
-
-      const task = state.todoTasks.find(item => item.id === id);
-      if (!task) return;
-
-      if (
-  task.activityType === "pending" ||
-  (task.activityType && task.activityType !== "other")
-) {
-  event.target.checked = task.completed;
-
-  showToast("🤖 Complete the matching StudyQuest activity first!");
-  return;
-}
-
-task.completed = event.target.checked;
-       if (task.completed) {
-  recordDailyStreak();
-}
-
-      if (task.completed && !task.rewardClaimed) {
-  state.stars += 5;
-  task.rewardClaimed = true;
-
-  triggerAchievementEffect(5);
-
-  showToast("⭐ Task completed! +5 Stars");
-}
-
-      saveState();
-      updateDashboard();
-      renderQuests();
-      renderShop();
-    });
+  if (list && !list.dataset.questBound) {
+    list.dataset.questBound = "yes";
 
     list.addEventListener("click", event => {
-      const editId = event.target.dataset.todoEdit;
-      const deleteId = event.target.dataset.todoDelete;
+      const button = event.target.closest("[data-quest-go]");
+      if (!button) return;
 
-      if (editId) {
-        const task = state.todoTasks.find(item => item.id === editId);
-        if (!task) return;
+      const quest = state.aiQuests.find(item =>
+        item.id === button.dataset.questGo
+      );
 
-        const next = prompt("Edit task:", task.title);
-        if (next === null) return;
-
-        if (!next.trim()) {
-          showToast("Task title cannot be empty.");
-          return;
-        }
-
-        task.title = next.trim().slice(0, 120);
-        saveState();
-        renderQuests();
-      }
-
-      if (deleteId) {
-        const task = state.todoTasks.find(item => item.id === deleteId);
-        if (!task) return;
-
-        if (!confirm(`Delete "${task.title}"?`)) return;
-
-        state.todoTasks = state.todoTasks.filter(item => item.id !== deleteId);
-        saveState();
-        renderQuests();
-        updateDashboard();
+      if (quest && !quest.completed) {
+        openQuestActivity(quest.activityType);
       }
     });
   }
+
+  refreshQuestNoteOptions();
+}
+
+// One successfully completed StudyQuest activity completes
+// one matching quest. A quest can only award Stars once.
+function completeMatchingQuests(activityType) {
+  const quest = (state.aiQuests || []).find(item =>
+    item.activityType === activityType &&
+    !item.completed &&
+    !item.rewardClaimed
+  );
+
+  if (!quest) return;
+
+  quest.completed = true;
+  quest.rewardClaimed = true;
+  quest.completedAt = new Date().toISOString();
+
+  saveState();
+
+  awardStars(
+    QUEST_REWARDS,
+    `AI Quest completed: ${quest.title}`
+  );
+
+  showToast("⚔️ Quest completed! +5 Stars!");
 }
 
 function checkQuestProgress() {
-  // Old automatic quests are disabled.
-}
-
-
-function addTodoTask() {
-  const input = $("todoInput");
-
-  if (!input || !input.value.trim()) {
-    showToast("Type a task first.");
-    return;
-  }
-
-  const title = input.value.trim().slice(0, 120);
-  const key = todoKey(title);
-
-  if (state.todoTasks.some(task => todoKey(task.title) === key)) {
-    showToast("That task is already on your list.");
-    return;
-  }
-
-  const newTask = {
-    id: makeId(),
-    title,
-    completed: false,
-    rewardClaimed: false,
-    activityType: "pending"
-  };
-
-  state.todoTasks.push(newTask);
-
-  input.value = "";
-
-  saveState();
+  refreshQuestNoteOptions();
   renderQuests();
-  updateDashboard();
-
-  // AI identifies which StudyQuest activity matches this task.
-  classifyTodoTask(newTask);
 }
 
-const addTodoButton = $("addTodo");
-
-if (addTodoButton) {
-  addTodoButton.addEventListener("click", addTodoTask);
-}
-
-const todoInputElement = $("todoInput");
-
-if (todoInputElement) {
-  todoInputElement.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      addTodoTask();
-    }
-  });
-}
+/* =========================================
+   END STUDYQUEST AI QUEST SYSTEM
+========================================= */
 /* -------------------- DASHBOARD -------------------- */
 
 function updateDashboard() {
   $("starBalance").textContent = state.stars;
-  $("questsDone").textContent = (state.todoTasks || []).filter(task => task.completed).length;
+  $("questsDone").textContent =
+  (state.aiQuests || []).filter(quest => quest.completed).length;
   $("focusMinutes").textContent = state.focusMinutes;
   $("notesCount").textContent = state.notes.length;
   $("currentStreak").textContent = state.currentStreak;
@@ -1484,7 +1535,7 @@ if ($("checkBlurt")) {
 saveState();
 updateDashboard();
     completeWeekendObjective("blurting");
-     completeMatchingTodoTasks("blurting");
+     completeMatchingQuests("blurting");
 
     if (!Array.isArray(state.completedBlurtingNotes)) {
       state.completedBlurtingNotes = [];
