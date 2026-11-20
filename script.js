@@ -1882,9 +1882,8 @@ function finishQuiz() {
   state.quizResults.correct += correct;
 
   if (earned > 0) {
-    state.stars += earned;
-    triggerAchievementEffect(earned);
-  }
+  awardStars(earned, "Quiz completed!");
+}
 
   recordDailyStreak();
   saveState();
