@@ -209,15 +209,6 @@ function getWeekendKey() {
     String(now.getMonth() + 1).padStart(2, "0") + "-" +
     String(now.getDate()).padStart(2, "0");
 }
-
-function completeWeekendObjective(objective) {
-  const now = new Date();
-
-  if (![0, 5, 6].includes(now.getDay())) {
-    showToast("🏆 Weekend Legend is available Friday to Sunday!");
-    return;
-  }
-
   const key = getWeekendKey();
 
   if (!state.weekendLegend || state.weekendLegend.week !== key) {
@@ -879,20 +870,6 @@ function updateDashboard() {
   renderProfile();
   renderQuests();
   renderTitles();
-
-  const weekendProgress = $("weekendLegendProgress");
-
-  if (weekendProgress) {
-    const completed =
-      state.weekendLegend &&
-      state.weekendLegend.week === getWeekendKey()
-        ? state.weekendLegend.completed.length
-        : 0;
-
-    weekendProgress.textContent = `Progress: ${completed}/4 objectives`;
-  }
-}
-
 function refreshEverything() {
   renderProfile();
   updateDashboard();
@@ -1534,7 +1511,6 @@ if ($("checkBlurt")) {
      recordDailyStreak();
 saveState();
 updateDashboard();
-    completeWeekendObjective("blurting");
      completeMatchingQuests("blurting");
 
     if (!Array.isArray(state.completedBlurtingNotes)) {
@@ -1542,9 +1518,12 @@ updateDashboard();
     }
 
     if (!state.completedBlurtingNotes.includes(note.id)) {
-      state.completedBlurtingNotes.push(note.id);
-      awardStars(10, "Blurting challenge completed!");
-    }
+  state.completedBlurtingNotes.push(note.id);
+  saveState();
+
+  completeMatchingQuests("blurting");
+  awardStars(10, "Blurting challenge completed!");
+}
   });
 }
 if ($("tryBlurtAgain")) {
@@ -1893,12 +1872,17 @@ function renderQuizQuestion() {
 }
 
 function finishQuiz() {
-  if (!activeQuiz) return;
+  if (!activeQuiz || activeQuiz.finished) return;
 
-  const total = activeQuiz.questions.length;
-  const correct = activeQuiz.correct;
+  // Lock this quiz immediately to prevent duplicate rewards.
+  const quiz = activeQuiz;
+  quiz.finished = true;
+  activeQuiz = null;
+
+  const total = quiz.questions.length;
+  const correct = quiz.correct;
   const earned = Math.round((correct / total) * 10);
-  const accuracy = Math.round(correct / total * 100);
+  const accuracy = Math.round((correct / total) * 100);
 
   state.quizResults.attempts++;
   state.quizResults.correct += correct;
@@ -1912,8 +1896,9 @@ function finishQuiz() {
   saveState();
   updateDashboard();
   checkQuestProgress();
-  completeWeekendObjective("quiz");
-   completeMatchingTodoTasks("quiz");
+
+  // Complete one matching AI quest, only once.
+  completeMatchingQuests("quiz");
 
   $("quizArea").innerHTML = `
     <div class="empty">
@@ -1922,18 +1907,16 @@ function finishQuiz() {
       <p>You got <strong>${correct} out of ${total}</strong> correct.</p>
       <p>Accuracy: <strong>${accuracy}%</strong></p>
       <p>Earned: <strong>⭐ ${earned} Stars</strong></p>
-      <button class="btn" id="retryQuiz">Generate another quiz</button>
+      <button class="btn" id="retryQuiz">
+        Generate another quiz
+      </button>
     </div>
   `;
 
   $("retryQuiz").addEventListener("click", () => {
-    activeQuiz = null;
     $("startQuiz").click();
   });
-
-  activeQuiz = null;
 }
-
 /* -------------------- END AI QUIZ ARENA -------------------- */
 
 
@@ -2304,7 +2287,7 @@ Do not create empty or unrelated branches.
       "Your AI mind map is ready! You can save it below.";
 
     showToast("AI mind map generated! ✨");
-     completeMatchingTodoTasks("mindmap");
+     completeMatchingQuests("mindmap");
 
   } catch (error) {
     status.textContent =
@@ -2926,8 +2909,6 @@ if (generatePaperButton) {
       saveState();
       renderGeneratedPracticePaper();
       checkQuestProgress();
-      completeWeekendObjective("paper");
-
       showToast("Your AI-generated practice paper is ready! 📝");
     } catch (error) {
       console.error("StudyQuest AI paper generation error:", error);
@@ -2967,6 +2948,10 @@ if (submitPaperButton) {
       showToast("Generate a practice paper first.");
       return;
     }
+     if (currentPracticePaper.submitted) {
+  showToast("This paper has already been submitted.");
+  return;
+}
 
    savePracticePaperResponses();
 
@@ -2983,7 +2968,7 @@ currentPracticePaper.submitted = true;
 
     renderGeneratedPracticePaper();
     renderPracticePaperResults();
-     completeMatchingTodoTasks("past_papers");
+     completeMatchingQuests("past_papers");
 
     showToast("Your answers have been submitted! ✅");
   });
@@ -3163,7 +3148,7 @@ if (
   state.unlockedTitles.push("flow-spammer");
   showToast("🏆 Title unlocked: Flow Spammer!");
 }
-  completeMatchingTodoTasks("focus");
+  completeMatchingQuests("focus");
   saveState();
   renderTimer();
   updateDashboard();
@@ -3900,6 +3885,8 @@ function applyShopAppearance() {
 
   document.body.dataset.starRewardEffect =
     effect ? effect.id : "";
+   document.body.dataset.shopCosmetic =
+  effect ? effect.id : "";
 
   const profileAvatar = document.querySelector(".profile .avatar");
 
