@@ -243,8 +243,6 @@ if (progress) {
     saveState();
     showToast("🏆 Weekend Legend progress saved!");
   }
-}
-
 function awardStars(amount, reason) {
   state.stars += amount;
 
