@@ -226,11 +226,6 @@ if (progress) {
   progress.textContent =
     `Progress: ${challenge.completed.length}/4 objectives`;
 } 
-
-  if (!challenge.completed.includes(objective)) {
-    challenge.completed.push(objective);
-  }
-
   const required = ["quiz", "blurting", "paper", "quests"];
 
   if (
