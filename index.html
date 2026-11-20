@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1101,7 +1100,745 @@ body::after {
   }
 }
 
+/* ==========================================
+   STUDYQUEST — COSMIC VISUAL UPGRADE
+   CSS ONLY — SAFE ADD-ON
+========================================== */
 
+/* 1. Smooth scrolling and selection */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #b44dff;
+  color: white;
+}
+
+/* 2. Cosmic animated background */
+body {
+  background:
+    radial-gradient(ellipse at 15% 15%, rgba(180,77,255,.13), transparent 38%),
+    radial-gradient(ellipse at 85% 45%, rgba(100,40,255,.12), transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(180,77,255,.10), transparent 45%),
+    #10051f;
+  background-attachment: fixed;
+}
+
+/* 3. Glowing ambient lighting */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(180,77,255,.09), transparent 25%),
+    radial-gradient(circle at 80% 70%, rgba(139,53,255,.08), transparent 30%);
+  animation: cosmicGlow 12s ease-in-out infinite alternate;
+}
+
+@keyframes cosmicGlow {
+  from { opacity: .45; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.12); }
+}
+
+/* 4. Headings with futuristic glow */
+h1, h2 {
+  text-shadow: 0 0 18px rgba(180,77,255,.22);
+}
+
+h1 {
+  letter-spacing: -1.5px;
+}
+
+/* 5. Gradient text */
+.gradient-text,
+.hero h1 span {
+  background: linear-gradient(
+    100deg,
+    #ffffff,
+    #d9a5ff,
+    #a84dff,
+    #f0d5ff
+  );
+  background-size: 250% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradientFlow 6s linear infinite;
+}
+
+@keyframes gradientFlow {
+  to { background-position: 250% center; }
+}
+
+/* 6. Glassmorphism feature cards */
+.feature-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.075),
+    rgba(180,77,255,.035)
+  );
+  border: 1px solid rgba(205,155,255,.17);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 20px;
+  transition:
+    transform .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+/* 7. Moving light across cards */
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  z-index: -1;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255,255,255,.09) 50%,
+    transparent 60%
+  );
+  transform: translateX(-40%);
+  transition: transform .8s ease;
+  pointer-events: none;
+}
+
+.feature-card:hover::before {
+  transform: translateX(40%);
+}
+
+.feature-card:hover {
+  transform: translateY(-9px);
+  border-color: rgba(200,130,255,.65);
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.28),
+    0 0 25px rgba(180,77,255,.16);
+}
+
+/* 8. Feature icon glow */
+.feature-icon {
+  transition: transform .4s ease, filter .4s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.17) rotate(-7deg);
+  filter: drop-shadow(0 0 12px rgba(190,100,255,.8));
+}
+
+/* 9. Glowing buttons */
+button,
+.btn,
+.cta-button {
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    filter .25s ease;
+}
+
+button:hover,
+.btn:hover,
+.cta-button:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.12);
+  box-shadow:
+    0 8px 25px rgba(180,77,255,.28),
+    0 0 15px rgba(180,77,255,.18);
+}
+
+button:active,
+.btn:active,
+.cta-button:active {
+  transform: scale(.97);
+}
+
+/* 10. Animated glowing borders */
+.feature-card:hover {
+  animation: borderPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes borderPulse {
+  from { border-color: rgba(180,77,255,.3); }
+  to { border-color: rgba(220,170,255,.75); }
+}
+
+/* 11. Section entrance polish */
+section {
+  scroll-margin-top: 80px;
+}
+
+section h2 {
+  position: relative;
+}
+
+section h2::after {
+  content: "";
+  display: block;
+  width: 55px;
+  height: 3px;
+  margin: 12px auto 0;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #8b35ff, #e0b5ff);
+  box-shadow: 0 0 14px rgba(180,77,255,.6);
+}
+
+/* 12. Navigation glass effect */
+nav,
+header {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* 13. Image hover effects */
+img {
+  transition: transform .4s ease, filter .4s ease;
+}
+
+img:hover {
+  filter: brightness(1.08) saturate(1.12);
+}
+
+/* 14. Smooth reveal-ready appearance */
+.feature-card,
+button,
+.btn {
+  will-change: transform;
+}
+
+/* 15. Scrollbar makeover */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #10051f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#b44dff, #7025c9);
+  border-radius: 20px;
+  border: 2px solid #10051f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d19aff;
+}
+
+/* 16. Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* 17. Mobile optimization */
+@media (max-width: 600px) {
+  .feature-card {
+    border-radius: 16px;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-3px);
+  }
+
+  body {
+    background-attachment: scroll;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — COSMIC UPGRADE PART 2
+   ADVANCED CSS VISUAL EFFECTS
+========================================== */
+
+/* 1. Animated aurora atmosphere */
+body {
+  background-size: 100% 100%, 100% 100%, 100% 100%, auto;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .35;
+  background:
+    linear-gradient(
+      125deg,
+      transparent 15%,
+      rgba(153, 65, 255, .09) 35%,
+      transparent 55%,
+      rgba(92, 42, 255, .09) 75%,
+      transparent
+    );
+  background-size: 250% 250%;
+  animation: auroraDrift 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraDrift {
+  0% { background-position: 0% 30%; }
+  100% { background-position: 100% 70%; }
+}
+
+/* 2. Holographic feature cards */
+.feature-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.075),
+      rgba(130,50,255,.045),
+      rgba(255,255,255,.025)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 10px 35px rgba(0,0,0,.16);
+}
+
+.feature-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,.08),
+    transparent 35%,
+    transparent 70%,
+    rgba(180,77,255,.08)
+  );
+  opacity: .45;
+}
+
+/* 3. Glowing feature card icons */
+.feature-icon {
+  filter: drop-shadow(0 0 7px rgba(180,77,255,.28));
+}
+
+.feature-card:hover .feature-icon {
+  filter:
+    drop-shadow(0 0 8px rgba(180,77,255,.85))
+    drop-shadow(0 0 18px rgba(130,50,255,.55));
+}
+
+/* 4. Animated neon headings */
+h1, h2 {
+  text-shadow:
+    0 0 8px rgba(180,77,255,.2),
+    0 0 25px rgba(180,77,255,.12);
+}
+
+h2 {
+  transition: text-shadow .35s ease;
+}
+
+h2:hover {
+  text-shadow:
+    0 0 10px rgba(200,140,255,.65),
+    0 0 30px rgba(180,77,255,.35);
+}
+
+/* 5. Premium gradient buttons */
+button,
+.btn,
+.cta-button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+button::before,
+.btn::before,
+.cta-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255,255,255,.22) 50%,
+    transparent 80%
+  );
+  transform: translateX(-120%);
+  transition: transform .65s ease;
+}
+
+button:hover::before,
+.btn:hover::before,
+.cta-button:hover::before {
+  transform: translateX(120%);
+}
+
+/* 6. Glowing navigation links */
+nav a {
+  position: relative;
+  transition: color .25s ease, text-shadow .25s ease;
+}
+
+nav a:hover {
+  color: #e4c5ff;
+  text-shadow: 0 0 12px rgba(180,77,255,.7);
+}
+
+/* 7. Animated underline */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 0;
+  height: 2px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #8b35ff, #e4c5ff);
+  box-shadow: 0 0 10px #b44dff;
+  transition: width .3s ease, left .3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* 8. Floating hero visual */
+.hero {
+  isolation: isolate;
+}
+
+.hero > * {
+  position: relative;
+}
+
+.hero h1 {
+  animation: heroFloat 6s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* 9. Feature card depth */
+.feature-card {
+  transform-style: preserve-3d;
+}
+
+.feature-card:hover {
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.28),
+    0 0 25px rgba(180,77,255,.17),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* 10. Elegant text selection */
+p {
+  text-wrap: pretty;
+}
+
+/* 11. Glowing dividers */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180,77,255,.6),
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(180,77,255,.2);
+}
+
+/* 12. Image frames */
+img {
+  border-radius: inherit;
+}
+
+img:hover {
+  filter:
+    brightness(1.08)
+    saturate(1.12)
+    drop-shadow(0 0 10px rgba(180,77,255,.2));
+}
+
+/* 13. Focus accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #d6a5ff;
+  outline-offset: 4px;
+  box-shadow: 0 0 15px rgba(180,77,255,.3);
+}
+
+/* 14. Form field polish */
+input,
+textarea,
+select {
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease,
+    background .25s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #b44dff;
+  box-shadow:
+    0 0 0 3px rgba(180,77,255,.12),
+    0 0 18px rgba(180,77,255,.15);
+}
+
+/* 15. Mobile performance */
+@media (max-width: 600px) {
+  .hero h1 {
+    animation: none;
+  }
+
+  .feature-card:hover {
+    box-shadow: 0 8px 22px rgba(0,0,0,.2);
+  }
+
+  body::after {
+    opacity: .2;
+  }
+}
+
+/* ==========================================
+   STUDYQUEST — COSMIC HERO UPGRADE 3.0
+   ========================================== */
+
+/* 1. Add a living cosmic atmosphere to hero */
+.hero {
+  isolation: isolate;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  left: -160px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #a855f722,
+    #7c3aed0c 45%,
+    transparent 70%
+  );
+  filter: blur(25px);
+  animation: contentAura 8s ease-in-out infinite alternate;
+}
+
+@keyframes contentAura {
+  from {
+    transform: scale(.8);
+    opacity: .45;
+  }
+  to {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* 2. Give the portal a deeper glow */
+.game-scene {
+  position: relative;
+  background: radial-gradient(
+    ellipse at center,
+    #9333ea16,
+    #2563eb08 45%,
+    transparent 70%
+  );
+  background-size: 150% 150%;
+  animation: portalAtmosphere 8s ease-in-out infinite alternate;
+}
+
+@keyframes portalAtmosphere {
+  from { background-position: 0% 30%; }
+  to { background-position: 100% 70%; }
+}
+
+/* 3. Add an extra orbital halo */
+.game-scene::before {
+  content: "";
+  position: absolute;
+  width: 370px;
+  height: 370px;
+  border: 1px solid #c084fc25;
+  border-radius: 50%;
+  box-shadow:
+    0 0 25px #9333ea18,
+    inset 0 0 25px #9333ea12;
+  pointer-events: none;
+  animation: haloBreathing 7s ease-in-out infinite alternate;
+}
+
+@keyframes haloBreathing {
+  from {
+    transform: scale(.9) rotate(0deg);
+    opacity: .35;
+  }
+  to {
+    transform: scale(1.12) rotate(18deg);
+    opacity: .85;
+  }
+}
+
+/* 4. Add a second delicate halo */
+.game-scene::after {
+  content: "";
+  position: absolute;
+  width: 410px;
+  height: 250px;
+  border: 1px dashed #67e8f930;
+  border-radius: 50%;
+  transform: rotate(-28deg);
+  pointer-events: none;
+  animation: secondaryOrbit 28s linear infinite;
+}
+
+@keyframes secondaryOrbit {
+  to { rotate: 360deg; }
+}
+
+/* 5. Make the existing orbits more cinematic */
+.orbit {
+  border-width: 1.5px;
+  animation-duration: 32s;
+}
+
+.orbit-two {
+  animation-duration: 22s;
+}
+
+/* 6. Make the portal glow breathe */
+.planet {
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 0 30px #a855f7bb,
+    0 0 75px #7c3aed77,
+    0 0 125px #2563eb40,
+    inset 0 0 25px #ffffff22;
+}
+
+/* 7. Status light pulse */
+.status-dot {
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px #4ade80;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 0 12px #4ade80,
+      0 0 22px #4ade8080;
+    transform: scale(1.2);
+  }
+}
+
+/* 8. Floating cards get extra depth */
+.floating-card {
+  transition:
+    border-color .3s ease,
+    box-shadow .3s ease,
+    background .3s ease;
+}
+
+.floating-card:hover {
+  border-color: #e9d5ff;
+  box-shadow:
+    0 15px 45px #0008,
+    0 0 25px #a855f755;
+}
+
+/* 9. Give the stars card a golden glow */
+.card-stars .mini-icon {
+  filter: drop-shadow(0 0 8px #facc1580);
+}
+
+/* 10. Give the quest card a purple glow */
+.card-quest .mini-icon {
+  filter: drop-shadow(0 0 9px #b44dff90);
+}
+
+/* 11. More atmospheric section headings */
+.section-heading h2 {
+  text-shadow: 0 0 25px #a855f722;
+}
+
+.section-heading p {
+  text-shadow: 0 0 15px #a855f710;
+}
+
+/* 12. Better healthy-habit panel depth */
+.habit-panel {
+  box-shadow:
+    0 20px 65px #0005,
+    0 0 35px #9333ea16,
+    inset 0 1px 0 #ffffff12;
+}
+
+/* 13. More premium final CTA */
+.final-cta {
+  box-shadow:
+    0 20px 65px #0006,
+    0 0 45px #9333ea25,
+    inset 0 1px 0 #ffffff15;
+}
+
+/* 14. Mobile-friendly adjustments */
+@media (max-width: 560px) {
+  .game-scene::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .game-scene::after {
+    width: 320px;
+    height: 210px;
+  }
+
+  .hero-content::before {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+/* 15. Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .hero-content::before,
+  .game-scene,
+  .game-scene::before,
+  .game-scene::after,
+  .status-dot {
+    animation: none !important;
+  }
+}
   </style>
 </head>
 
@@ -1194,10 +1931,10 @@ body::after {
 
       <div class="feature-grid">
         <article class="feature-card reveal">
-          <div class="feature-icon">🎯</div>
-          <h3>To-Do List & planning</h3>
-          <p>Break your study goals into manageable tasks, organize them in your To-Do List, and track your progress as you complete them.</p>
-        </article>
+  <div class="feature-icon">⚔️</div>
+  <h3>AI Quest Board</h3>
+  <p>Transform your study goals into AI-powered quests. Complete personalized learning challenges, track your progress, and earn Stars as you advance on your learning journey.</p>
+</article>
 
         <article class="feature-card reveal">
           <div class="feature-icon">⭐</div>
