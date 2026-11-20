@@ -868,6 +868,7 @@ function updateDashboard() {
   renderProfile();
   renderQuests();
   renderTitles();
+}
 function refreshEverything() {
   renderProfile();
   updateDashboard();
