@@ -12051,6 +12051,234 @@ body[data-shop-theme="theme_cosmic"] .nav button.active {
   border-color: rgba(85, 180, 255, .55);
   color: #d8f3ff;
 }
+  
+/* =========================================
+   SOLAR SYSTEM — GOLDEN AURORA
+   Flowing yellow, gold and champagne lights
+========================================= */
+
+/* Deep midnight space */
+body[data-shop-theme="theme_crystal"] {
+  background:
+    radial-gradient(ellipse at 20% 15%, rgba(255, 205, 75, .18), transparent 42%),
+    radial-gradient(ellipse at 85% 65%, rgba(255, 150, 35, .13), transparent 42%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 235, 150, .08), transparent 45%),
+    #080b19 !important;
+
+  --line: rgba(255, 210, 105, .35);
+}
+
+/* Actual moving golden aurora curtains */
+body[data-shop-theme="theme_crystal"]::after {
+  background:
+    radial-gradient(
+      ellipse at 18% 38%,
+      rgba(255, 225, 105, .32),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 78% 42%,
+      rgba(255, 165, 45, .27),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 48% 55%,
+      rgba(255, 245, 185, .23),
+      transparent 42%
+    ),
+    repeating-linear-gradient(
+      104deg,
+      transparent 0%,
+      transparent 5%,
+      rgba(255, 220, 90, .10) 7%,
+      rgba(255, 190, 55, .19) 9%,
+      transparent 14%,
+      transparent 18%,
+      rgba(255, 240, 165, .13) 20%,
+      rgba(255, 170, 45, .12) 22%,
+      transparent 27%
+    );
+
+  background-size: 180% 160%;
+  background-blend-mode: screen;
+  filter: blur(17px) saturate(1.45);
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 82%,
+    transparent 100%
+  );
+
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 82%,
+    transparent 100%
+  );
+
+  animation: goldenAuroraFlow 25s ease-in-out infinite alternate;
+  will-change: transform, background-position;
+}
+
+@keyframes goldenAuroraFlow {
+  0% {
+    transform: translate3d(-2%, 0, 0) scale(1) skewX(-3deg);
+    background-position: 0% 45%;
+  }
+
+  35% {
+    transform: translate3d(2%, -1%, 0) scale(1.05) skewX(2deg);
+    background-position: 45% 55%;
+  }
+
+  70% {
+    transform: translate3d(-1%, 2%, 0) scale(1.03) skewX(-2deg);
+    background-position: 85% 40%;
+  }
+
+  100% {
+    transform: translate3d(2%, 0, 0) scale(1.06) skewX(3deg);
+    background-position: 100% 60%;
+  }
+}
+
+/* Golden glass sidebar */
+body[data-shop-theme="theme_crystal"] aside {
+  background: rgba(18, 15, 29, .94);
+  border-right-color: rgba(255, 205, 105, .30);
+  box-shadow: 5px 0 35px rgba(255, 185, 55, .07);
+}
+
+body[data-shop-theme="theme_crystal"] .nav button:hover,
+body[data-shop-theme="theme_crystal"] .nav button.active {
+  background: linear-gradient(
+    110deg,
+    rgba(255, 210, 90, .19),
+    rgba(255, 145, 40, .13)
+  );
+  border-color: rgba(255, 220, 135, .52);
+  color: #fff5d6;
+}
+
+/* Warm golden atmosphere across the dashboard */
+body[data-shop-theme="theme_crystal"] #page-dashboard {
+  --dash-accent: #ffe69a;
+  --dash-glow: rgba(255, 190, 65, .20);
+  --dash-border: rgba(255, 215, 125, .38);
+  --dash-card: #171729;
+  --dash-card2: #29243a;
+}
+
+/* Sunlit hero */
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero {
+  background:
+    radial-gradient(
+      ellipse at 78% 45%,
+      rgba(255, 245, 175, .65),
+      rgba(255, 190, 65, .22) 13%,
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 15% 20%,
+      rgba(255, 210, 90, .27),
+      transparent 45%
+    ),
+    linear-gradient(
+      120deg,
+      #211b32,
+      #59402a 55%,
+      #30233b
+    ) !important;
+
+  border-color: rgba(255, 225, 145, .65);
+
+  box-shadow:
+    0 0 35px rgba(255, 190, 65, .20),
+    0 0 60px rgba(255, 225, 125, .09);
+}
+
+/* Golden glass panels across the app */
+body[data-shop-theme="theme_crystal"] .stat,
+body[data-shop-theme="theme_crystal"] .panel,
+body[data-shop-theme="theme_crystal"] .feature,
+body[data-shop-theme="theme_crystal"] .shop-item,
+body[data-shop-theme="theme_crystal"] .paper-card,
+body[data-shop-theme="theme_crystal"] .flashcard,
+body[data-shop-theme="theme_crystal"] .upload-box,
+body[data-shop-theme="theme_crystal"] .note-status {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 205, 90, .13),
+      transparent 55%
+    ),
+    linear-gradient(
+      145deg,
+      #29243a,
+      #151526
+    ) !important;
+
+  border-color: rgba(255, 210, 115, .30);
+
+  box-shadow:
+    0 8px 28px rgba(255, 175, 45, .07);
+}
+
+/* Glowing golden numbers */
+body[data-shop-theme="theme_crystal"] .stat strong {
+  color: #ffe9a8;
+  text-shadow: 0 0 15px rgba(255, 195, 65, .42);
+}
+
+/* Sun-inspired feature icons */
+body[data-shop-theme="theme_crystal"] .feature-icon,
+body[data-shop-theme="theme_crystal"] .stat-icon {
+  background: linear-gradient(
+    135deg,
+    #9b702b,
+    #d49b3c,
+    #f3d47d
+  ) !important;
+
+  border: 1px solid rgba(255, 230, 160, .50);
+  box-shadow: 0 0 18px rgba(255, 190, 65, .20);
+}
+
+/* Golden rocket and orbital glow */
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero-art {
+  filter:
+    drop-shadow(0 0 12px rgba(255, 210, 90, .55))
+    drop-shadow(0 0 28px rgba(255, 160, 40, .28));
+}
+
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero-art::before {
+  border-color: rgba(255, 225, 135, .75);
+  box-shadow:
+    0 0 22px rgba(255, 200, 70, .45),
+    inset 0 0 18px rgba(255, 225, 130, .22);
+}
+
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero-art::after {
+  border-color: rgba(255, 190, 80, .65);
+}
+
+/* Reduced-motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  body[data-shop-theme="theme_crystal"]::after {
+    animation: none !important;
+  }
+}
+
+/* Keep the effect lighter on smaller screens */
+@media (max-width: 680px) {
+  body[data-shop-theme="theme_crystal"]::after {
+    opacity: .65;
+    animation-duration: 32s;
+  }
+}
 </style>
 </head>
 <body>
