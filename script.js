@@ -3897,6 +3897,7 @@ delete document.body.dataset.shopCosmetic;
 
 
 /* Show the selected effect when Stars are earned. */
+
 function triggerAchievementEffect(amount) {
   const effectId = state.shopEquipped.effect ||
     state.shopEquipped.cosmetic;
@@ -3916,11 +3917,58 @@ function triggerAchievementEffect(amount) {
     document.body.appendChild(overlay);
   }
 
-    const symbols = {
+  // Clear an earlier animation if another reward happens.
+  clearTimeout(overlay._cleanupTimeout);
+
+  // Special animated Cosmic Portal.
+  if (effectId === "cos_portal") {
+    overlay.innerHTML = `
+      <div class="sq-portal-scene">
+        <div class="sq-portal-aura"></div>
+
+        <div class="sq-portal">
+          <div class="sq-portal-ring ring-one"></div>
+          <div class="sq-portal-ring ring-two"></div>
+          <div class="sq-portal-ring ring-three"></div>
+
+          <div class="sq-portal-vortex"></div>
+          <div class="sq-portal-core"></div>
+        </div>
+
+        <div class="sq-portal-flash"></div>
+
+        <div class="star-effect-title">
+          +${amount} ⭐
+        </div>
+
+        ${Array.from({ length: 24 }, (_, i) => `
+          <span class="sq-portal-particle"
+            style="
+              --i:${i};
+              --x:${(i * 41 + 7) % 100}%;
+              --y:${(i * 29 + 13) % 100}%;
+            ">✦</span>
+        `).join("")}
+      </div>
+    `;
+
+    overlay.className = "";
+    void overlay.offsetWidth;
+    overlay.classList.add("active", "cos_portal");
+
+    overlay._cleanupTimeout = setTimeout(() => {
+      overlay.className = "";
+      overlay.innerHTML = "";
+    }, 3800);
+
+    return;
+  }
+
+  // Original effects remain unchanged.
+  const symbols = {
     cos_sparkle: "✨",
     cos_lightning: "⚡",
-    cos_champion: "🏆",
-    cos_portal: "🌌"
+    cos_champion: "🏆"
   };
 
   const symbol = symbols[effectId] || "⭐";
@@ -3942,6 +3990,7 @@ function triggerAchievementEffect(amount) {
   void overlay.offsetWidth;
   overlay.classList.add("active", effectId);
 }
+
 
 /* Category navigation. */
 document.querySelectorAll("[data-shop-category]").forEach(button => {
