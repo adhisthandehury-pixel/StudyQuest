@@ -3917,10 +3917,77 @@ function triggerAchievementEffect(amount) {
     document.body.appendChild(overlay);
   }
 
-  // Clear an earlier animation if another reward happens.
   clearTimeout(overlay._cleanupTimeout);
 
-  // Special animated Cosmic Portal.
+  // THUNDER: Lightning strikes and reveals the reward.
+  if (effectId === "cos_lightning") {
+    overlay.innerHTML = `
+      <div class="sq-thunder-scene">
+
+        <div class="sq-thunder-flash"></div>
+
+        <svg class="sq-thunder-bolt main-bolt"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none">
+          <path d="
+            M 58 -5
+            L 37 30
+            L 51 30
+            L 24 67
+            L 43 62
+            L 34 105
+            L 76 48
+            L 57 51
+            L 70 -5
+            Z
+          "/>
+        </svg>
+
+        <svg class="sq-thunder-bolt side-bolt"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none">
+          <path d="
+            M 65 -5
+            L 45 35
+            L 59 34
+            L 28 78
+            L 50 70
+            L 38 105
+            L 82 44
+            L 63 48
+            L 78 -5
+            Z
+          "/>
+        </svg>
+
+        <div class="sq-thunder-impact"></div>
+
+        <div class="sq-thunder-reward">
+          <div class="sq-thunder-star">⭐</div>
+          <div class="sq-thunder-amount">
+            +${amount}
+          </div>
+          <div class="sq-thunder-label">
+            STARS EARNED
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    overlay.className = "";
+    void overlay.offsetWidth;
+    overlay.classList.add("active", "cos_lightning");
+
+    overlay._cleanupTimeout = setTimeout(() => {
+      overlay.className = "";
+      overlay.innerHTML = "";
+    }, 3000);
+
+    return;
+  }
+
+  // COSMIC PORTAL
   if (effectId === "cos_portal") {
     overlay.innerHTML = `
       <div class="sq-portal-scene">
@@ -3930,7 +3997,6 @@ function triggerAchievementEffect(amount) {
           <div class="sq-portal-ring ring-one"></div>
           <div class="sq-portal-ring ring-two"></div>
           <div class="sq-portal-ring ring-three"></div>
-
           <div class="sq-portal-vortex"></div>
           <div class="sq-portal-core"></div>
         </div>
@@ -3964,10 +4030,9 @@ function triggerAchievementEffect(amount) {
     return;
   }
 
-  // Original effects remain unchanged.
+  // ORIGINAL STANDARD EFFECTS
   const symbols = {
     cos_sparkle: "✨",
-    cos_lightning: "⚡",
     cos_champion: "🏆"
   };
 
@@ -3977,6 +4042,7 @@ function triggerAchievementEffect(amount) {
     <div class="star-effect-title">
       +${amount} ⭐
     </div>
+
     ${Array.from({ length: 12 }, (_, index) => `
       <span style="
         --i:${index};
