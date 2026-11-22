@@ -11464,6 +11464,216 @@ body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
   0%, 85% { opacity: 1; }
   100% { opacity: 0; }
 }
+  
+/* ==========================================
+   AURORA — DANCING NORTHERN LIGHTS
+   Blue + Pink + Violet
+========================================== */
+
+body[data-shop-theme="theme_midnight"] {
+  background:
+    radial-gradient(
+      ellipse at 18% 12%,
+      rgba(35, 130, 255, .20),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 82% 25%,
+      rgba(255, 90, 190, .17),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 50% 85%,
+      rgba(130, 65, 255, .16),
+      transparent 45%
+    ),
+    #080b1d !important;
+
+  --line: #554477;
+}
+
+/* The actual moving aurora curtains */
+body[data-shop-theme="theme_midnight"]::after {
+  background:
+    radial-gradient(
+      ellipse at 20% 38%,
+      rgba(50, 175, 255, .30),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 78% 42%,
+      rgba(255, 105, 205, .26),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 50% 55%,
+      rgba(145, 100, 255, .24),
+      transparent 42%
+    ),
+    repeating-linear-gradient(
+      104deg,
+      transparent 0%,
+      transparent 5%,
+      rgba(45, 175, 255, .10) 7%,
+      rgba(100, 150, 255, .20) 9%,
+      transparent 14%,
+      transparent 18%,
+      rgba(255, 115, 205, .13) 20%,
+      rgba(180, 100, 255, .12) 22%,
+      transparent 27%
+    );
+
+  background-size: 180% 160%;
+  background-blend-mode: screen;
+  filter: blur(17px) saturate(1.4);
+
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 82%,
+      transparent 100%
+    );
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 82%,
+      transparent 100%
+    );
+
+  animation: auroraCurtains 24s ease-in-out infinite alternate;
+  will-change: transform, background-position;
+}
+
+@keyframes auroraCurtains {
+  0% {
+    transform: translate3d(-2%, 0, 0) scale(1) skewX(-3deg);
+    background-position: 0% 45%;
+  }
+
+  35% {
+    transform: translate3d(2%, -1%, 0) scale(1.05) skewX(2deg);
+    background-position: 45% 55%;
+  }
+
+  70% {
+    transform: translate3d(-1%, 2%, 0) scale(1.03) skewX(-2deg);
+    background-position: 85% 40%;
+  }
+
+  100% {
+    transform: translate3d(2%, 0, 0) scale(1.06) skewX(3deg);
+    background-position: 100% 60%;
+  }
+}
+
+/* Aurora sidebar */
+body[data-shop-theme="theme_midnight"] aside {
+  background: rgba(8, 15, 35, .96);
+  border-color: rgba(100, 160, 255, .28);
+}
+
+body[data-shop-theme="theme_midnight"] .nav button:hover,
+body[data-shop-theme="theme_midnight"] .nav button.active {
+  background: linear-gradient(
+    110deg,
+    rgba(40, 145, 255, .19),
+    rgba(210, 85, 200, .17)
+  );
+  border-color: rgba(160, 145, 255, .55);
+  color: #f5eaff;
+}
+
+/* Aurora dashboard colours */
+body[data-shop-theme="theme_midnight"] #page-dashboard {
+  --dash-accent: #a8dcff;
+  --dash-glow: rgba(95, 145, 255, .22);
+  --dash-border: rgba(140, 165, 255, .38);
+  --dash-card: #10172d;
+  --dash-card2: #192342;
+}
+
+/* Blue and pink glowing hero */
+body[data-shop-theme="theme_midnight"] #page-dashboard .hero {
+  background:
+    radial-gradient(
+      ellipse at 15% 20%,
+      rgba(55, 180, 255, .40),
+      transparent 45%
+    ),
+    radial-gradient(
+      ellipse at 85% 80%,
+      rgba(255, 100, 205, .34),
+      transparent 48%
+    ),
+    linear-gradient(
+      120deg,
+      #102447,
+      #28204f 52%,
+      #401c50
+    ) !important;
+
+  border-color: rgba(165, 175, 255, .65);
+
+  box-shadow:
+    0 0 35px rgba(65, 145, 255, .16),
+    0 0 45px rgba(255, 100, 205, .10);
+}
+
+/* Aurora glass-like dashboard panels */
+body[data-shop-theme="theme_midnight"] #page-dashboard .stat,
+body[data-shop-theme="theme_midnight"] #page-dashboard .panel,
+body[data-shop-theme="theme_midnight"] #page-dashboard .feature {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 65, 105, .72),
+      rgba(40, 25, 70, .88)
+    ) !important;
+
+  border-color: rgba(145, 155, 255, .32);
+
+  box-shadow:
+    0 8px 28px rgba(30, 100, 210, .10),
+    0 5px 25px rgba(220, 85, 190, .07);
+}
+
+body[data-shop-theme="theme_midnight"] #page-dashboard .stat strong {
+  color: #b9e5ff;
+  text-shadow: 0 0 14px rgba(80, 175, 255, .35);
+}
+
+body[data-shop-theme="theme_midnight"] #page-dashboard .feature-icon {
+  background: linear-gradient(
+    135deg,
+    #23649b,
+    #744b91,
+    #a94f91
+  ) !important;
+
+  border: 1px solid rgba(205, 175, 255, .35);
+  box-shadow: 0 0 18px rgba(100, 145, 255, .18);
+}
+
+/* Aurora stat icons */
+body[data-shop-theme="theme_midnight"] #page-dashboard .stat-icon {
+  background: linear-gradient(
+    135deg,
+    #214d79,
+    #683d78
+  ) !important;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  body[data-shop-theme="theme_midnight"]::after {
+    animation: none;
+  }
+}
 </style>
 </head>
 <body>
