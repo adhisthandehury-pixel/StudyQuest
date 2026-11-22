@@ -11055,6 +11055,215 @@ body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
 /* =========================================
    END DASHBOARD DESIGNS
    ========================================= */
+  
+/* =====================================
+   COSMIC PORTAL — MYTHIC STAR REWARD
+===================================== */
+
+#starRewardFx.cos_portal {
+  animation: sqPortalFade 3.7s ease both;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(95, 20, 180, .20),
+      rgba(8, 2, 24, .88) 75%
+    );
+}
+
+.sq-portal-scene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.sq-portal-aura {
+  position: absolute;
+  width: min(85vw, 650px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(170, 60, 255, .28),
+    rgba(90, 20, 220, .12) 45%,
+    transparent 70%
+  );
+  animation: sqPortalAura 3.5s ease-in-out both;
+}
+
+.sq-portal {
+  position: relative;
+  width: min(65vw, 340px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 0 25px #a020ff);
+  animation: sqPortalOpen 3.5s cubic-bezier(.15,.8,.2,1) both;
+}
+
+.sq-portal-ring {
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  box-shadow:
+    0 0 15px #b44dff,
+    inset 0 0 15px #8b35ff;
+}
+
+.sq-portal-ring.ring-one {
+  border-top-color: #f1c5ff;
+  border-right-color: #b44dff;
+  animation: sqPortalSpin 3s linear infinite;
+}
+
+.sq-portal-ring.ring-two {
+  inset: 12%;
+  border-width: 3px;
+  border-bottom-color: #63dfff;
+  border-left-color: #bd78ff;
+  animation: sqPortalSpin 2s linear infinite reverse;
+}
+
+.sq-portal-ring.ring-three {
+  inset: 20%;
+  border-width: 2px;
+  border-top-color: #fff;
+  border-bottom-color: #8b35ff;
+  animation: sqPortalSpin 1.5s linear infinite;
+}
+
+.sq-portal-vortex {
+  position: absolute;
+  width: 68%;
+  height: 68%;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      from 0deg,
+      #16052e,
+      #9d35ff,
+      #22074b,
+      #e6aaff,
+      #30066b,
+      #16052e
+    );
+  box-shadow:
+    0 0 30px #a020ff,
+    inset 0 0 35px #080016;
+  animation: sqVortexSpin 2.5s linear infinite;
+}
+
+.sq-portal-core {
+  position: absolute;
+  width: 43%;
+  height: 43%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      #070014 15%,
+      #22064d 50%,
+      #9f3dff 75%,
+      transparent 100%
+    );
+  box-shadow:
+    0 0 35px #b44dff,
+    0 0 75px #762bff;
+  animation: sqPortalCore 1.5s ease-in-out infinite alternate;
+}
+
+#starRewardFx.cos_portal .star-effect-title {
+  z-index: 5;
+  top: calc(50% + min(35vw, 180px));
+  font-size: clamp(27px, 5vw, 43px);
+  color: #f0d4ff;
+  text-shadow:
+    0 0 12px #fff,
+    0 0 28px #b44dff,
+    0 0 50px #762bff;
+}
+
+.sq-portal-particle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  color: #e8c4ff;
+  font-size: clamp(12px, 2vw, 22px);
+  text-shadow: 0 0 12px #b44dff;
+  animation: sqPortalParticles 2.5s ease-out calc(var(--i) * .035s) both;
+}
+
+.sq-portal-flash {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,.9),
+    rgba(190,90,255,.25) 20%,
+    transparent 65%
+  );
+  opacity: 0;
+  animation: sqPortalFlash 3.5s ease-out both;
+}
+
+@keyframes sqPortalSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sqVortexSpin {
+  to { transform: rotate(-360deg) scale(1.08); }
+}
+
+@keyframes sqPortalOpen {
+  0% { transform: scale(.05); opacity: 0; }
+  35% { transform: scale(1.12); opacity: 1; }
+  75% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(.85); opacity: 0; }
+}
+
+@keyframes sqPortalAura {
+  0%, 100% { opacity: 0; transform: scale(.5); }
+  35%, 75% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes sqPortalCore {
+  from { transform: scale(.85); }
+  to { transform: scale(1.15); }
+}
+
+@keyframes sqPortalParticles {
+  0% {
+    opacity: 0;
+    transform: scale(.2) translateY(35px) rotate(0);
+  }
+  30% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: scale(1.5) translateY(-100px) rotate(180deg);
+  }
+}
+
+@keyframes sqPortalFlash {
+  0%, 20%, 100% { opacity: 0; }
+  30% { opacity: .9; }
+  45% { opacity: .1; }
+}
+
+@keyframes sqPortalFade {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 600px) {
+  .sq-portal {
+    width: min(75vw, 290px);
+  }
+}
+
 </style>
 </head>
 <body>
