@@ -198,46 +198,6 @@ function safeExternalURL(rawURL) {
 
   return "";
 }
-function getWeekendKey() {
-  const now = new Date();
-  const day = now.getDay();
-  const daysSinceFriday = (day + 2) % 7;
-
-  now.setDate(now.getDate() - daysSinceFriday);
-
-  return now.getFullYear() + "-" +
-    String(now.getMonth() + 1).padStart(2, "0") + "-" +
-    String(now.getDate()).padStart(2, "0");
-}
-  const key = getWeekendKey();
-
-  if (!state.weekendLegend || state.weekendLegend.week !== key) {
-    state.weekendLegend = {
-      week: key,
-      completed: [],
-      bonusClaimed: false
-    };
-  }
-
-  const challenge = state.weekendLegend;
-  const progress = document.getElementById("weekendLegendProgress");
-
-if (progress) {
-  progress.textContent =
-    `Progress: ${challenge.completed.length}/4 objectives`;
-} 
-  const required = ["quiz", "blurting", "paper", "quests"];
-
-  if (
-    required.every(item => challenge.completed.includes(item)) &&
-    !challenge.bonusClaimed
-  ) {
-    challenge.bonusClaimed = true;
-    awardStars(200, "WEEKEND LEGEND completed!");
-  } else {
-    saveState();
-    showToast("🏆 Weekend Legend progress saved!");
-  }
 function awardStars(amount, reason) {
   state.stars += amount;
 
