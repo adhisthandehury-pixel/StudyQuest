@@ -3550,17 +3550,19 @@ const SHOP_ITEMS = [
     icon: "🌌",
     price: 100,
     rarity: "Rare",
-    description: "A cool blue atmosphere inspired by glowing northern lights."
+    description: "
+A dancing northern-lights sky with flowing blue, pink and violet curtains.
+."
   },
   {
-    id: "theme_cosmic",
-    category: "dashboards",
-    name: "Nebula",
-    icon: "🪐",
-    price: 250,
-    rarity: "Epic",
-    description: "Transform your dashboard with a glowing purple cosmic atmosphere."
-  },
+  id: "theme_cosmic",
+  category: "dashboards",
+  name: "Eclipse",
+  icon: "🌑",
+  price: 250,
+  rarity: "Epic",
+  description: "A mysterious dark-space atmosphere illuminated by a radiant blue-violet eclipse."
+},
   {
     id: "theme_crystal",
     category: "dashboards",
