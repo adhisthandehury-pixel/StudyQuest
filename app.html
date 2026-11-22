@@ -11738,6 +11738,189 @@ body[data-shop-theme="theme_midnight"] #page-dashboard .stat-icon {
     animation: none;
   }
 }
+  
+/* =========================================
+   SOLAR SYSTEM — CELESTIAL ORBIT UPGRADE
+   CSS ONLY — keeps theme_crystal intact
+========================================= */
+
+/* Deep-space atmosphere */
+body[data-shop-theme="theme_crystal"] {
+  background:
+    radial-gradient(
+      circle at 78% 18%,
+      rgba(255, 190, 75, .19),
+      transparent 27%
+    ),
+    radial-gradient(
+      ellipse at 12% 75%,
+      rgba(65, 115, 220, .17),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 85% 85%,
+      rgba(160, 85, 210, .12),
+      transparent 38%
+    ),
+    #070b1b !important;
+
+  --line: rgba(190, 160, 105, .32);
+}
+
+/* Golden celestial sidebar */
+body[data-shop-theme="theme_crystal"] aside {
+  background: rgba(8, 13, 30, .96);
+  border-right-color: rgba(255, 195, 95, .28);
+  box-shadow: 5px 0 35px rgba(255, 175, 60, .06);
+}
+
+body[data-shop-theme="theme_crystal"] .nav button:hover,
+body[data-shop-theme="theme_crystal"] .nav button.active {
+  background: linear-gradient(
+    110deg,
+    rgba(255, 190, 75, .16),
+    rgba(90, 120, 210, .16)
+  );
+  border-color: rgba(255, 205, 125, .45);
+  color: #fff0cf;
+}
+
+/* Dashboard colour palette */
+body[data-shop-theme="theme_crystal"] #page-dashboard {
+  --dash-accent: #ffdc91;
+  --dash-glow: rgba(255, 180, 65, .15);
+  --dash-border: rgba(255, 205, 125, .30);
+  --dash-card: #10182c;
+  --dash-card2: #19243a;
+}
+
+/* The central sun and orbital paths */
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 79% 48%,
+      rgba(255, 245, 190, .95) 0%,
+      rgba(255, 195, 75, .75) 2%,
+      rgba(255, 145, 45, .30) 7%,
+      transparent 17%
+    ),
+    radial-gradient(
+      ellipse at 79% 48%,
+      transparent 0 19%,
+      rgba(255, 210, 125, .48) 19.2% 19.5%,
+      transparent 19.8% 29%,
+      rgba(120, 165, 255, .38) 29.2% 29.5%,
+      transparent 29.8% 40%,
+      rgba(255, 190, 95, .28) 40.2% 40.4%,
+      transparent 40.8%
+    ),
+    radial-gradient(
+      ellipse at 15% 100%,
+      rgba(70, 125, 230, .23),
+      transparent 48%
+    ),
+    linear-gradient(
+      120deg,
+      #0a1429,
+      #18294a 55%,
+      #382b42
+    ) !important;
+
+  border-color: rgba(255, 211, 130, .58);
+
+  box-shadow:
+    0 0 35px rgba(255, 180, 65, .13),
+    inset 0 0 35px rgba(100, 140, 230, .08);
+}
+
+/* Keep hero content above the orbital illustration */
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Glass-like planetary dashboard panels */
+body[data-shop-theme="theme_crystal"] #page-dashboard .stat,
+body[data-shop-theme="theme_crystal"] #page-dashboard .panel,
+body[data-shop-theme="theme_crystal"] #page-dashboard .feature {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 195, 100, .09),
+      transparent 48%
+    ),
+    linear-gradient(
+      145deg,
+      #202b43,
+      #10182c
+    ) !important;
+
+  border-color: rgba(255, 205, 130, .28);
+
+  box-shadow:
+    0 9px 28px rgba(0, 0, 0, .18),
+    0 0 18px rgba(255, 180, 65, .045);
+}
+
+/* Golden numbers */
+body[data-shop-theme="theme_crystal"] #page-dashboard .stat strong {
+  color: #ffe1a0;
+  text-shadow: 0 0 15px rgba(255, 190, 75, .32);
+}
+
+/* Planet-inspired feature icons */
+body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
+  display: inline-grid;
+  place-items: center;
+  min-width: 43px;
+  min-height: 43px;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #6d542d,
+    #344b78,
+    #76518a
+  ) !important;
+
+  border: 1px solid rgba(255, 215, 145, .38);
+
+  box-shadow:
+    0 0 18px rgba(255, 185, 80, .12);
+}
+
+/* Stat icons */
+body[data-shop-theme="theme_crystal"] #page-dashboard .stat-icon {
+  background: linear-gradient(
+    135deg,
+    #70552e,
+    #344d76
+  ) !important;
+
+  border: 1px solid rgba(255, 210, 135, .28);
+}
+
+/* Elegant headings */
+body[data-shop-theme="theme_crystal"] #page-dashboard h2,
+body[data-shop-theme="theme_crystal"] #page-dashboard h3 {
+  color: #fff0d0;
+}
+
+/* Smooth theme transitions */
+body[data-shop-theme="theme_crystal"] #page-dashboard .hero,
+body[data-shop-theme="theme_crystal"] #page-dashboard .stat,
+body[data-shop-theme="theme_crystal"] #page-dashboard .panel,
+body[data-shop-theme="theme_crystal"] #page-dashboard .feature {
+  transition:
+    background .4s ease,
+    border-color .4s ease,
+    box-shadow .4s ease;
+}
+
 </style>
 </head>
 <body>
