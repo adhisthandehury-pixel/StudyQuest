@@ -3877,9 +3877,10 @@ function applyShopAppearance() {
     skin ? skin.id : "";
 
   document.body.dataset.starRewardEffect =
-    effect ? effect.id : "";
-   document.body.dataset.shopCosmetic =
   effect ? effect.id : "";
+
+// Celebration effects must not change the profile.
+delete document.body.dataset.shopCosmetic;
 
   const profileAvatar = document.querySelector(".profile .avatar");
 
