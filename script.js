@@ -3510,9 +3510,7 @@ const SHOP_ITEMS = [
     icon: "🌌",
     price: 100,
     rarity: "Rare",
-    description: "
-A dancing northern-lights sky with flowing blue, pink and violet curtains.
-."
+    description: "A dancing northern-lights sky with flowing blue, pink and violet curtains."
   },
   {
   id: "theme_cosmic",
