@@ -11264,6 +11264,206 @@ body[data-shop-theme="theme_crystal"] #page-dashboard .feature-icon {
   }
 }
 
+/* =================================
+   THUNDER — ELECTRIC STAR REWARD
+================================= */
+
+#starRewardFx.cos_lightning {
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(20, 100, 255, .25),
+      rgba(2, 5, 25, .94) 75%
+    );
+  animation: sqThunderFade 3s ease both;
+}
+
+.sq-thunder-scene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.sq-thunder-flash {
+  position: absolute;
+  inset: 0;
+  background: #d9f5ff;
+  opacity: 0;
+  animation: sqThunderFlash 2.8s ease both;
+}
+
+.sq-thunder-bolt {
+  position: absolute;
+  top: -5%;
+  left: 50%;
+  width: min(45vw, 230px);
+  height: 85%;
+  transform: translateX(-50%);
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 5px #fff)
+    drop-shadow(0 0 15px #36aaff)
+    drop-shadow(0 0 35px #087bff);
+  opacity: 0;
+}
+
+.sq-thunder-bolt path {
+  fill: #e7faff;
+  stroke: #64caff;
+  stroke-width: 1.5;
+}
+
+.sq-thunder-bolt.main-bolt {
+  animation: sqThunderStrike 1.05s cubic-bezier(.2,.8,.3,1) both;
+}
+
+.sq-thunder-bolt.side-bolt {
+  width: min(30vw, 150px);
+  height: 70%;
+  margin-left: 15%;
+  filter:
+    drop-shadow(0 0 8px #36aaff)
+    drop-shadow(0 0 22px #087bff);
+  animation: sqThunderSide 1.15s .12s ease both;
+}
+
+.sq-thunder-impact {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  width: min(70vw, 400px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,.95),
+    rgba(55,165,255,.5) 15%,
+    rgba(20,90,255,.15) 45%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%) scale(.1);
+  opacity: 0;
+  animation: sqThunderImpact 2.8s ease both;
+}
+
+.sq-thunder-reward {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -35%) scale(.4);
+  text-align: center;
+  opacity: 0;
+  z-index: 5;
+  color: white;
+  text-shadow:
+    0 0 12px #fff,
+    0 0 28px #168bff,
+    0 0 55px #0066ff;
+  animation: sqThunderReveal 2.8s ease both;
+}
+
+.sq-thunder-star {
+  font-size: clamp(35px, 7vw, 65px);
+  animation: sqThunderStar 1s ease-in-out infinite alternate;
+}
+
+.sq-thunder-amount {
+  font-size: clamp(55px, 12vw, 100px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.sq-thunder-label {
+  margin-top: 8px;
+  font-size: clamp(12px, 2vw, 17px);
+  font-weight: 800;
+  letter-spacing: 5px;
+  color: #a8e5ff;
+}
+
+@keyframes sqThunderStrike {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  12% { opacity: 1; }
+  55% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  70%, 100% {
+    opacity: 0;
+    transform: translate(-50%, 5%);
+  }
+}
+
+@keyframes sqThunderSide {
+  0%, 15% {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  35% { opacity: .8; }
+  65% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% { opacity: 0; }
+}
+
+@keyframes sqThunderFlash {
+  0%, 15%, 100% { opacity: 0; }
+  20% { opacity: .85; }
+  24% { opacity: .05; }
+  35% { opacity: .55; }
+  40% { opacity: 0; }
+}
+
+@keyframes sqThunderImpact {
+  0%, 40% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.1);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.7);
+  }
+}
+
+@keyframes sqThunderReveal {
+  0%, 48% {
+    opacity: 0;
+    transform: translate(-50%, -25%) scale(.4);
+  }
+  65% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  75%, 90% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -65%) scale(.9);
+  }
+}
+
+@keyframes sqThunderStar {
+  from { transform: scale(.9) rotate(-8deg); }
+  to { transform: scale(1.15) rotate(8deg); }
+}
+
+@keyframes sqThunderFade {
+  0%, 85% { opacity: 1; }
+  100% { opacity: 0; }
+}
 </style>
 </head>
 <body>
