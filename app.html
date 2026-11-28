@@ -12325,6 +12325,28 @@ body[data-shop-theme="theme_crystal"] .stat-icon {
     0 0 30px rgba(255, 180, 20, .25) !important;
   border-color: rgba(255, 240, 160, .8) !important;
 }
+  
+/* StudyQuest — visible reward fallback for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #starRewardFx {
+    opacity: 1 !important;
+  }
+
+  #starRewardFx.active {
+    animation: none !important;
+  }
+
+  #starRewardFx .star-effect-title {
+    opacity: 1 !important;
+    transform: translate(-50%, 0) scale(1) !important;
+    animation: none !important;
+  }
+
+  #starRewardFx span {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
 </style>
 </head>
 <body>
