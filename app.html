@@ -12325,25 +12325,70 @@ body[data-shop-theme="theme_crystal"] .stat-icon {
     0 0 30px rgba(255, 180, 20, .25) !important;
   border-color: rgba(255, 240, 160, .8) !important;
 }
-  
-/* StudyQuest — visible reward fallback for reduced motion */
+
+/* StudyQuest — static reward fallback for reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  #starRewardFx {
-    opacity: 1 !important;
-  }
 
   #starRewardFx.active {
+    opacity: 1 !important;
     animation: none !important;
   }
 
+  /* Standard Starburst and Golden Aura */
   #starRewardFx .star-effect-title {
     opacity: 1 !important;
     transform: translate(-50%, 0) scale(1) !important;
     animation: none !important;
   }
 
-  #starRewardFx span {
+  #starRewardFx > span {
     opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Cosmic Portal */
+  #starRewardFx.cos_portal .sq-portal,
+  #starRewardFx.cos_portal .sq-portal-ring,
+  #starRewardFx.cos_portal .sq-portal-vortex,
+  #starRewardFx.cos_portal .sq-portal-core {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  #starRewardFx.cos_portal .sq-portal-aura {
+    opacity: .85 !important;
+    animation: none !important;
+  }
+
+  #starRewardFx.cos_portal .sq-portal-particle {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Thunder */
+  #starRewardFx.cos_lightning .sq-thunder-bolt {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: translateX(-50%) !important;
+  }
+
+  #starRewardFx.cos_lightning .sq-thunder-reward {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  #starRewardFx.cos_lightning .sq-thunder-impact {
+    opacity: .7 !important;
+    animation: none !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  #starRewardFx.cos_lightning .sq-thunder-flash {
+    opacity: 0 !important;
     animation: none !important;
   }
 }
